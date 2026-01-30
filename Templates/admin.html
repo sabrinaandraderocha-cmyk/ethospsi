@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="card">
+  <h2 style="margin-top: 0;">Painel Administrativo</h2>
+  <p style="color: #64748b;">Monitoramento do sistema.</p>
+
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 30px;">
+    <div style="background: #f8fafc; padding: 20px; border-radius: 10px; border: 1px solid #e2e8f0; text-align: center;">
+      <div style="font-size: 2.5rem; font-weight: bold; color: #3b82f6; line-height: 1;">{{ stats.documents }}</div>
+      <div style="color: #64748b; font-size: 0.9rem; margin-top: 5px;">Documentos</div>
+    </div>
+    <div style="background: #f8fafc; padding: 20px; border-radius: 10px; border: 1px solid #e2e8f0; text-align: center;">
+      <div style="font-size: 2.5rem; font-weight: bold; color: #10b981; line-height: 1;">{{ stats.chunks }}</div>
+      <div style="color: #64748b; font-size: 0.9rem; margin-top: 5px;">Trechos</div>
+    </div>
+    <div style="background: #f8fafc; padding: 20px; border-radius: 10px; border: 1px solid #e2e8f0; text-align: center;">
+      <div style="font-size: 2.5rem; font-weight: bold; color: #f59e0b; line-height: 1;">{{ stats.history }}</div>
+      <div style="color: #64748b; font-size: 0.9rem; margin-top: 5px;">Consultas</div>
+    </div>
+  </div>
+
+  <div style="margin-top: 40px; background: #fff1f2; border: 1px solid #fecaca; padding: 20px; border-radius: 8px;">
+      <h3 style="font-size: 1rem; color: #991b1b; margin-top: 0;">Zona de Manutenção</h3>
+      <p style="font-size: 0.85rem; color: #7f1d1d; margin-bottom: 15px;">
+        Use este botão apenas se você alterou o código fonte e precisa recarregar os textos do Código de Ética no banco de dados.
+      </p>
+      
+      <form method="post" action="/">
+        <input type="hidden" name="load_bases" value="true">
+        <button class="btn-action" type="submit" style="background-color: #ef4444; font-size: 0.85rem;">
+          ⚠️ Forçar Recarga das Bases
+        </button>
+      </form>
+  </div>
+
+  <div style="margin-top: 30px; text-align: center;">
+    <a href="{{ url_for('home') }}" class="btn-action" style="text-decoration: none; display: inline-block; background-color: #64748b;">Voltar para Consulta</a>
+  </div>
+
+</section>
+{% endblock %}

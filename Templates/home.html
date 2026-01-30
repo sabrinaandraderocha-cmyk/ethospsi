@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="ethical-warning">
+    <strong>⚠️ Aviso Importante:</strong>
+    <ul>
+        <li>Este sistema é para <strong>consulta rápida e apoio</strong>. Ele NÃO substitui a leitura do Código de Ética nem a consulta oficial ao <strong>CFP</strong> ou ao seu CRP.</li>
+        <li><strong>Privacidade:</strong> As perguntas não são usadas para treinar IAs externas. Os dados ficam apenas no seu histórico local.</li>
+        <li><strong>Nunca insira dados reais</strong> (nomes, telefones, endereços) de pacientes.</li>
+    </ul>
+</div>
+
+<section class="card">
+  <div style="margin-bottom: 20px;">
+    <h2 style="margin:0;">Consulta Ética</h2>
+    <p style="margin:5px 0 0 0; color: #64748b; font-size: 0.9rem;">
+      Tire suas dúvidas sobre conduta, sigilo e prontuários.
+    </p>
+  </div>
+  
+  <form method="post" style="margin-bottom: 25px;">
+    <textarea name="q" placeholder="Digite sua dúvida ética aqui... (Ex: Como devo descartar prontuários antigos?)"></textarea>
+    <div style="margin-top: 10px; text-align: right;">
+      <button class="btn-action" type="submit">Consultar Assistente</button>
+    </div>
+  </form>
+
+  <div class="quick-questions">
+    <small style="color: #64748b; font-weight: 600; display: block; margin-bottom: 8px;">Perguntas Frequentes (Clique para testar):</small>
+    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+      {% for qq in quick_questions %}
+        <form method="post" style="margin:0;">
+          <input type="hidden" name="q" value="{{ qq }}">
+          <button class="chip-btn" type="submit">{{ qq }}</button>
+        </form>
+      {% endfor %}
+    </div>
+  </div>
+
+  {% if answer %}
+    <div class="answer-container">
+      {{ answer|safe }}
+    </div>
+  {% endif %}
+</section>
+
+<section class="card">
+  <h3>Histórico Recente</h3>
+  {% if history %}
+    <ul class="history-list">
+      {% for h in history %}
+        <li style="border-bottom: 1px solid #f1f5f9; padding: 10px 0;">
+          <small style="color: #94a3b8; font-size: 0.75rem;">{{ h.created_at }}</small>
+          <div style="font-weight: 600; font-size: 0.9rem; color: #0f172a;">{{ h.question }}</div>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p style="color: #94a3b8; font-size: 0.9rem;">Nenhuma consulta recente.</p>
+  {% endif %}
+</section>
+
+{% endblock %}

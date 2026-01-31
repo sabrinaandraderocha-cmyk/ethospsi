@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block content %}
+
+<section class="card">
+  <h2 style="margin-top:0;">Mapa de Rede</h2>
+  <p style="color:#64748b; margin-top:6px;">
+    Gere roteiros prontos para encaminhamentos e contatos. Evite inserir dados de pacientes.
+  </p>
+
+  <form method="post" class="form-grid">
+    <div class="form-card">
+      <h3>Destino</h3>
+
+      <label class="field">
+        Para quem?
+        <select name="destino">
+          <option value="psiquiatria">Psiquiatria</option>
+          <option value="escola">Escola</option>
+          <option value="familia">Família/Responsáveis</option>
+          <option value="rede_publica">Rede pública/serviços</option>
+          <option value="autorizacao">Modelo de autorização</option>
+        </select>
+      </label>
+
+      <label class="field">
+        Canal sugerido
+        <select name="canal">
+          <option selected>WhatsApp</option>
+          <option>E-mail</option>
+          <option>Telefone</option>
+        </select>
+      </label>
+
+      <label class="field">
+        Incluir lembrete de autorização por escrito?
+        <select name="autorizacao">
+          <option value="sim" selected>Sim</option>
+          <option value="nao">Não</option>
+        </select>
+      </label>
+
+      <label class="field">
+        Tom do texto
+        <select name="tom">
+          <option value="neutro" selected>Neutro</option>
+          <option value="formal">Mais formal</option>
+          <option value="curto">Mais curto</option>
+        </select>
+      </label>
+
+      <button class="btn-action" type="submit" style="margin-top:10px; width:100%;">
+        Gerar roteiro
+      </button>
+    </div>
+
+    <div class="form-card">
+      <h3>Boas práticas</h3>
+      <ul style="margin: 8px 0 0 18px; color:#334155;">
+        <li>Evite detalhes sensíveis por mensagens.</li>
+        <li>Peça autorização por escrito e delimite finalidade.</li>
+        <li>Compartilhe o mínimo necessário.</li>
+        <li>Se houver risco imediato, priorize serviços locais adequados.</li>
+      </ul>
+    </div>
+  </form>
+</section>
+
+{% if out %}
+<section class="card">
+  <h2 style="margin-top:0;">{{ out.titulo }}</h2>
+  <div class="copy-row">
+    <button class="btn-action" type="button" onclick="copyText()">Copiar</button>
+    <a class="btn-action" href="{{ url_for('politicas') }}">Políticas prontas</a>
+  </div>
+  <textarea id="outText" class="mono-area" readonly>{{ out.texto }}</textarea>
+</section>
+
+<script>
+  function copyText(){
+    const el = document.getElementById("outText");
+    el.select();
+    el.setSelectionRange(0, 999999);
+    document.execCommand("copy");
+  }
+</script>
+{% endif %}
+
+{% endblock %}

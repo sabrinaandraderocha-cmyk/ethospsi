@@ -19,7 +19,7 @@
     </p>
   </div>
 
-  <!-- REMOVIDO CAMPO DE DIGITAR: agora é só botões -->
+  <!-- SOMENTE BOTÕES -->
   <div class="quick-questions">
     <small style="color: #64748b; font-weight: 600; display: block; margin-bottom: 8px;">
       Dúvidas éticas (clique para consultar):
@@ -35,7 +35,7 @@
     </div>
   </div>
 
-  <!-- Botão opcional para carregar base (mantive simples) -->
+  <!-- Atualizar base ética -->
   <form method="post" style="margin-top: 18px;">
     <button class="btn-action" type="submit" name="load_bases" value="1">
       Atualizar base do Código
@@ -55,13 +55,19 @@
     <ul class="history-list">
       {% for h in history %}
         <li style="border-bottom: 1px solid #f1f5f9; padding: 10px 0;">
-          <small style="color: #94a3b8; font-size: 0.75rem;">{{ h.created_at }}</small>
-          <div style="font-weight: 600; font-size: 0.9rem; color: #0f172a;">{{ h.question }}</div>
+          <small style="color: #94a3b8; font-size: 0.75rem;">
+            {{ h.created_at }}
+          </small>
+          <div style="font-weight: 600; font-size: 0.9rem; color: #0f172a;">
+            {{ h.question }}
+          </div>
         </li>
       {% endfor %}
     </ul>
   {% else %}
-    <p style="color: #94a3b8; font-size: 0.9rem;">Nenhuma consulta recente.</p>
+    <p style="color: #94a3b8; font-size: 0.9rem;">
+      Nenhuma consulta recente.
+    </p>
   {% endif %}
 </section>
 

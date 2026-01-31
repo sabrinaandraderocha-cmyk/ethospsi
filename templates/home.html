@@ -3,12 +3,12 @@
 {% block content %}
 
 <div class="ethical-warning">
-    <strong>⚠️ Aviso Importante:</strong>
-    <ul>
-        <li>Este sistema é para <strong>consulta rápida e apoio</strong>. Ele NÃO substitui a leitura do Código de Ética nem a consulta oficial ao <strong>CFP</strong> ou ao seu CRP.</li>
-        <li><strong>Privacidade:</strong> As perguntas não são usadas para treinar IAs externas. Os dados ficam apenas no seu histórico local.</li>
-        <li><strong>Nunca insira dados reais</strong> (nomes, telefones, endereços) de pacientes.</li>
-    </ul>
+  <strong>⚠️ Aviso Importante:</strong>
+  <ul>
+    <li>Este sistema é para <strong>consulta rápida e apoio</strong>. Ele NÃO substitui a leitura do Código de Ética nem a consulta oficial ao <strong>CFP</strong> ou ao seu CRP.</li>
+    <li><strong>Privacidade:</strong> As perguntas não são usadas para treinar IAs externas. Os dados ficam apenas no seu histórico local.</li>
+    <li><strong>Nunca insira dados reais</strong> (nomes, telefones, endereços) de pacientes.</li>
+  </ul>
 </div>
 
 <section class="card">
@@ -18,25 +18,29 @@
       Tire suas dúvidas sobre conduta, sigilo e prontuários.
     </p>
   </div>
-  
-  <form method="post" style="margin-bottom: 25px;">
-    <textarea name="q" placeholder="Digite sua dúvida ética aqui... (Ex: Como devo descartar prontuários antigos?)"></textarea>
-    <div style="margin-top: 10px; text-align: right;">
-      <button class="btn-action" type="submit">Consultar Assistente</button>
-    </div>
-  </form>
 
+  <!-- REMOVIDO CAMPO DE DIGITAR: agora é só botões -->
   <div class="quick-questions">
-    <small style="color: #64748b; font-weight: 600; display: block; margin-bottom: 8px;">Perguntas Frequentes (Clique para testar):</small>
-    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+    <small style="color: #64748b; font-weight: 600; display: block; margin-bottom: 8px;">
+      Dúvidas éticas (clique para consultar):
+    </small>
+
+    <div class="quick-grid">
       {% for qq in quick_questions %}
         <form method="post" style="margin:0;">
           <input type="hidden" name="q" value="{{ qq }}">
-          <button class="chip-btn" type="submit">{{ qq }}</button>
+          <button class="quick-btn" type="submit">{{ qq }}</button>
         </form>
       {% endfor %}
     </div>
   </div>
+
+  <!-- Botão opcional para carregar base (mantive simples) -->
+  <form method="post" style="margin-top: 18px;">
+    <button class="btn-action" type="submit" name="load_bases" value="1">
+      Atualizar base do Código
+    </button>
+  </form>
 
   {% if answer %}
     <div class="answer-container">

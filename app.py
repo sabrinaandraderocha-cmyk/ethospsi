@@ -1,10 +1,13 @@
 import os
 import sqlite3
 from datetime import datetime
+from io import BytesIO
 
 from flask import (
-    Flask, render_template, request, redirect, url_for, flash
+    Flask, render_template, request, redirect, url_for, flash, send_file
 )
+
+from docx import Document
 
 # =====================================================
 # CONFIG
@@ -691,7 +694,6 @@ O objetivo é proteger a pessoa atendida e a qualidade do serviço.
 """
         return {"titulo": "Sigilo e privacidade", "texto": texto}
 
-    # fallback
     return {"titulo": "Política", "texto": f"{base_header}Escolha uma política para gerar um texto pronto."}
 
 # =====================================================
@@ -775,6 +777,50 @@ Assinatura: ______________________________
         return {"titulo": "Autorização por escrito", "texto": texto}
 
     return {"titulo": "Rede", "texto": "Escolha um destino para gerar um roteiro."}
+
+# =====================================================
+# DOCX DOWNLOAD
+# =====================================================
+def _sanitize_filename(name: str) -> str:
+    keep = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_ "
+    cleaned = "".join([c if c in keep else "_" for c in (name or "")]).strip()
+    return cleaned[:80] if cleaned else "documento"
+
+def _make_docx_bytes(title: str, text: str) -> BytesIO:
+    doc = Document()
+    if title:
+        doc.add_heading(title, level=1)
+
+    # preserva quebras de linha
+    lines = (text or "").replace("\r\n", "\n").split("\n")
+    for line in lines:
+        if line.strip() == "":
+            doc.add_paragraph("")
+        else:
+            doc.add_paragraph(line)
+
+    bio = BytesIO()
+    doc.save(bio)
+    bio.seek(0)
+    return bio
+
+@app.route("/download-docx", methods=["POST"])
+def download_docx():
+    title = (request.form.get("doc_title") or "Documento").strip()
+    text = request.form.get("doc_text") or ""
+    filename = _sanitize_filename(request.form.get("doc_filename") or title)
+
+    if not text.strip():
+        flash("Nada para baixar. Gere o documento primeiro.", "success")
+        return redirect(request.referrer or url_for("home"))
+
+    bio = _make_docx_bytes(title=title, text=text)
+    return send_file(
+        bio,
+        as_attachment=True,
+        download_name=f"{filename}.docx",
+        mimetype="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    )
 
 # =====================================================
 # ROTAS

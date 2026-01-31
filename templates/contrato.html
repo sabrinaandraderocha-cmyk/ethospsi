@@ -10,15 +10,19 @@
   <form method="post" class="form-grid">
     <div class="form-card">
       <h3>Modalidade</h3>
-      <div class="radio-row">
-        <label><input type="radio" name="modalidade" value="Online" checked> Online</label>
-        <label><input type="radio" name="modalidade" value="Presencial"> Presencial</label>
-      </div>
+
+      <label class="field">
+        Modalidade
+        <select name="modalidade">
+          <option selected>Online</option>
+          <option>Presencial</option>
+        </select>
+      </label>
 
       <label class="field">
         Plataforma (online)
         <select name="plataforma">
-          <option>Google Meet</option>
+          <option selected>Google Meet</option>
           <option>Zoom</option>
           <option>Microsoft Teams</option>
           <option>Outro</option>
@@ -42,10 +46,14 @@
           <option value="variável">Variável</option>
         </select>
       </label>
+
+      <button class="btn-action" type="submit" style="margin-top:10px; width:100%;">
+        Gerar contrato
+      </button>
     </div>
 
     <div class="form-card">
-      <h3>Regras do Enquadre</h3>
+      <h3>Enquadre</h3>
 
       <label class="field">
         Canal de contato
@@ -93,14 +101,14 @@
     </div>
 
     <div class="form-card">
-      <h3>Pagamento e documentos</h3>
+      <h3>Pagamento</h3>
 
       <label class="field">
         Forma de pagamento
         <select name="pagamento">
           <option value="pix" selected>Pix</option>
-          <option value="cartao">Cartão</option>
           <option value="transferencia">Transferência</option>
+          <option value="cartao">Cartão</option>
         </select>
       </label>
 
@@ -125,9 +133,9 @@
       <h3>Sigilo e limites</h3>
 
       <label class="field">
-        Texto de sigilo (padrão)
+        Texto de sigilo
         <select name="sigilo">
-          <option value="sim" selected>Sim</option>
+          <option value="sim" selected>Completo</option>
           <option value="nao">Simplificado</option>
         </select>
       </label>
@@ -147,10 +155,6 @@
           <option value="nao">Não incluir</option>
         </select>
       </label>
-
-      <button class="btn-action" type="submit" style="margin-top:10px; width:100%;">
-        Gerar contrato
-      </button>
     </div>
   </form>
 </section>
@@ -158,11 +162,16 @@
 {% if contrato_txt %}
 <section class="card">
   <h2 style="margin-top:0;">Contrato gerado</h2>
-  <p style="color:#64748b; margin-top:6px;">Copie e ajuste conforme sua prática.</p>
 
   <div class="copy-row">
     <button class="btn-action" type="button" onclick="copyText()">Copiar</button>
-    <a class="btn-action" href="{{ url_for('politicas') }}">Políticas prontas</a>
+
+    <form method="post" action="{{ url_for('download_docx') }}" style="margin:0;">
+      <input type="hidden" name="doc_title" value="Contrato Terapêutico">
+      <input type="hidden" name="doc_filename" value="contrato-terapeutico">
+      <input type="hidden" name="doc_text" value="{{ contrato_txt|e }}">
+      <button class="btn-action" type="submit">Baixar em Word</button>
+    </form>
   </div>
 
   <textarea id="outText" class="mono-area" readonly>{{ contrato_txt }}</textarea>

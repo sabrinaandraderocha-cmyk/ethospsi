@@ -13,26 +13,19 @@
   <div style="margin-bottom: 18px;">
     <h2 style="margin:0;">Consulta Ética</h2>
     <p style="margin:6px 0 0 0; color:#64748b; font-size:0.92rem;">
-      As perguntas com respostas objetivas ficam no topo.
+      Selecione uma dúvida abaixo para ver a orientação.
     </p>
-
-    <div class="seal-legend">
-      <span class="seal-item seal-green"><span class="dot dot-green"></span> Resposta objetiva</span>
-      <span class="seal-item seal-yellow"><span class="dot dot-yellow"></span> Zona de cuidado</span>
-    </div>
   </div>
 
-  <!-- BLOCO 1: RESPOSTAS OBJETIVAS -->
-  <h3 class="section-mini">Respostas objetivas</h3>
-  {% if direct_questions and direct_questions|length > 0 %}
+  {% if questions and questions|length > 0 %}
     <div class="quick-questions">
       <div class="quick-grid">
-        {% for qq in direct_questions %}
+        {% for q in questions %}
           <form method="post" style="margin:0;">
-            <input type="hidden" name="q" value="{{ qq.text }}">
+            <input type="hidden" name="q" value="{{ q.text }}">
             <button class="quick-btn" type="submit">
               <span class="dot dot-green"></span>
-              <span class="quick-text">{{ qq.text }}</span>
+              <span class="quick-text">{{ q.text }}</span>
             </button>
           </form>
         {% endfor %}
@@ -40,36 +33,13 @@
     </div>
   {% else %}
     <div class="muted-box">
-      Nenhuma pergunta com resposta objetiva foi cadastrada ainda.
-      Adicione respostas em <strong>RESPOSTAS_PRONTAS</strong> para aparecerem aqui.
-    </div>
-  {% endif %}
-
-  <!-- BLOCO 2: ZONA DE CUIDADO -->
-  <h3 class="section-mini" style="margin-top:18px;">Zona de cuidado</h3>
-  {% if care_questions and care_questions|length > 0 %}
-    <div class="quick-questions">
-      <div class="quick-grid">
-        {% for qq in care_questions %}
-          <form method="post" style="margin:0;">
-            <input type="hidden" name="q" value="{{ qq.text }}">
-            <button class="quick-btn" type="submit">
-              <span class="dot dot-yellow"></span>
-              <span class="quick-text">{{ qq.text }}</span>
-            </button>
-          </form>
-        {% endfor %}
-      </div>
-    </div>
-  {% else %}
-    <div class="muted-box">
-      Nenhuma pergunta na zona de cuidado.
+      Nenhuma pergunta cadastrada no momento.
     </div>
   {% endif %}
 
   <form method="post" style="margin-top: 18px;">
     <button class="btn-action" type="submit" name="load_bases" value="1">
-      Atualizar base do Código
+      Recarregar Base
     </button>
   </form>
 

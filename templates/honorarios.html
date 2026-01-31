@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+{% block content %}
+
+<section class="card">
+  <h2 style="margin-top:0;">Calculadora de Honorários</h2>
+  <p style="color:#64748b; margin-top:6px;">
+    Calcule um preço mínimo sustentável e compare com referências.
+  </p>
+
+  <div class="callout">
+    <div>
+      <strong>Referência oficial:</strong>
+      <a href="{{ links.tabela_honorarios_cfp }}" target="_blank" rel="noopener">Tabela de Honorários (CFP)</a>
+      <span class="muted-inline">|</span>
+      <a href="{{ links.tabela_honorarios_pdf_ate_julho_2025 }}" target="_blank" rel="noopener">PDF (jul/2025)</a>
+    </div>
+  </div>
+
+  <form method="post" class="form-grid">
+    <div class="form-card">
+      <h3>Custos mensais</h3>
+
+      <label class="field">
+        Custos fixos (R$)
+        <input name="custos_fixos" type="number" step="0.01" min="0" value="0">
+      </label>
+
+      <label class="field">
+        Custos variáveis (R$)
+        <input name="custos_variaveis_mes" type="number" step="0.01" min="0" value="0">
+      </label>
+
+      <label class="field">
+        Pró-labore desejado (R$)
+        <input name="pro_labore" type="number" step="0.01" min="0" value="0">
+      </label>
+
+      <label class="field">
+        Impostos (percentual)
+        <input name="impostos_perc" type="number" step="0.1" min="0" max="95" value="0">
+      </label>
+
+      <label class="field">
+        Semanas por mês
+        <input name="semanas_mes" type="number" step="0.1" min="3" max="5" value="4.3">
+      </label>
+    </div>
+
+    <div class="form-card">
+      <h3>Capacidade de atendimento</h3>
+
+      <label class="field">
+        Sessões por semana
+        <input name="sessoes_semana" type="number" step="1" min="0" value="20">
+      </label>
+
+      <label class="field">
+        Duração por sessão (min)
+        <input name="duracao_min" type="number" step="1" min="20" value="50">
+      </label>
+
+      <label class="field">
+        Tempo administrativo por sessão (min)
+        <input name="admin_min" type="number" step="1" min="0" value="10">
+      </label>
+
+      <label class="field">
+        Faltas/no-show (percentual)
+        <input name="faltas_perc" type="number" step="0.5" min="0" max="95" value="10">
+      </label>
+
+      <button class="btn-action" type="submit" style="margin-top:10px; width:100%;">
+        Calcular
+      </button>
+    </div>
+  </form>
+</section>
+
+{% if resultado %}
+<section class="card">
+  {% if resultado.ok %}
+    <h2 style="margin-top:0;">Resultado</h2>
+
+    <div class="result-grid">
+      <div class="result-card">
+        <div class="k">Custo total/mês</div>
+        <div class="v">R$ {{ "%.2f"|format(resultado.custo_total_mes) }}</div>
+      </div>
+
+      <div class="result-card">
+        <div class="k">Receita bruta necessária</div>
+        <div class="v">R$ {{ "%.2f"|format(resultado.receita_bruta_necessaria) }}</div>
+      </div>
+
+      <div class="result-card">
+        <div class="k">Sessões/mês (planejado)</div>
+        <div class="v">{{ resultado.sessoes_mes_brutas }}</div>
+      </div>
+
+      <div class="result-card">
+        <div class="k">Sessões/mês (efetivas)</div>
+        <div class="v">{{ resultado.sessoes_mes_liquidas }}</div>
+      </div>
+
+      <div class="result-card highlight">
+        <div class="k">Preço mínimo por sessão</div>
+        <div class="v">R$ {{ "%.2f"|format(resultado.preco_min_sessao) }}</div>
+      </div>
+
+      <div class="result-card">
+        <div class="k">Tempo real por sessão</div>
+        <div class="v">{{ resultado.tempo_por_sessao_min }} min</div>
+      </div>
+
+      <div class="result-card">
+        <div class="k">Horas de trabalho/mês</div>
+        <div class="v">{{ resultado.horas_trabalho_mes }}</div>
+      </div>
+
+      <div class="result-card">
+        <div class="k">Receita bruta por hora</div>
+        <div class="v">R$ {{ "%.2f"|format(resultado.receita_por_hora_bruta) }}</div>
+      </div>
+    </div>
+
+    <div class="alert-box tip" style="margin-top:16px;">
+      💡 Use esse preço como piso de sustentabilidade. Depois, compare com a tabela e ajuste por região, especialidade, demanda e modelo de trabalho.
+    </div>
+  {% else %}
+    <div class="alert-box warning">
+      {{ resultado.erro }}
+    </div>
+  {% endif %}
+</section>
+{% endif %}
+
+{% endblock %}

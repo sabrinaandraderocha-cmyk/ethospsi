@@ -3,45 +3,44 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>{{ app_name }}</title>
+  <title>{{ app_name or "EthosPsi" }}</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-
   <div class="container">
-    
+
     <header class="topbar">
       <div class="brand">
-        <div class="logo-symbol">Ψ</div>
+        <div class="logo-symbol" aria-hidden="true">Ψ</div>
         <div class="brand-text">
-          <h1>{{ app_name }}</h1>
-          <p>Assistente Ética para Psicólogos</p>
+          <h1>{{ app_name or "EthosPsi" }}</h1>
+          <p>Consulta rápida e apoio informacional</p>
         </div>
       </div>
-      
+
       <nav class="nav">
         <a class="navlink" href="{{ url_for('home') }}">Consulta</a>
+        <a class="navlink" href="{{ url_for('recursos') }}">Recursos</a>
+        <a class="navlink" href="{{ url_for('contrato') }}">Contrato</a>
+        <a class="navlink" href="{{ url_for('honorarios') }}">Honorários</a>
         <a class="navlink" href="{{ url_for('admin') }}">Admin</a>
       </nav>
     </header>
 
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
-        {% for category, message in messages %}
-          <div class="flash {{ category }}">{{ message }}</div>
+        {% for cat, msg in messages %}
+          <div class="flash">{{ msg }}</div>
         {% endfor %}
       {% endif %}
     {% endwith %}
 
-    <main>
-      {% block content %}{% endblock %}
-    </main>
+    {% block content %}{% endblock %}
 
     <footer>
-       EthosPsi - Baseado no Código de Ética Profissional. <br>
-       Ferramenta de apoio. Não substitui consulta oficial ao CRP.
+      <p>EthosPsi é ferramenta de apoio informacional. Consulte sempre fontes oficiais.</p>
     </footer>
-  </div>
 
+  </div>
 </body>
 </html>

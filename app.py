@@ -15,7 +15,7 @@ from flask import (
 # =====================================================
 APP_NAME = "EthosPsi"
 app = Flask(__name__)
-app.config["SECRET_KEY"] = "dev-ethospsi-secret-final-v3"
+app.config["SECRET_KEY"] = "dev-ethospsi-secret-master-v4"
 
 DATA_DIR = os.path.abspath("./data")
 os.makedirs(DATA_DIR, exist_ok=True)
@@ -28,195 +28,404 @@ CHUNK_OVERLAP = 100
 _WORD_RE = re.compile(r"[\wÀ-ÿ']+", re.UNICODE)
 
 # =====================================================
-# RESPOSTAS PRONTAS (CURADORIA CLÍNICA EXPANDIDA)
+# RESPOSTAS PRONTAS (BASE DE CONHECIMENTO CLÍNICO/ÉTICO)
 # =====================================================
 RESPOSTAS_PRONTAS = {
-    # --- RELAÇÕES E VÍNCULOS ---
-    "Posso atender familiares de ex-pacientes?": """
+    # ---------------------------------------------------------
+    # 🧭 SIGILO PROFISSIONAL
+    # ---------------------------------------------------------
+    "Até onde vai o sigilo quando o paciente relata um comportamento ilegal?": """
     <div class="resposta-humanizada">
-        <h3>Pode atender, mas com muitas ressalvas éticas.</h3>
-        <p>Na prática clínica, <strong>não é recomendado</strong> atender familiares próximos (pais, filhos, irmãos, cônjuge). Mesmo que não seja explicitamente "proibido", fere o princípio da neutralidade e do sigilo.</p>
-        <div class="alert-box warning">
-            <strong>Risco:</strong> Confusão de papéis, quebra involuntária de sigilo e prejuízo ao vínculo terapêutico. Se puder, encaminhe.
-        </div>
+        <h3>O sigilo protege o relato, não o crime. Mas cuidado.</h3>
+        <p>Se o paciente relata um crime <strong>já cometido</strong> (ex: roubou algo no passado), o sigilo é absoluto. O psicólogo não é policial nem juiz.</p>
+        <p>O sigilo só pode (e deve) ser quebrado se houver <strong>risco iminente e grave</strong> à vida ou integridade física do paciente ou de terceiros (Art. 10), como em casos de violência contra criança, idoso ou ameaça concreta de homicídio/suicídio.</p>
     </div>
     """,
 
-    "Posso ir a eventos sociais em que meu paciente esta?": """
+    "O que fazer quando o paciente pede que você não registre algo no prontuário?": """
     <div class="resposta-humanizada">
-        <h3>Zona de Cuidado: Evite Relações Duplas.</h3>
-        <p>Se for um evento grande (show, palestra), tudo bem. Se for íntimo (aniversário, jantar na casa de amigos em comum), sua presença pode inibir o paciente ou configurar uma relação pessoal que interfere na profissional.</p>
-        <p><strong>Dica:</strong> Se o encontro for inevitável, mantenha postura discreta e profissional. Não aja como "amiga" íntima.</p>
-    </div>
-    """,
-
-    "Devo cumprimentar meu paciente na rua?": """
-    <div class="resposta-humanizada">
-        <h3>Regra de Ouro: Espere o paciente reagir.</h3>
-        <p>O sigilo sobre a existência do tratamento é direito dele. Se você cumprimentar primeiro, pode expor para quem estiver com ele que vocês se conhecem (e de onde).</p>
+        <h3>O registro é dever do psicólogo, não escolha do paciente.</h3>
+        <p>Você é obrigada pela Resolução CFP 01/2009 a manter o prontuário atualizado. Porém, você pode usar a técnica da <strong>generalidade ética</strong>.</p>
         <div class="alert-box tip">
-            💡 <strong>Combine antes:</strong> "Se nos encontrarmos na rua, vou esperar você me dar oi para proteger sua privacidade, ok?"
+            💡 <strong>Como fazer:</strong> Em vez de escrever "Paciente traiu a esposa com a vizinha", registre "Paciente trouxe questões relativas a conflitos conjugais e extraconjugais". Você registra o tema técnico sem expor a intimidade desnecessária.
         </div>
     </div>
     """,
 
-    "Posso aceitar presentes de um paciente?": """
+    "Como agir quando um familiar liga pedindo informações sobre o paciente?": """
     <div class="resposta-humanizada">
-        <h3>Depende do significado e do valor.</h3>
-        <p>O Código de Ética (Art. 2º, 'o') veda receber vantagens além dos honorários. Porém, na clínica, pequenos presentes simbólicos (um desenho, um bombom) podem fazer parte do vínculo.</p>
-        <p><strong>Analise:</strong> É uma tentativa de compra/sedução? É algo caro? Se for valioso, devolva explicando a ética. Se for simbólico, pode aceitar como manejo clínico.</p>
-    </div>
-    """,
-    
-    "Posso contar sobre a minha vida para o paciente?": """
-    <div class="resposta-humanizada">
-        <h3>Cuidado com a Auto-revelação (Self-disclosure).</h3>
-        <p>A terapia é sobre o paciente, não sobre você. Falar da sua vida só é válido se tiver um <strong>objetivo terapêutico claro</strong> para ajudar aquele paciente naquele momento.</p>
-        <p>Se for para desabafar ou "ficar amigo", é erro técnico e ético.</p>
+        <h3>Proteja a existência do tratamento.</h3>
+        <p>Se você confirmar que a pessoa é paciente, já está quebrando o sigilo. A resposta padrão deve ser: <em>"Por questões éticas e de sigilo, não posso confirmar se essa pessoa é atendida aqui ou passar qualquer informação."</em></p>
+        <p>Se o paciente for criança/adolescente, você fala com os responsáveis, mas apenas o estritamente necessário (Art. 13).</p>
     </div>
     """,
 
-    # --- PRONTUÁRIOS E DOCUMENTOS ---
-    "Eu sou obrigada fazer anotações?": """
+    "O sigilo pode ser mantido mesmo diante de risco potencial e ainda incerto?": """
     <div class="resposta-humanizada">
-        <h3>Sim, é obrigatório.</h3>
-        <p>Manter prontuário não é opcional. É dever do psicólogo (Resolução CFP 01/2009) para garantir a continuidade do serviço e a defesa técnica em caso de processos.</p>
-        <p><strong>O que anotar?</strong> Evolução, datas, procedimentos e encaminhamentos. Não precisa ser a transcrição da fala, mas a síntese técnica.</p>
+        <h3>Sim. O risco precisa ser atual e grave.</h3>
+        <p>A quebra de sigilo (Art. 10) é baseada na busca do <strong>menor prejuízo</strong>. Se o risco é apenas uma hipótese vaga ("tenho vontade de sumir"), trabalha-se isso em sessão.</p>
+        <p>A quebra ocorre quando o risco se torna <strong>iminente</strong> (planejamento, meios acessíveis, intenção clara). Na dúvida, recorra à supervisão ou COF sem identificar o paciente.</p>
     </div>
     """,
 
-    "O que é obrigatório eu anotar no prontuário?": """
+    "Como manejar o sigilo em atendimentos online feitos em ambiente não controlado?": """
     <div class="resposta-humanizada">
-        <h3>Itens Obrigatórios (Resolução CFP 01/2009):</h3>
+        <h3>Contrato e tecnologia.</h3>
+        <p>Oriente o paciente a usar fones de ouvido e estar em local privado. Se ele estiver em local público ou com família perto, é dever do psicólogo interromper ou remarcar a sessão para proteger o sigilo dele, mesmo que ele diga que "não tem problema".</p>
+    </div>
+    """,
+
+    "É ético discutir um caso clínico em supervisão sem autorização explícita do paciente?": """
+    <div class="resposta-humanizada">
+        <h3>Sim, desde que com anonimato total.</h3>
+        <p>A supervisão visa aprimorar o atendimento (Art. 1º 'c'). Você não precisa pedir permissão para se qualificar, mas tem o dever ético de <strong>omitir qualquer dado identificável</strong> (nome, empresa específica, cidade pequena) para que o supervisor foque no manejo, não na pessoa.</p>
+    </div>
+    """,
+
+    "O que fazer quando o paciente revela algo grave sobre terceiros?": """
+    <div class="resposta-humanizada">
+        <h3>Avalie a vulnerabilidade da vítima.</h3>
+        <p>Se o terceiro for criança, adolescente ou idoso sofrendo violência (ECA/Estatuto do Idoso), a notificação é compulsória e se sobrepõe ao sigilo. Se for um conflito entre adultos capazes, o sigilo prevalece e o trabalho é clínico, visando a responsabilização do paciente.</p>
+    </div>
+    """,
+
+    "Como lidar com pedidos de prontuário feitos por advogados?": """
+    <div class="resposta-humanizada">
+        <h3>O prontuário pertence ao paciente, não ao advogado.</h3>
+        <p>Você só fornece documentos se o <strong>próprio paciente</strong> solicitar. Se o advogado pedir, diga que precisa da solicitação direta do paciente.</p>
+        <p>Se for ordem judicial, entregue em envelope lacrado marcado como "Confidencial".</p>
+    </div>
+    """,
+
+    "Existe diferença ética entre sigilo clínico e sigilo institucional?": """
+    <div class="resposta-humanizada">
+        <h3>O sigilo é do psicólogo, mas o escopo muda.</h3>
+        <p>Em instituições (hospitais, empresas), você pode compartilhar informações com a equipe multiprofissional, mas <strong>apenas o necessário</strong> para a condução conjunta do caso (Art. 6º). Detalhes íntimos que não afetam a conduta médica/escolar devem ficar restritos ao psicólogo.</p>
+    </div>
+    """,
+
+    "O que caracteriza quebra de sigilo “necessária” e “excessiva”?": """
+    <div class="resposta-humanizada">
+        <h3>O critério é o "Menor Prejuízo".</h3>
         <ul>
-            <li>Identificação do usuário;</li>
-            <li>Avaliação de demanda e definição de objetivos;</li>
-            <li>Registro da evolução (datas e síntese dos atendimentos);</li>
-            <li>Procedimentos técnico-científicos adotados;</li>
-            <li>Encaminhamentos ou encerramento.</li>
+            <li><strong>Necessária:</strong> Informar a família que há risco de suicídio.</li>
+            <li><strong>Excessiva:</strong> Informar a família sobre o risco E contar detalhes de mágoas, traições ou fantasias que não têm relação direta com a proteção da vida.</li>
         </ul>
     </div>
     """,
 
-    "Posso usar prontuários de forma digital?": """
+    # ---------------------------------------------------------
+    # ⚖️ LIMITES DA ATUAÇÃO PROFISSIONAL
+    # ---------------------------------------------------------
+    "Quando uma orientação ultrapassa o limite da psicoterapia e vira aconselhamento indevido?": """
     <div class="resposta-humanizada">
-        <h3>Sim, com segurança garantida.</h3>
-        <p>Você pode abolir o papel, desde que o sistema garanta:</p>
-        <ul>
-            <li><strong>Confidencialidade:</strong> Senha forte e criptografia.</li>
-            <li><strong>Autenticidade:</strong> De preferência com Assinatura Digital (e-CPF/ICP-Brasil).</li>
-            <li><strong>Permanência:</strong> Backup seguro por 5 anos.</li>
-        </ul>
-        <div class="alert-box warning">Nota simples no celular ou Word sem senha não servem como prontuário seguro.</div>
+        <h3>Psicólogo promove autonomia, não decide pelo outro.</h3>
+        <p>Vira "conselho indevido" quando você diz o que o paciente <em>deve</em> fazer ("Separe dele", "Peça demissão"). O papel é ajudar o paciente a entender as consequências e decidir por si mesmo.</p>
     </div>
     """,
 
-    "Como devo guardar prontuários antigos?": """
+    "É ético sugerir decisões práticas de vida ao paciente?": """
     <div class="resposta-humanizada">
-        <h3>Prazo Mínimo: 5 Anos.</h3>
-        <p>Você deve guardar os documentos por no mínimo 5 anos, mantendo o sigilo absoluto (arquivo trancado ou digital criptografado).</p>
+        <h3>Não.</h3>
+        <p>Salvo em situações de risco de vida, sugerir decisões práticas ("Venda sua casa", "Mude de emprego") cria dependência e retira a responsabilidade do sujeito. Trabalhe para que <em>ele</em> chegue à conclusão.</p>
     </div>
     """,
 
-    "O que fazer se o juiz pedir o prontuário?": """
+    "Como reconhecer quando o psicólogo está atuando fora de sua competência técnica?": """
     <div class="resposta-humanizada">
-        <h3>Não entregue tudo automaticamente!</h3>
-        <p>O sigilo protege o paciente. Se intimada:</p>
+        <h3>Autoanálise constante.</h3>
+        <p>Se você se sente perdido, angustiado antes da sessão, ou percebe que o caso não evolui porque falta base teórica específica (ex: Transtorno Alimentar grave, Autismo), você deve encaminhar. Insistir sem preparo é imprudência (Art. 1º 'b').</p>
+    </div>
+    """,
+
+    "O que fazer quando o paciente pede um parecer para fins judiciais?": """
+    <div class="resposta-humanizada">
+        <h3>Cuidado: Não misture papéis.</h3>
+        <p>Se você é psicoterapeuta da pessoa, não deve atuar como perito dela (Resolução CFP 08/2010). O laudo assistencial é parcial (baseado no relato do paciente). Explique a diferença e, se necessário, faça apenas um relatório informativo de acompanhamento, nunca um laudo pericial conclusivo.</p>
+    </div>
+    """,
+
+    "É ético atender demandas que exigem formação que o profissional ainda não possui?": """
+    <div class="resposta-humanizada">
+        <h3>Não. É vedado pelo Art. 1º 'b'.</h3>
+        <p>Você só deve assumir responsabilidades para as quais esteja capacitado pessoal, teórica e tecnicamente. Se não sabe manejar, encaminhe.</p>
+    </div>
+    """,
+
+    "Quando encaminhar deixa de ser opção e se torna obrigação ética?": """
+    <div class="resposta-humanizada">
+        <h3>Em três situações principais:</h3>
         <ol>
-            <li>Tente responder via <strong>Relatório/Laudo</strong> respondendo apenas aos quesitos do juiz.</li>
-            <li>Se obrigada a entregar o prontuário bruto, lacre-o e peça <strong>Segredo de Justiça</strong>.</li>
+            <li>Falta de competência técnica para a demanda.</li>
+            <li>Conflito pessoal que impede a neutralidade (ex: paciente agressor sexual e você foi vítima recentemente).</li>
+            <li>Ausência de evolução terapêutica prolongada.</li>
         </ol>
-        <p><em>Dica: Consulte a COF do seu CRP com o ofício em mãos.</em></p>
     </div>
     """,
 
-    # --- SIGILO E FAMÍLIA ---
-    "Ao dar devolutiva para os pais apos atendimento devo contar tudo que a criança disse?": """
+    "É ético atender um paciente apenas por necessidade financeira?": """
     <div class="resposta-humanizada">
-        <h3>Não! A criança também tem direito ao sigilo.</h3>
-        <p>O Art. 13 do Código de Ética é claro: aos responsáveis, comunica-se apenas o <strong>estritamente essencial</strong> para promover medidas em benefício da criança.</p>
-        <p><strong>O que falar?</strong> Riscos, orientações de manejo, dinâmicas gerais. Não conte segredos íntimos que não ofereçam risco, senão você quebra a confiança da criança em você.</p>
+        <h3>Não.</h3>
+        <p>Prolongar tratamento desnecessariamente (Art. 2º 'n') ou aceitar casos que você não pode ajudar apenas pelo dinheiro fere a integridade da profissão e lesa o paciente.</p>
     </div>
     """,
 
-    "O que posso compartilhar em uma supervisão?": """
+    "Até onde o psicólogo pode intervir em conflitos familiares?": """
     <div class="resposta-humanizada">
-        <h3>Apenas o caso clínico, nunca a identidade.</h3>
-        <p>A supervisão é fundamental para a qualidade (Art. 1º 'c'). Você pode e deve discutir o manejo, mas deve <strong>anonimizar</strong> o paciente.</p>
-        <p>Não diga nome, local de trabalho específico ou detalhes que permitam ao supervisor identificar quem é a pessoa socialmente.</p>
+        <h3>Apenas no que tange ao seu paciente.</h3>
+        <p>Você pode convidar familiares para sessões pontuais de orientação (com autorização do paciente), mas não deve agir como juiz, advogado ou "levar recados". O foco é a dinâmica relacional, não quem tem razão.</p>
     </div>
     """,
 
-    "Preciso ter um contato emergencial para todo paciente?": """
+    "O que caracteriza exercício irregular da profissão dentro da clínica?": """
     <div class="resposta-humanizada">
-        <h3>Sim, é uma medida de segurança recomendada.</h3>
-        <p>Especialmente em casos com risco de suicídio, surto ou vulnerabilidade. Tenha o contato anotado e combine com o paciente em que situações extremas aquele contato será acionado (quebra de sigilo por risco de vida, Art. 10).</p>
+        <h3>Uso de técnicas não reconhecidas.</h3>
+        <p>Usar Tarô, Florais, Reiki, Constelação Familiar (não reconhecida pelo CFP) ou cunho religioso dentro da sessão de psicologia é falta ética (Art. 1º 'c' e Art. 2º 'f').</p>
     </div>
     """,
 
-    # --- QUESTÕES ÉTICAS E SOCIAIS ---
-    "Posso atender de graça?": """
+    "A neutralidade é uma exigência ética ou um mito clínico?": """
     <div class="resposta-humanizada">
-        <h3>Pode, mas cuide do enquadre.</h3>
-        <p>O atendimento pro bono (voluntário) é permitido e nobre. O que o Código veda é usar o preço baixo como propaganda ("Sessão a R$ 10,00!") para captar clientela de forma desleal.</p>
-        <p><strong>Dica:</strong> Se for atender de graça, mantenha o mesmo rigor, horário e comprometimento do atendimento pago. O contrato terapêutico deve ser claro.</p>
+        <h3>A neutralidade absoluta é um mito; a imparcialidade é dever.</h3>
+        <p>Você sente coisas, tem valores. A ética exige que você não atue <em>em função</em> desses valores pessoais, mas sim em prol da demanda do sujeito. Você acolhe sem julgar, mesmo que discorde internamente.</p>
     </div>
     """,
 
-    "Posso influenciar na orientação sexual do meu paciente?": """
+    # ---------------------------------------------------------
+    # 🔄 RELAÇÕES DUAIS E CONFLITOS
+    # ---------------------------------------------------------
+    "É ético atender amigos ou conhecidos?": """
     <div class="resposta-humanizada">
-        <h3>JAMAIS. Isso é infração ética grave.</h3>
-        <p><strong>Art. 2º 'b' do Código de Ética:</strong> É vedado ao psicólogo induzir a convicções de orientação sexual.</p>
-        <p>Além disso, a Resolução 01/99 proíbe qualquer tipo de "terapia de conversão" ou patologização da homossexualidade. O papel da psicologia é o acolhimento, nunca o julgamento ou tentativa de mudança da orientação.</p>
+        <h3>Não recomendado.</h3>
+        <p>A relação pessoal prévia contamina a transferência e a neutralidade. É uma relação dual que geralmente prejudica o andamento clínico e a amizade.</p>
     </div>
     """,
 
-    "Existe psicologia evangélica?": """
+    "O que caracteriza uma relação dual problemática?": """
     <div class="resposta-humanizada">
-        <h3>Não existe "Psicologia Cristã" como ciência.</h3>
-        <p>A Psicologia é uma ciência laica. Você pode ser cristã/evangélica, mas sua prática técnica não pode ser religiosa.</p>
-        <p><strong>Limites:</strong></p>
+        <h3>Quando há dois papéis simultâneos.</h3>
+        <p>Ex: Ser psicólogo e chefe; psicólogo e professor (avaliador); psicólogo e sócio. O poder ou interesse de uma relação interfere na isenção da outra.</p>
+    </div>
+    """,
+
+    "Como lidar quando o paciente começa a oferecer favores ou presentes?": """
+    <div class="resposta-humanizada">
+        <h3>Analise a função do ato.</h3>
+        <p>É gratidão? É sedução? É tentativa de compra? Recuse favores que gerem dívida simbólica ("posso consertar seu carro"). Presentes pequenos podem ser aceitos se a recusa for mais danosa, mas sempre analise o significado clínico.</p>
+    </div>
+    """,
+
+    "É ético manter contato com pacientes nas redes sociais?": """
+    <div class="resposta-humanizada">
+        <h3>Perfil Profissional: Sim. Perfil Pessoal: Evite.</h3>
+        <p>Seguir o paciente de volta no seu perfil íntimo expõe sua privacidade e quebra o enquadre. Mantenha as interações restritas ao campo profissional.</p>
+    </div>
+    """,
+
+    "O que fazer quando o psicólogo cruza socialmente com o paciente?": """
+    <div class="resposta-humanizada">
+        <h3>Discrição total.</h3>
+        <p>Não tome a iniciativa de cumprimentar efusivamente. Espere o paciente. Se ele não falar, respeite. Se falar, seja breve e cordial, sem entrar em temas terapêuticos.</p>
+    </div>
+    """,
+
+    "É possível uma relação terapêutica ética após uma relação prévia?": """
+    <div class="resposta-humanizada">
+        <h3>Muito difícil e arriscado.</h3>
+        <p>Se já houve intimidade, romance ou conflito, a imagem que o paciente tem de você já está formada e dificilmente permitirá a projeção necessária para a terapia.</p>
+    </div>
+    """,
+
+    "Como agir quando o paciente demonstra interesse afetivo ou sexual?": """
+    <div class="resposta-humanizada">
+        <h3>Manejo clínico rigoroso.</h3>
+        <p>Não corresponda, mas acolha como material de trabalho (transferência erótica). Ajude o paciente a entender o que esse desejo representa na terapia. Se ficar insustentável ou houver assédio, o encaminhamento é necessário.</p>
+    </div>
+    """,
+
+    "O que configura exploração da relação terapêutica?": """
+    <div class="resposta-humanizada">
+        <h3>Usar o paciente para benefício próprio.</h3>
+        <p>Ex: Pedir votos políticos, vender produtos (Tupperware/Hinode), pedir emprego para parentes ou usar a influência psicológica para obter vantagens sexuais (infração gravíssima).</p>
+    </div>
+    """,
+
+    "É ético atender familiares de ex-pacientes?": """
+    <div class="resposta-humanizada">
+        <h3>Zona de risco.</h3>
+        <p>Se o atendimento anterior foi recente ou envolveu dinâmicas familiares intensas, evite. O sigilo do ex-paciente pode ser comprometido pelo que o novo paciente trouxer.</p>
+    </div>
+    """,
+
+    "Como identificar conflitos de interesse sutis na prática clínica?": """
+    <div class="resposta-humanizada">
+        <h3>Sinais de alerta:</h3>
         <ul>
-            <li>Você deve respeitar a fé do paciente.</li>
-            <li>Você <strong>não pode</strong> pregar, orar durante a sessão (como técnica) ou tentar converter o paciente (Art. 2º 'b').</li>
+            <li>Você evita tocar em certos assuntos por medo de perder o paciente (financeiro).</li>
+            <li>Você se sente "devendo" algo ao paciente.</li>
+            <li>Você torce excessivamente por um desfecho na vida dele.</li>
         </ul>
     </div>
     """,
 
-    "É proíbido falar sobre religião nas sessões?": """
+    # ---------------------------------------------------------
+    # 💬 COMUNICAÇÃO, POSTURA E MANEJO
+    # ---------------------------------------------------------
+    "Existe limite ético para a autorrevelação do psicólogo?": """
     <div class="resposta-humanizada">
-        <h3>Falar SOBRE religião é permitido e necessário.</h3>
-        <p>Se a fé é importante para o paciente, ela faz parte da subjetividade dele e deve ser acolhida.</p>
-        <p><strong>O que é proibido:</strong> O psicólogo impor suas crenças, usar a sessão para catequizar ou julgar a fé do paciente com base em dogmas pessoais.</p>
+        <h3>Sim: O benefício do paciente.</h3>
+        <p>Falar de si só é válido se tiver objetivo terapêutico claro. Desabafar seus problemas, falar de suas conquistas por vaidade ou comparar dores ("eu também sofri isso") geralmente desloca o foco e é falha técnica.</p>
     </div>
     """,
-    
-    "Posso divulgar o valor da sessão no Instagram?": """
+
+    "Quando o silêncio pode ser eticamente problemático?": """
     <div class="resposta-humanizada">
-        <h3>Pode informar, mas não prometer desconto.</h3>
-        <p>O preço não pode ser usado como chamariz promocional ("Promoção de Black Friday!"). Mas ter uma tabela de valores acessível ou responder quanto custa é transparência permitida.</p>
+        <h3>Quando é negligência ou punição.</h3>
+        <p>O silêncio técnico é ferramenta. O silêncio porque você não sabe o que fazer, está com sono ou irritado com o paciente, é abandono disfarçado.</p>
     </div>
     """,
-    
-    "Preciso de contrato para terapia online?": """
+
+    "Como manejar discordâncias de valores sem impor crenças pessoais?": """
     <div class="resposta-humanizada">
-        <h3>Sim, é fundamental.</h3>
-        <p>Estabeleça por escrito: sigilo, plataforma usada, o que acontece se a internet cair, política de faltas e contato de emergência.</p>
+        <h3>Validação e foco no sofrimento.</h3>
+        <p>Você não precisa concordar (ex: política, religião), precisa entender como aquilo funciona para o sujeito. Se o valor do paciente fere Direitos Humanos (ex: racismo), o psicólogo deve se posicionar conforme os Princípios Fundamentais, mas de forma clínica, não agressiva.</p>
+    </div>
+    """,
+
+    "É ético confrontar diretamente o paciente?": """
+    <div class="resposta-humanizada">
+        <h3>Sim, a confrontação técnica é válida.</h3>
+        <p>Confrontar contradições do discurso é trabalho. Ser agressivo, irônico ou moralista não é confrontação, é desrespeito.</p>
+    </div>
+    """,
+
+    "Como agir quando o paciente questiona a competência do psicólogo?": """
+    <div class="resposta-humanizada">
+        <h3>Não se defenda atacando.</h3>
+        <p>Acolha a dúvida. Pergunte o que gerou essa sensação. Pode ser uma resistência do paciente ou uma falha real sua. Analise com humildade e, se necessário, supervisione.</p>
+    </div>
+    """,
+
+    "O que caracteriza uma postura clínica respeitosa?": """
+    <div class="resposta-humanizada">
+        <h3>Pontualidade, escuta ativa e ambiente adequado.</h3>
+        <p>Respeito vai além de "ser educado". É não desmarcar em cima da hora sem motivo, não atender mexendo no celular e garantir que ninguém ouça a sessão.</p>
+    </div>
+    """,
+
+    "É ético prolongar um processo terapêutico sem ganhos claros?": """
+    <div class="resposta-humanizada">
+        <h3>Não. É vedado (Art. 2º 'n').</h3>
+        <p>Se a terapia estagnou, discuta isso com o paciente. Proponha novos objetivos, dê alta ou encaminhe.</p>
+    </div>
+    """,
+
+    "Quando a frustração do psicólogo interfere eticamente na clínica?": """
+    <div class="resposta-humanizada">
+        <h3>Quando vira atuação (acting-out).</h3>
+        <p>Se você começa a ser ríspido, esquecer sessões ou "desistir" internamente do paciente por frustração, você está prejudicando o cuidado. Busque supervisão urgente.</p>
+    </div>
+    """,
+
+    "O que fazer quando o psicólogo percebe antipatia pelo paciente?": """
+    <div class="resposta-humanizada">
+        <h3>Supervisão e Análise Pessoal.</h3>
+        <p>Se o sentimento impedir a empatia e o acolhimento, é mais ético encaminhar do que atender "mal".</p>
+    </div>
+    """,
+
+    "Como manejar erros cometidos durante o processo terapêutico?": """
+    <div class="resposta-humanizada">
+        <h3>Transparência e reparação.</h3>
+        <p>Se errou (esqueceu sessão, falou algo inadequado), reconheça, peça desculpas e analise o impacto disso na relação. A onipotência de "não errar" é prejudicial.</p>
+    </div>
+    """,
+
+    # ---------------------------------------------------------
+    # 🧠 AUTONOMIA, RESPONSABILIDADE E CUIDADO
+    # ---------------------------------------------------------
+    "Como respeitar a autonomia do paciente em escolhas autodestrutivas?": """
+    <div class="resposta-humanizada">
+        <h3>O limite é a capacidade civil e o risco de vida.</h3>
+        <p>Se o paciente é capaz e não há risco iminente de morte, ele tem direito a fazer escolhas ruins (ex: gastar todo dinheiro, manter relação tóxica). O psicólogo aponta, mas não proíbe.</p>
+    </div>
+    """,
+
+    "Quando o cuidado justifica uma intervenção mais diretiva?": """
+    <div class="resposta-humanizada">
+        <h3>Em crises e perda de crítica.</h3>
+        <p>Surto psicótico, risco de suicídio, abuso de substâncias com risco vital. Nesses casos, a proteção à vida se sobrepõe temporariamente à autonomia.</p>
+    </div>
+    """,
+
+    "É ético continuar atendendo um paciente que não deseja mudanças?": """
+    <div class="resposta-humanizada">
+        <h3>Depende do contrato.</h3>
+        <p>Às vezes a demanda é apenas suporte/manutenção, não mudança radical. Se isso for acordado, ok. Se o psicólogo sente que não há função terapêutica, deve discutir a alta.</p>
+    </div>
+    """,
+
+    "Como lidar com demandas que contrariam princípios pessoais do psicólogo?": """
+    <div class="resposta-humanizada">
+        <h3>Encaminhamento responsável.</h3>
+        <p>Se você não consegue acolher (ex: questões de aborto, religião, identidade de gênero) por convicção pessoal, reconheça sua limitação e encaminhe para alguém que acolha sem julgamento.</p>
+    </div>
+    """,
+
+    "O que caracteriza negligência ética na clínica?": """
+    <div class="resposta-humanizada">
+        <h3>Omissão de cuidado.</h3>
+        <p>Ignorar risco de suicídio, não fazer prontuário, faltar sem avisar, deixar o paciente sem respaldo em crises.</p>
+    </div>
+    """,
+
+    "Quando a desistência do atendimento é eticamente justificável?": """
+    <div class="resposta-humanizada">
+        <h3>Quando há ameaça/violência ou limite técnico.</h3>
+        <p>O psicólogo não é obrigado a atender quem o agride, ameaça ou assedia. Nesses casos, encerre o contrato garantindo apenas a segurança do encaminhamento.</p>
+    </div>
+    """,
+
+    "Como lidar com faltas e inadimplência sem violar a ética?": """
+    <div class="resposta-humanizada">
+        <h3>Contrato claro desde o início.</h3>
+        <p>Cobrar sessões faltadas é ético se foi combinado. Cobrar dívidas deve ser feito de forma respeitosa, sem expor o paciente a vexame (Art. 4º).</p>
+    </div>
+    """,
+
+    "O que é responsabilidade ética na clínica além do Código?": """
+    <div class="resposta-humanizada">
+        <h3>Compromisso social e Direitos Humanos.</h3>
+        <p>É combater preconceitos, entender o contexto social do sofrimento e não patologizar a pobreza ou a diversidade.</p>
+    </div>
+    """,
+
+    "É ético atender pacientes em sofrimento intenso sem suporte de rede?": """
+    <div class="resposta-humanizada">
+        <h3>É desafiador, mas ético.</h3>
+        <p>O psicólogo deve ajudar a construir essa rede (CAPS, Assistência Social, grupos). Não abandone o paciente por ser um "caso difícil", mas não tente ser a única rede dele.</p>
+    </div>
+    """,
+
+    "Como a ética se manifesta nas pequenas decisões cotidianas da clínica?": """
+    <div class="resposta-humanizada">
+        <h3>Nos detalhes.</h3>
+        <p>Está em responder uma mensagem com cuidado, em ter uma sala com isolamento acústico real, em guardar o prontuário na chave, em estudar o caso antes da sessão.</p>
     </div>
     """
 }
 
-# Lista atualizada de botões para aparecer na tela
+# Lista atualizada de botões (Mix de temas para atrair o usuário)
 QUICK_QUESTIONS = [
+    "Até onde vai o sigilo em caso de crime?",
+    "O que fazer se o juiz pedir o prontuário?",
     "Posso atender familiares de ex-pacientes?",
     "Eu sou obrigada fazer anotações?",
     "Posso atender de graça?",
-    "Ao dar devolutiva para os pais devo contar tudo?",
-    "Posso aceitar presentes de um paciente?",
-    "Posso influenciar na orientação sexual?",
-    "Existe psicologia evangélica?",
-    "Devo cumprimentar meu paciente na rua?",
-    "O que fazer se o juiz pedir o prontuário?"
+    "É ético atender amigos?",
+    "Como lidar com inadimplência?",
+    "Posso aceitar presentes?",
+    "Paciente pediu para não registrar no prontuário"
 ]
 
 # =====================================================
@@ -227,18 +436,17 @@ PRINCÍPIOS FUNDAMENTAIS
 I. O psicólogo baseará o seu trabalho no respeito e na promoção da liberdade, da dignidade, da igualdade e da integridade do ser humano.
 II. O psicólogo trabalhará visando promover a saúde e a qualidade de vida.
 DAS RESPONSABILIDADES DO PSICÓLOGO - Art. 1º São deveres fundamentais:
+b) Assumir responsabilidades profissionais somente por atividades para as quais esteja capacitado pessoal, teórica e tecnicamente.
 c) Prestar serviços psicológicos de qualidade, utilizando princípios fundamentados na ciência psicológica, na ética e na legislação.
 j) Ter, para com o trabalho dos psicólogos e de outros profissionais, respeito, consideração e solidariedade.
 Art. 2º Ao psicólogo é vedado:
 a) Praticar ou ser conivente com quaisquer atos que caracterizem negligência, discriminação, exploração, violência, crueldade ou opressão.
 b) Induzir a convicções políticas, filosóficas, morais, ideológicas, religiosas, de orientação sexual ou a qualquer tipo de preconceito.
-f) Prestar serviços ou vincular o título de psicólogo a serviços de atendimento psicológico cujos procedimentos, técnicas e meios não estejam regulamentados ou reconhecidos pela profissão.
 j) Estabelecer com a pessoa atendida, familiar ou terceiro, relação que possa interferir negativamente nos objetivos do serviço prestado.
-o) Receber, pagar remuneração ou porcentagem por encaminhamento de serviços.
-q) Realizar diagnósticos, divulgar procedimentos ou apresentar resultados em meios de comunicação de forma a expor pessoas.
+n) Prolongar, desnecessariamente, a prestação de serviços profissionais.
 SIGILO PROFISSIONAL
 Art. 9º - É dever do psicólogo respeitar o sigilo profissional a fim de proteger, por meio da confidencialidade, a intimidade das pessoas.
-Art. 13 - No atendimento à criança, ao adolescente ou ao interdito, deve ser comunicado aos responsáveis o estritamente essencial para se promoverem medidas em seu benefício.
+Art. 10 - Nas situações em que se configure conflito entre as exigências decorrentes do disposto no Art. 9º e as afirmações dos princípios fundamentais deste Código, excetuando-se os casos previstos em lei, o psicólogo poderá decidir pela quebra de sigilo, baseando sua decisão na busca do menor prejuízo.
 """
 
 # =====================================================
@@ -347,19 +555,24 @@ def home():
             if q in RESPOSTAS_PRONTAS:
                 answer = RESPOSTAS_PRONTAS[q]
             
-            # B) Tenta Match Parcial (Se o usuário digitar algo parecido com as perguntas prontas)
+            # B) Tenta Match Parcial (Lógica de aproximação)
             else:
                 found_partial = False
                 for key, val in RESPOSTAS_PRONTAS.items():
-                    # Se 80% das palavras da chave estiverem na pergunta do usuário (lógica simples)
+                    # Se houver muitas palavras em comum, assume que é a mesma pergunta
                     key_words = set(key.lower().replace("?","").split())
                     q_words = set(q.lower().replace("?","").split())
-                    if len(key_words.intersection(q_words)) >= len(key_words) * 0.7:
+                    
+                    # Interseção de palavras significativas
+                    common = key_words.intersection(q_words)
+                    
+                    # Se coincidir mais de 60% das palavras da chave
+                    if len(common) >= len(key_words) * 0.6:
                          answer = val
                          found_partial = True
                          break
                 
-                # C) Busca Genérica no Texto
+                # C) Busca Genérica no Texto (Fallback)
                 if not found_partial:
                     hits = simple_search(q)
                     if hits:
@@ -367,19 +580,19 @@ def home():
                         answer = f"""
                         <div class="resposta-humanizada">
                             <h3>Resultados da Busca</h3>
-                            <p>Não encontrei uma resposta exata para sua dúvida, mas veja o que o Código diz sobre temas relacionados:</p>
+                            <p>Não encontrei uma resposta pronta exata, mas veja o que o Código diz sobre temas relacionados:</p>
                             {html_hits}
-                            <div class="alert-box tip">💡 Tente simplificar a pergunta ou consulte os botões de sugestão.</div>
+                            <div class="alert-box tip">💡 Tente usar os botões de sugestão para respostas mais completas.</div>
                         </div>
                         """
                     else:
                         answer = """
                         <div class="resposta-humanizada">
-                            <h3>🤔 Dúvida complexa...</h3>
+                            <h3>🤔 Dúvida não encontrada.</h3>
                             <div class="alert-box warning">
                                 Não encontrei uma resposta específica no meu banco de dados atual.
                             </div>
-                            <p>Tente reformular usando termos como: <strong>"sigilo"</strong>, <strong>"prontuário"</strong>, <strong>"família"</strong> ou <strong>"religião"</strong>.</p>
+                            <p>Tente reformular ou clique em um dos botões abaixo.</p>
                         </div>
                         """
             

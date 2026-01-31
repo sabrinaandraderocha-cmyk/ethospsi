@@ -5,42 +5,36 @@
 <div class="ethical-warning">
   <strong>⚠️ Aviso Importante:</strong>
   <ul>
-    <li>Este sistema é para <strong>consulta rápida e apoio</strong>. Ele NÃO substitui a leitura do Código de Ética nem a consulta oficial ao <strong>CFP</strong> ou ao seu CRP.</li>
-    <li><strong>Privacidade:</strong> As perguntas não são usadas para treinar IAs externas. Os dados ficam apenas no seu histórico local.</li>
+    <li>Este sistema é apoio e consulta rápida. Não substitui o Código de Ética ou o CRP.</li>
+    <li>Dados ficam apenas no seu histórico local.</li>
   </ul>
 </div>
 
 <section class="card">
-  <div style="margin-bottom: 18px;">
+  <div style="margin-bottom: 20px;">
     <h2 style="margin:0;">Consulta Ética</h2>
-    <p style="margin:6px 0 0 0; color:#64748b; font-size:0.92rem;">
-      Selecione uma dúvida abaixo para ver a orientação embasada.
-    </p>
+    <p style="color:#64748b; margin-top: 5px;">Selecione uma dúvida abaixo:</p>
   </div>
 
-  {% if questions and questions|length > 0 %}
-    <div class="quick-questions">
-      <div class="quick-grid">
-        {% for q in questions %}
-          <form method="post" style="margin:0;">
-            <input type="hidden" name="q" value="{{ q.text }}">
-            <button class="quick-btn" type="submit">
-              <span class="dot dot-green"></span>
-              <span class="quick-text">{{ q.text }}</span>
-            </button>
-          </form>
-        {% endfor %}
-      </div>
+  {% if questions %}
+    <div class="quick-questions-container">
+      {% for q in questions %}
+        <form method="post" class="quick-form">
+          <input type="hidden" name="q" value="{{ q.text }}">
+          <button class="quick-btn" type="submit">
+            <span class="dot"></span>
+            {{ q.text }}
+          </button>
+        </form>
+      {% endfor %}
     </div>
   {% else %}
-    <div class="muted-box" style="padding: 20px; text-align: center; color: #94a3b8; background: #f8fafc; border-radius: 8px;">
-      Nenhuma pergunta cadastrada no momento.
-    </div>
+    <p style="color:#94a3b8; text-align:center;">Nenhuma pergunta carregada.</p>
   {% endif %}
 
-  <form method="post" style="margin-top: 18px; text-align: right;">
-    <button class="btn-action" type="submit" name="load_bases" value="1" title="Forçar recarga do banco de dados">
-      ↻ Atualizar Base
+  <form method="post" style="margin-top: 20px; text-align: right;">
+    <button class="btn-action" type="submit" name="load_bases" value="1">
+      Atualizar Base
     </button>
   </form>
 
@@ -52,43 +46,28 @@
 </section>
 
 <section class="card">
-  <h3 style="margin-bottom: 5px;">Atalhos úteis</h3>
-  <p style="color:#64748b; font-size:0.9rem; margin-bottom: 0;">Acesso rápido às ferramentas administrativas.</p>
-  
-  <div class="shortcuts-grid">
-    <a href="{{ url_for('contrato') }}" class="btn-shortcut">
-      Gerar Contrato
-    </a>
-
-    <a href="{{ url_for('honorarios') }}" class="btn-shortcut">
-      Calculadora
-    </a>
-
-    <a href="{{ url_for('politicas') }}" class="btn-shortcut">
-      Políticas
-    </a>
-
-    <a href="{{ url_for('rede') }}" class="btn-shortcut">
-      Rede
-    </a>
+  <h3>Atalhos úteis</h3>
+  <div class="shortcuts-container">
+    <a href="{{ url_for('contrato') }}" class="btn-shortcut">Gerar Contrato</a>
+    <a href="{{ url_for('honorarios') }}" class="btn-shortcut">Calculadora</a>
+    <a href="{{ url_for('politicas') }}" class="btn-shortcut">Políticas</a>
+    <a href="{{ url_for('rede') }}" class="btn-shortcut">Rede</a>
   </div>
 </section>
 
 <section class="card">
   <h3>Histórico Recente</h3>
   {% if history %}
-    <ul class="history-list">
+    <ul style="list-style: none; padding: 0;">
       {% for h in history %}
-        <li class="history-item">
-          <small class="history-date">{{ h.created_at }}</small>
-          <div class="history-question">{{ h.question }}</div>
+        <li style="border-bottom: 1px solid #f1f5f9; padding: 10px 0;">
+          <small style="color:#94a3b8;">{{ h.created_at }}</small>
+          <div style="font-weight:600; color:#334155;">{{ h.question }}</div>
         </li>
       {% endfor %}
     </ul>
   {% else %}
-    <p style="color: #94a3b8; font-size: 0.9rem; text-align: center; padding: 20px;">
-      Nenhuma consulta recente.
-    </p>
+    <p style="color:#94a3b8;">Sem histórico recente.</p>
   {% endif %}
 </section>
 

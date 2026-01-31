@@ -13,32 +13,59 @@
   <div style="margin-bottom: 18px;">
     <h2 style="margin:0;">Consulta Ética</h2>
     <p style="margin:6px 0 0 0; color:#64748b; font-size:0.92rem;">
-      Clique em uma dúvida para consultar.
+      As perguntas com respostas objetivas ficam no topo.
     </p>
 
     <div class="seal-legend">
-      <span class="seal-item seal-green">🟢 Resposta direta</span>
-      <span class="seal-item seal-yellow">🟡 Zona de cuidado</span>
+      <span class="seal-item seal-green"><span class="dot dot-green"></span> Resposta objetiva</span>
+      <span class="seal-item seal-yellow"><span class="dot dot-yellow"></span> Zona de cuidado</span>
     </div>
   </div>
 
-  <div class="quick-questions">
-    <div class="quick-grid">
-      {% for qq in quick_questions %}
-        <form method="post" style="margin:0;">
-          <input type="hidden" name="q" value="{{ qq.text }}">
-          <button class="quick-btn" type="submit">
-            <div class="quick-seal {{ 'seal-green' if qq.seal == 'direct' else 'seal-yellow' }}">
-              {{ qq.label }}
-            </div>
-            <div class="quick-text">
-              {{ qq.text }}
-            </div>
-          </button>
-        </form>
-      {% endfor %}
+  <!-- BLOCO 1: RESPOSTAS OBJETIVAS -->
+  <h3 class="section-mini">Respostas objetivas</h3>
+  {% if direct_questions and direct_questions|length > 0 %}
+    <div class="quick-questions">
+      <div class="quick-grid">
+        {% for qq in direct_questions %}
+          <form method="post" style="margin:0;">
+            <input type="hidden" name="q" value="{{ qq.text }}">
+            <button class="quick-btn" type="submit">
+              <span class="dot dot-green"></span>
+              <span class="quick-text">{{ qq.text }}</span>
+            </button>
+          </form>
+        {% endfor %}
+      </div>
     </div>
-  </div>
+  {% else %}
+    <div class="muted-box">
+      Nenhuma pergunta com resposta objetiva foi cadastrada ainda.
+      Adicione respostas em <strong>RESPOSTAS_PRONTAS</strong> para aparecerem aqui.
+    </div>
+  {% endif %}
+
+  <!-- BLOCO 2: ZONA DE CUIDADO -->
+  <h3 class="section-mini" style="margin-top:18px;">Zona de cuidado</h3>
+  {% if care_questions and care_questions|length > 0 %}
+    <div class="quick-questions">
+      <div class="quick-grid">
+        {% for qq in care_questions %}
+          <form method="post" style="margin:0;">
+            <input type="hidden" name="q" value="{{ qq.text }}">
+            <button class="quick-btn" type="submit">
+              <span class="dot dot-yellow"></span>
+              <span class="quick-text">{{ qq.text }}</span>
+            </button>
+          </form>
+        {% endfor %}
+      </div>
+    </div>
+  {% else %}
+    <div class="muted-box">
+      Nenhuma pergunta na zona de cuidado.
+    </div>
+  {% endif %}
 
   <form method="post" style="margin-top: 18px;">
     <button class="btn-action" type="submit" name="load_bases" value="1">

@@ -339,3 +339,58 @@ footer { text-align: center; font-size: 0.82rem; color: #94a3b8; margin-top: 40p
 .quick-text{
   font-weight: 800;
 }
+/* ===== Legenda e pontinhos (sem texto em todos os cards) ===== */
+
+.seal-legend{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top: 10px;
+}
+
+.seal-item{
+  font-weight: 800;
+  font-size: 0.85rem;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dot{
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  display:inline-block;
+  flex: 0 0 10px;
+}
+
+.dot-green{ background:#22c55e; }
+.dot-yellow{ background:#f59e0b; }
+
+.section-mini{
+  margin: 10px 0 8px 0;
+  font-size: 0.95rem;
+  color: #0f172a;
+  font-weight: 900;
+}
+
+.quick-btn{
+  display:flex;
+  align-items:flex-start;
+  gap: 10px;
+}
+
+.muted-box{
+  margin-top: 10px;
+  padding: 12px 12px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  color: #64748b;
+  font-weight: 700;
+  font-size: 0.9rem;
+}

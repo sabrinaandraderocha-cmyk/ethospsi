@@ -35,40 +35,12 @@
 </section>
 
 <section class="card">
-  <h2 style="margin-top:0;">Kit Recém-Formadas</h2>
-
-  <div class="resource-card" style="margin-top:14px;">
-    <h3 style="margin-top:0;">Checklist de Enquadre</h3>
-    <ul>
-      <li>Política de atrasos e faltas (prazo de desmarcação)</li>
-      <li>Forma de pagamento e recibos</li>
-      <li>Canal de contato e limites (mensagens)</li>
-      <li>Protocolo de queda de internet (online)</li>
-      <li>Encaminhamentos, rede de apoio e limites de urgência</li>
-    </ul>
-  </div>
-
-  <div class="resource-card" style="margin-top:14px;">
-    <h3 style="margin-top:0;">Rotina mínima de prontuário</h3>
-    <ul>
-      <li>Data e presença</li>
-      <li>Síntese técnica breve</li>
-      <li>Intervenções e combinados</li>
-      <li>Encaminhamentos e encerramento</li>
-    </ul>
-  </div>
-
-  <div class="resource-card" style="margin-top:14px;">
-    <h3 style="margin-top:0;">Use a calculadora do app</h3>
-    <ul>
-      <li>Calcule o preço mínimo sustentável por sessão</li>
-      <li>Compare com a Tabela de Honorários</li>
-      <li>Ajuste por no-show, impostos e tempo administrativo</li>
-    </ul>
-    <div class="btn-row">
-      <a class="btn-action" href="{{ url_for('honorarios') }}">Abrir Calculadora</a>
-      <a class="btn-action" href="{{ url_for('contrato') }}">Gerar Contrato</a>
-    </div>
+  <h2 style="margin-top:0;">Atalhos úteis</h2>
+  <div class="btn-row">
+    <a class="btn-action" href="{{ url_for('contrato') }}">Gerar Contrato</a>
+    <a class="btn-action" href="{{ url_for('honorarios') }}">Calculadora</a>
+    <a class="btn-action" href="{{ url_for('politicas') }}">Políticas</a>
+    <a class="btn-action" href="{{ url_for('rede') }}">Rede</a>
   </div>
 </section>
 

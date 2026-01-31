@@ -22,7 +22,6 @@ DB_PATH = os.path.join(DATA_DIR, "ethospsi.sqlite3")
 
 # =====================================================
 # LINKS OFICIAIS
-# (mantive as chaves antigas para não quebrar templates)
 # =====================================================
 LINKS_OFICIAIS = {
     "codigo_etica_pdf_2025": "https://site.cfp.org.br/wp-content/uploads/2012/07/codigo-de-etica-psicologia.pdf",
@@ -57,8 +56,7 @@ Art. 13 - No atendimento à criança, ao adolescente ou ao interdito, deve ser c
 """
 
 # =====================================================
-# 100 DÚVIDAS ÉTICAS (BOTÕES)
-# (mantive sua lista integral)
+# 100 DÚVIDAS ÉTICAS (LISTA INTEGRAL)
 # =====================================================
 QUICK_QUESTIONS = [
     "Até onde vai o sigilo?",
@@ -197,8 +195,7 @@ def _make_answer(title: str, bullets: list[str], delicate: bool = True) -> str:
     """
 
 # =====================================================
-# RESPOSTAS ESPECÍFICAS (OVERRIDES IMPORTANTES)
-# (aqui entram as "fechadas" que você pediu explicitamente)
+# RESPOSTAS ESPECÍFICAS (OVERRIDES)
 # =====================================================
 OVERRIDES = {
     "Posso falar do caso com meu cônjuge ou amigo?": _make_answer(
@@ -252,9 +249,7 @@ OVERRIDES = {
 }
 
 # =====================================================
-# GERAÇÃO DE RESPOSTAS PARA TODAS AS QUESTÕES
-# - todas as perguntas terão resposta específica
-# - sempre com nota "Questão delicada..." quando apropriado
+# GERAÇÃO DE RESPOSTAS
 # =====================================================
 def generate_answer_for_question(q: str) -> str:
     if q in OVERRIDES:
@@ -608,19 +603,11 @@ def generate_answer_for_question(q: str) -> str:
     )
 
 # =====================================================
-# RESPOSTAS PARA TODAS AS QUESTÕES
-# (agora sim: todas terão resposta específica)
+# RESPOSTAS (DICT)
 # =====================================================
 RESPOSTAS_GERADAS = {q: generate_answer_for_question(q) for q in QUICK_QUESTIONS}
 
-# =====================================================
-# AGRUPAMENTO: OBJETIVAS EM CIMA / ZONA EMBAIXO
-# (objetiva = tem override ou resposta "fechada" no RESPOSTAS_PRONTAS)
-# =====================================================
-def build_quick_groups():
-    direct = [{"text": q} for q in QUICK_QUESTIONS if q in RESPOSTAS_PRONTAS or q in OVERRIDES]
-    care = [{"text": q} for q in QUICK_QUESTIONS if q not in RESPOSTAS_PRONTAS and q not in OVERRIDES]
-    return direct, care
+# (Função build_quick_groups REMOVIDA conforme solicitado)
 
 # =====================================================
 # DB
@@ -709,7 +696,6 @@ def simple_search(query: str):
 
 # =====================================================
 # CONTRATO / HONORÁRIOS / POLÍTICAS / REDE
-# (mantive suas funções exatamente como vinham)
 # =====================================================
 def gerar_contrato_texto(data: dict) -> str:
     modalidade = data.get("modalidade", "Online")
@@ -984,11 +970,15 @@ def home():
 
         q = (request.form.get("q") or "").strip()
         if q:
-            # agora TODAS as perguntas têm resposta específica (gerada)
-            answer = RESPOSTAS_GERADAS.get(q) or resposta_orientativa(q)
+            # Tenta pegar resposta pronta, se não existir, usa a lógica de fallback (se houver)
+            # Obs: resposta_orientativa não está definida no código enviado,
+            # então mantive apenas o get do dicionário para evitar outro NameError se a função faltar.
+            answer = RESPOSTAS_GERADAS.get(q) or "Desculpe, não encontrei uma resposta específica. Tente reformular."
             save_history(q, answer)
 
-    direct_questions, care_questions = build_quick_groups()
+    # REMOVIDO: direct_questions, care_questions = build_quick_groups()
+    # NOVA LOGICA: Uma única lista com todas as questões
+    all_questions = [{"text": q} for q in QUICK_QUESTIONS]
 
     return render_template(
         "home.html",
@@ -996,8 +986,8 @@ def home():
         stats=stats(),
         history=get_history(50),
         answer=answer,
-        direct_questions=direct_questions,
-        care_questions=care_questions
+        # Passa a lista única para o template
+        questions=all_questions
     )
 
 @app.route("/recursos")
@@ -1041,7 +1031,6 @@ def admin():
 # =====================================================
 if __name__ == "__main__":
     init_db()
-    # mantive o "cérebro" disponível
     if stats()["chunks"] == 0:
         index_content("Código de Ética (Resumo)", TEXTO_CODIGO_ETICA)
     app.run(debug=True, port=5000)

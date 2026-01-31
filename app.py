@@ -1,7 +1,6 @@
 import os
 import sqlite3
 from datetime import datetime
-from math import ceil
 
 from flask import (
     Flask, render_template, request, redirect, url_for, flash
@@ -12,7 +11,7 @@ from flask import (
 # =====================================================
 APP_NAME = "EthosPsi"
 app = Flask(__name__)
-app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "dev-ethospsi-secret-final-v4")
+app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "dev-ethospsi-secret-final-v5")
 
 DATA_DIR = os.path.abspath("./data")
 os.makedirs(DATA_DIR, exist_ok=True)
@@ -51,22 +50,19 @@ Art. 13 - No atendimento à criança, ao adolescente ou ao interdito, deve ser c
 """
 
 # =====================================================
-# RESPOSTAS PRONTAS
-# Mantém as que você já tinha e adiciona mais específicas.
-# O restante cai em fallback inteligente por tema.
+# RESPOSTAS PRONTAS (curadoria)
+# (mantém e expande; as faltantes vão para fallback)
 # =====================================================
 RESPOSTAS_PRONTAS = {
-    # Originais suas (mantidas)
     "Posso atender familiares de ex-pacientes?": """
     <div class="resposta-humanizada">
       <h3>Pode, mas com muitas ressalvas éticas.</h3>
-      <p>Na prática clínica, <strong>não é recomendado</strong> atender familiares próximos. Mesmo que não exista uma proibição absoluta, isso aumenta risco de relação dual, conflito de interesse e quebra involuntária de sigilo.</p>
+      <p>Na prática clínica, <strong>não é recomendado</strong> atender familiares próximos. Isso aumenta risco de relação dual, conflito de interesse e quebra involuntária de sigilo.</p>
       <div class="alert-box warning">
         <strong>Risco:</strong> confusão de papéis e prejuízo do vínculo terapêutico. Se puder, encaminhe.
       </div>
     </div>
     """,
-
     "Posso ir a eventos sociais em que meu paciente esta?": """
     <div class="resposta-humanizada">
       <h3>Zona de cuidado: evite relações duplas.</h3>
@@ -74,7 +70,6 @@ RESPOSTAS_PRONTAS = {
       <p><strong>Conduta prática:</strong> discrição, pouco contato e retomar o enquadre na sessão se for relevante.</p>
     </div>
     """,
-
     "Devo cumprimentar meu paciente na rua?": """
     <div class="resposta-humanizada">
       <h3>Regra de ouro: espere o paciente.</h3>
@@ -84,7 +79,6 @@ RESPOSTAS_PRONTAS = {
       </div>
     </div>
     """,
-
     "Posso aceitar presentes de um paciente?": """
     <div class="resposta-humanizada">
       <h3>Depende do valor e do significado.</h3>
@@ -94,22 +88,18 @@ RESPOSTAS_PRONTAS = {
       </div>
     </div>
     """,
-
-    "Posso contar sobre a minha vida para o paciente?": """
+    "Posso aceitar presentes?": """
     <div class="resposta-humanizada">
-      <h3>Cuidado com auto-revelação.</h3>
-      <p>Se ocorrer, precisa ter finalidade terapêutica clara, ser breve e não deslocar o foco. Se for para aliviar sua ansiedade, buscar validação ou criar intimidade, é erro técnico e pode virar relação dual.</p>
+      <h3>Depende do contexto.</h3>
+      <p>Presentes caros, frequentes ou com “cobrança” devem ser recusados. Presentes simbólicos podem ser avaliados clinicamente, com cautela.</p>
     </div>
     """,
-
-    # Prontuário e documentos
     "Sou obrigada a fazer anotações?": """
     <div class="resposta-humanizada">
       <h3>Sim, registro é dever profissional.</h3>
       <p>Registre o essencial, de forma técnica e suficiente. Você não precisa escrever detalhes íntimos desnecessários.</p>
     </div>
     """,
-
     "O que é obrigatório eu anotar no prontuário?": """
     <div class="resposta-humanizada">
       <h3>O essencial: processo, evolução e conduta.</h3>
@@ -122,40 +112,13 @@ RESPOSTAS_PRONTAS = {
       </ul>
     </div>
     """,
-
     "Paciente pediu para não registrar no prontuário": """
     <div class="resposta-humanizada">
       <h3>Explique que o registro técnico é dever.</h3>
       <p>Você pode combinar um registro mais sintético, sem detalhes íntimos, mas precisa registrar o essencial para continuidade do cuidado e proteção técnica.</p>
-      <div class="alert-box tip">💡 Uma boa frase: “Vou registrar de forma técnica e sem detalhes desnecessários, para proteger você e o processo.”</div>
+      <div class="alert-box tip">💡 “Vou registrar de forma técnica e sem detalhes desnecessários, para proteger você e o processo.”</div>
     </div>
     """,
-
-    "O paciente pode pedir cópia do prontuário?": """
-    <div class="resposta-humanizada">
-      <h3>Em geral, pode solicitar acesso.</h3>
-      <p>Na prática, a forma mais segura costuma ser uma <strong>síntese ou relatório</strong>, preservando terceiros e evitando dano por exposição de anotações brutas. Se houver dúvida, registre sua decisão técnica e busque orientação do CRP.</p>
-    </div>
-    """,
-
-    "Como devo guardar prontuários antigos?": """
-    <div class="resposta-humanizada">
-      <h3>Com sigilo e controle de acesso.</h3>
-      <p>Físico: arquivo trancado e acesso restrito. Digital: senha, backup e proteção do dispositivo/contas. Evite misturar com arquivos pessoais.</p>
-    </div>
-    """,
-
-    "Posso usar prontuários de forma digital?": """
-    <div class="resposta-humanizada">
-      <h3>Sim, com segurança.</h3>
-      <ul>
-        <li>Senha forte e acesso restrito</li>
-        <li>Backup seguro e testado</li>
-        <li>Evitar apps sem proteção</li>
-      </ul>
-    </div>
-    """,
-
     "O que fazer se o juiz pedir o prontuário?": """
     <div class="resposta-humanizada">
       <h3>Entregue o mínimo necessário.</h3>
@@ -166,259 +129,79 @@ RESPOSTAS_PRONTAS = {
       <div class="alert-box tip">Em dúvida, procure orientação técnica do CRP (COF) com o ofício em mãos.</div>
     </div>
     """,
-
-    # Sigilo e família
-    "Ao dar devolutiva para os pais apos atendimento devo contar tudo que a criança disse?": """
-    <div class="resposta-humanizada">
-      <h3>Não. Conte só o estritamente essencial.</h3>
-      <p>Crianças e adolescentes têm direito à privacidade no processo terapêutico. Aos responsáveis, comunique apenas o necessário para medidas em benefício do paciente, sem expor confidências íntimas.</p>
-    </div>
-    """,
-
-    "Ao dar devolutiva para os pais devo contar tudo?": """
-    <div class="resposta-humanizada">
-      <h3>Não. Apenas o essencial.</h3>
-      <p>Comunique o necessário para medidas em benefício do paciente, preservando confidências sem necessidade de proteção.</p>
-    </div>
-    """,
-
-    "O que posso compartilhar em uma supervisão?": """
-    <div class="resposta-humanizada">
-      <h3>Compartilhe o caso, não a identidade.</h3>
-      <p>Use anonimização (sem nomes, locais, detalhes identificáveis). Foque em manejo, hipóteses e intervenções.</p>
-    </div>
-    """,
-
-    "Preciso ter um contato emergencial para todo paciente?": """
-    <div class="resposta-humanizada">
-      <h3>É recomendável, especialmente em casos de risco.</h3>
-      <p>Combine previamente quando esse contato poderia ser acionado e registre o combinado.</p>
-    </div>
-    """,
-
-    # Social
-    "Posso atender de graça?": """
-    <div class="resposta-humanizada">
-      <h3>Pode, com enquadre claro.</h3>
-      <p>Atendimento pro bono é possível. Evite usar como propaganda e mantenha regras, limites e contrato claros.</p>
-    </div>
-    """,
-
-    "Existe cura gay?": """
-    <div class="resposta-humanizada">
-      <h3>Não existe “cura gay”.</h3>
-      <p>Orientação sexual não é doença. O trabalho ético é acolher sofrimento, apoiar autonomia e enfrentar impactos de discriminação, sem objetivo de “mudar” orientação.</p>
-    </div>
-    """,
-
-    "O que responder quando pedem terapia de reversão?": """
-    <div class="resposta-humanizada">
-      <h3>Responda com firmeza e cuidado.</h3>
-      <p>Explique que não existe finalidade psicológica legítima para “reversão” de orientação sexual. Ofereça cuidado para sofrimento, culpa, ansiedade e conflitos, sem objetivo de mudança de orientação.</p>
-      <div class="alert-box tip">💡 Frase útil: “Posso te ajudar com o sofrimento que você vive, mas não com a ideia de ‘mudar’ sua orientação sexual.”</div>
-    </div>
-    """,
-
-    "Posso influenciar na orientação sexual do meu paciente?": """
-    <div class="resposta-humanizada">
-      <h3>Não. É vedado induzir convicções.</h3>
-      <p>O cuidado ético prioriza acolhimento e autonomia, sem imposição moral, religiosa ou ideológica.</p>
-    </div>
-    """,
-
-    "Posso influenciar na orientação sexual?": """
-    <div class="resposta-humanizada">
-      <h3>Não.</h3>
-      <p>É vedado induzir, pressionar ou conduzir a pessoa atendida quanto à orientação sexual.</p>
-    </div>
-    """,
-
-    "Existe psicologia evangélica?": """
-    <div class="resposta-humanizada">
-      <h3>A Psicologia é laica.</h3>
-      <p>Você pode ter fé, mas não pode transformar a sessão em prática religiosa. A espiritualidade do paciente pode ser acolhida como tema clínico, sem imposição.</p>
-    </div>
-    """,
-
-    "É proíbido falar sobre religião nas sessões?": """
-    <div class="resposta-humanizada">
-      <h3>Não. Falar sobre fé pode ser necessário.</h3>
-      <p>O que não pode é impor crenças, pregar, converter ou julgar com base em dogmas pessoais.</p>
-    </div>
-    """,
-
-    # Redes
-    "Posso seguir paciente no Instagram?": """
-    <div class="resposta-humanizada">
-      <h3>Em geral, não é recomendado.</h3>
-      <p>Redes sociais aumentam risco de relação dual e exposição. O mais seguro é manter separação. Se houver motivo excepcional, combine limites e registre.</p>
-    </div>
-    """,
-
-    "Posso curtir posts do paciente?": """
-    <div class="resposta-humanizada">
-      <h3>Evite.</h3>
-      <p>Curtidas podem ser percebidas como proximidade pessoal e podem expor o vínculo. Melhor manter neutralidade e trabalhar o tema em sessão.</p>
-    </div>
-    """,
-
-    "Posso ver stories do paciente?": """
-    <div class="resposta-humanizada">
-      <h3>Cuidado com monitoramento.</h3>
-      <p>Ver stories por curiosidade pode virar vigilância e interferir no processo. Só considere em contexto muito justificável, preferencialmente com supervisão e transparência.</p>
-    </div>
-    """,
-
-    "Posso bloquear paciente nas redes sociais?": """
-    <div class="resposta-humanizada">
-      <h3>Pode, se for medida de enquadre e proteção.</h3>
-      <p>Se fizer sentido, alinhe em sessão: “Para manter o enquadre, não mantenho contato por redes sociais.”</p>
-    </div>
-    """,
-
-    "Posso pesquisar o paciente no Google?": """
-    <div class="resposta-humanizada">
-      <h3>Evite por curiosidade.</h3>
-      <p>Pesquisar pode violar privacidade e distorcer o vínculo. Só considere se houver justificativa concreta ligada à segurança.</p>
-    </div>
-    """,
-
-    # Contato
-    "Posso responder mensagens fora do horário?": """
-    <div class="resposta-humanizada">
-      <h3>Defina limites de comunicação.</h3>
-      <p>Combine horário, canal e finalidade (ex.: remarcação). Deixe claro que não é canal de urgência. Em casos de risco, construa plano com rede de apoio e serviços adequados.</p>
-    </div>
-    """,
-
-    "Posso usar WhatsApp pessoal com pacientes?": """
-    <div class="resposta-humanizada">
-      <h3>Pode, com enquadre.</h3>
-      <p>Use para logística. Oriente privacidade do aparelho e evite conversas terapêuticas longas fora da sessão.</p>
-    </div>
-    """,
-
-    "Posso confirmar para alguém que a pessoa é minha paciente?": """
-    <div class="resposta-humanizada">
-      <h3>Evite confirmar.</h3>
-      <p>Resposta padrão segura: “Por sigilo profissional, não posso confirmar nem negar.”</p>
-    </div>
-    """,
-
-    "Posso falar do caso com meu cônjuge ou amigo?": """
-    <div class="resposta-humanizada">
-      <h3>Não. Isso quebra sigilo.</h3>
-      <p>Discussão de caso deve ser em contexto profissional (supervisão/equipe autorizada) e com anonimização.</p>
-    </div>
-    """,
-
-    # Online
     "Preciso de contrato para terapia online?": """
     <div class="resposta-humanizada">
       <h3>Sim, recomendado.</h3>
-      <p>Coloque por escrito: sigilo, plataforma, política de faltas, plano para queda de conexão, canal de contato e limites.</p>
+      <p>Coloque por escrito: sigilo, plataforma, política de faltas, protocolo de queda de conexão, canal de contato e limites.</p>
     </div>
     """,
-
-    "Como garantir sigilo no atendimento online?": """
-    <div class="resposta-humanizada">
-      <h3>Reduza riscos com regras simples.</h3>
-      <ul>
-        <li>Ambiente privado e fone de ouvido</li>
-        <li>Evitar Wi-Fi público</li>
-        <li>Plano para queda de conexão</li>
-        <li>Canal para remarcação e limites</li>
-      </ul>
-    </div>
-    """,
-
-    "Posso atender online com paciente em outro estado?": """
-    <div class="resposta-humanizada">
-      <h3>Em geral, sim, com registro e enquadre.</h3>
-      <p>Garanta contrato, prontuário e sigilo. Se houver caso de risco, fortaleça a rede local do paciente.</p>
-    </div>
-    """,
-
-    "O que fazer quando a internet cai na sessão?": """
-    <div class="resposta-humanizada">
-      <h3>Tenha um protocolo combinado.</h3>
-      <ol>
-        <li>Aguardar X minutos</li>
-        <li>Tentar reconectar</li>
-        <li>Confirmar por mensagem e remarcar conforme política</li>
-      </ol>
-    </div>
-    """,
-
-    "Posso atender paciente dirigindo?": """
-    <div class="resposta-humanizada">
-      <h3>Não é recomendado.</h3>
-      <p>Dirigir reduz privacidade e segurança. Oriente o paciente a parar em local privado e seguro ou remarcar.</p>
-    </div>
-    """,
-
-    "Posso gravar a sessão?": """
-    <div class="resposta-humanizada">
-      <h3>Só com consentimento explícito e necessidade.</h3>
-      <p>Defina finalidade, armazenamento seguro, tempo de guarda e acesso. Gravação aumenta risco de vazamento.</p>
-    </div>
-    """,
-
-    # Honorários
     "Posso cobrar multa por falta?": """
     <div class="resposta-humanizada">
       <h3>Pode, se estiver combinado previamente.</h3>
       <p>Coloque em contrato: prazo para desmarcação, remarcação e exceções. Mantenha tom respeitoso e foco no enquadre.</p>
     </div>
     """,
-
     "Como lidar com inadimplência?": """
     <div class="resposta-humanizada">
       <h3>Com dignidade e clareza.</h3>
       <p>Relembre o combinado, proponha renegociação e registre. Evite exposição. Se necessário, encerre com encaminhamento.</p>
     </div>
     """,
-
     "Posso cobrar PIX adiantado?": """
     <div class="resposta-humanizada">
       <h3>Pode, como regra de contrato.</h3>
       <p>Deixe claro: cancelamentos, remarcação e reembolso.</p>
     </div>
     """,
-
-    "Posso cobrar pacote de sessões?": """
+    "Existe cura gay?": """
     <div class="resposta-humanizada">
-      <h3>Pode, com transparência.</h3>
-      <p>Defina validade, cancelamento e como fica em caso de alta ou mudanças do plano terapêutico.</p>
+      <h3>Não existe “cura gay”.</h3>
+      <p>Orientação sexual não é doença. O trabalho ético é acolher sofrimento, apoiar autonomia e enfrentar impactos de discriminação, sem objetivo de “mudar” orientação.</p>
     </div>
     """,
-
-    # Encaminhamento e encerramento
-    "Quando devo encaminhar um paciente?": """
+    "O que responder quando pedem terapia de reversão?": """
     <div class="resposta-humanizada">
-      <h3>Quando houver limite técnico, risco ou conflito.</h3>
-      <p>Encaminhe se a demanda excede sua competência, se há relação dual ou se a continuidade com você não é mais a melhor opção.</p>
+      <h3>Responda com firmeza e cuidado.</h3>
+      <p>Explique que não existe finalidade psicológica legítima para “reversão” de orientação sexual. Ofereça cuidado para sofrimento, culpa, ansiedade e conflitos, sem objetivo de mudança de orientação.</p>
+      <div class="alert-box tip">💡 “Posso te ajudar com o sofrimento que você vive, mas não com a ideia de ‘mudar’ sua orientação sexual.”</div>
     </div>
     """,
-
-    "Como encerrar terapia de forma ética?": """
+    "Posso influenciar na orientação sexual do meu paciente?": """
     <div class="resposta-humanizada">
-      <h3>Encerramento é parte do cuidado.</h3>
-      <ul>
-        <li>Prepare com antecedência quando possível</li>
-        <li>Reveja objetivos e avanços</li>
-        <li>Ofereça plano de continuidade e encaminhamento</li>
-        <li>Registre no prontuário</li>
-      </ul>
+      <h3>Não. É vedado induzir convicções.</h3>
+      <p>O cuidado ético prioriza acolhimento e autonomia, sem imposição moral, religiosa ou ideológica.</p>
+    </div>
+    """,
+    "Existe psicologia evangélica?": """
+    <div class="resposta-humanizada">
+      <h3>A Psicologia é laica.</h3>
+      <p>Você pode ter fé, mas não pode transformar a sessão em prática religiosa. A espiritualidade do paciente pode ser tema clínico, sem imposição.</p>
+    </div>
+    """,
+    "É proíbido falar sobre religião nas sessões?": """
+    <div class="resposta-humanizada">
+      <h3>Não. Falar sobre fé pode ser necessário.</h3>
+      <p>O que não pode é impor crenças, pregar, converter ou julgar com base em dogmas pessoais.</p>
+    </div>
+    """,
+    "Posso seguir paciente no Instagram?": """
+    <div class="resposta-humanizada">
+      <h3>Em geral, não é recomendado.</h3>
+      <p>Redes sociais aumentam risco de relação dual e exposição. O mais seguro é manter separação. Se houver motivo excepcional, combine limites e registre.</p>
+    </div>
+    """,
+    "Posso responder mensagens fora do horário?": """
+    <div class="resposta-humanizada">
+      <h3>Defina limites de comunicação.</h3>
+      <p>Combine horário, canal e finalidade (ex.: remarcação). Deixe claro que não é canal de urgência.</p>
     </div>
     """,
 }
 
 # =====================================================
-# 100 DÚVIDAS ÉTICAS (BOTÕES) - sem duplicatas
+# 100 DÚVIDAS ÉTICAS (BOTÕES)
 # =====================================================
 QUICK_QUESTIONS = [
-    # Sigilo e privacidade
     "Até onde vai o sigilo?",
     "Quando posso quebrar o sigilo?",
     "Posso confirmar para alguém que a pessoa é minha paciente?",
@@ -429,8 +212,6 @@ QUICK_QUESTIONS = [
     "Posso responder e-mail de familiar sobre o paciente?",
     "Posso discutir caso em grupo de WhatsApp profissional?",
     "O que fazer se eu quebrar o sigilo sem querer?",
-
-    # Prontuário e documentos
     "Sou obrigada a fazer anotações?",
     "O que é obrigatório eu anotar no prontuário?",
     "Paciente pediu para não registrar no prontuário",
@@ -441,8 +222,6 @@ QUICK_QUESTIONS = [
     "Por quanto tempo devo guardar prontuários?",
     "Posso negar um relatório solicitado?",
     "O que fazer se o juiz pedir o prontuário?",
-
-    # Relatórios e declarações
     "Posso emitir declaração de comparecimento?",
     "Posso emitir laudo psicológico para processo?",
     "Posso emitir relatório para escola?",
@@ -453,8 +232,6 @@ QUICK_QUESTIONS = [
     "Posso cobrar por relatório psicológico?",
     "Posso alterar um relatório após entregue?",
     "Posso recusar emitir laudo judicial?",
-
-    # Relações duais e limites
     "Posso atender amigos?",
     "Posso atender familiares?",
     "Posso atender familiares de ex-pacientes?",
@@ -465,8 +242,6 @@ QUICK_QUESTIONS = [
     "Posso atender paciente que é meu chefe?",
     "Posso atender paciente que é meu professor?",
     "Posso manter amizade com paciente durante o tratamento?",
-
-    # Contato fora da sessão e redes
     "Devo cumprimentar meu paciente na rua?",
     "Posso ir a eventos sociais em que meu paciente esta?",
     "Posso seguir paciente no Instagram?",
@@ -477,8 +252,6 @@ QUICK_QUESTIONS = [
     "Posso responder mensagens fora do horário?",
     "Posso usar WhatsApp pessoal com pacientes?",
     "Posso ligar para o paciente fora do combinado?",
-
-    # Atendimento online
     "Preciso de contrato para terapia online?",
     "Como garantir sigilo no atendimento online?",
     "Posso atender online com paciente em outro estado?",
@@ -489,8 +262,6 @@ QUICK_QUESTIONS = [
     "Posso atender paciente dirigindo?",
     "Posso atender paciente no trabalho dele?",
     "Posso gravar a sessão?",
-
-    # Honorários e pagamentos
     "Posso cobrar multa por falta?",
     "Como lidar com inadimplência?",
     "Posso cobrar PIX adiantado?",
@@ -501,8 +272,6 @@ QUICK_QUESTIONS = [
     "Posso fazer sorteio de sessões?",
     "Posso receber comissão por encaminhamento?",
     "Posso fazer parceria com médico por indicação?",
-
-    # Questões éticas e sociais
     "Existe cura gay?",
     "O que responder quando pedem terapia de reversão?",
     "Posso influenciar na orientação sexual do meu paciente?",
@@ -513,8 +282,6 @@ QUICK_QUESTIONS = [
     "Posso recusar atendimento por falta de vaga?",
     "Quando devo encaminhar um paciente?",
     "Como encerrar terapia de forma ética?",
-
-    # Úteis para recém-formadas
     "Como definir meu enquadre (horários, cancelamentos e atrasos)?",
     "Como criar um contrato terapêutico simples?",
     "Como organizar ficha de anamnese sem invadir demais?",
@@ -582,7 +349,7 @@ TEMA_DICAS = {
         "Em dúvida, encaminhe ou busque supervisão.",
     ],
     "geral": [
-        "Se a decisão aumentar risco de exposição, recuo e reoriento.",
+        "Se a decisão aumentar risco de exposição, recue e reoriente.",
         "Se houver dúvida, supervisão e orientação do CRP ajudam.",
         "Registre combinados importantes de forma técnica.",
     ],
@@ -613,10 +380,10 @@ def resposta_orientativa(pergunta: str) -> str:
     <div class="resposta-humanizada">
       <h3>Orientação ética para esta dúvida</h3>
       <p><strong>Pergunta:</strong> {pergunta}</p>
-      <p>Esta pergunta ainda não tem uma resposta específica cadastrada. Pelo tema (<strong>{tema}</strong>), estes princípios ajudam a decidir com segurança:</p>
+      <p>Esta pergunta ainda não tem resposta específica cadastrada. Pelo tema (<strong>{tema}</strong>), estes princípios ajudam a decidir com segurança:</p>
       <ul>{html_dicas}</ul>
       <div class="alert-box tip">
-        💡 Dica: use a aba <strong>Recursos</strong> para abrir o Código de Ética e a Tabela de Honorários. Se precisar, leve a dúvida para supervisão ou orientação do CRP (COF).
+        💡 Dica: use as abas <strong>Recursos</strong>, <strong>Políticas</strong> e <strong>Rede</strong> para textos prontos e roteiros.
       </div>
     </div>
     """
@@ -714,30 +481,30 @@ def simple_search(query: str):
     return unique_rows[:3]
 
 # =====================================================
-# CONTRATO GERADOR
+# CONTRATO (gerador)
 # =====================================================
 def gerar_contrato_texto(data: dict) -> str:
     modalidade = data.get("modalidade", "Online")
+    plataforma = data.get("plataforma", "Google Meet")
     duracao = data.get("duracao", "50")
     frequencia = data.get("frequencia", "semanal")
     canal = data.get("canal", "WhatsApp")
     prazo_cancel = data.get("prazo_cancel", "24")
     falta_cobra = data.get("falta_cobra", "sim")
+    atraso = data.get("atraso", "15")
+    queda = data.get("queda", "10")
     pagamento = data.get("pagamento", "pix")
     recibo = data.get("recibo", "sim")
     reembolso = data.get("reembolso", "nao")
-    atraso = data.get("atraso", "15")
-    queda = data.get("queda", "10")
     emergencias = data.get("emergencias", "sim")
     sigilo = data.get("sigilo", "sim")
     grava = data.get("grava", "nao")
-    plataforma = data.get("plataforma", "Google Meet")
 
-    if modalidade.lower() == "presencial":
-        detalhe_modalidade = "Atendimento presencial em ambiente privativo, com início e término conforme horário agendado."
-    else:
-        detalhe_modalidade = f"Atendimento online por {plataforma}, com orientações de privacidade (local reservado e, se possível, uso de fone)."
-
+    detalhe_modalidade = (
+        "Atendimento presencial em ambiente privativo, com início e término conforme horário agendado."
+        if modalidade.lower() == "presencial"
+        else f"Atendimento online por {plataforma}, com orientações de privacidade (local reservado e, se possível, uso de fone)."
+    )
     falta_txt = "Sessões não desmarcadas dentro do prazo são cobradas." if falta_cobra == "sim" else "Sessões não desmarcadas dentro do prazo podem ser remanejadas conforme disponibilidade e critério."
     recibo_txt = "Recibo pode ser emitido mediante solicitação." if recibo == "sim" else "Recibo não é emitido."
     reembolso_txt = "Em caso de interrupção do serviço, valores antecipados podem ser ajustados conforme sessões realizadas." if reembolso == "sim" else "Não há reembolso automático para faltas ou cancelamentos fora do prazo."
@@ -745,7 +512,7 @@ def gerar_contrato_texto(data: dict) -> str:
     sig_txt = "O sigilo profissional é regra. Exceções são raras e seguem princípio do mínimo necessário." if sigilo == "sim" else "O sigilo profissional orienta a prática, com cuidado especial para privacidade."
     grava_txt = "Gravações não são permitidas sem consentimento explícito das partes e finalidade justificada." if grava == "nao" else "Gravações podem ocorrer apenas com consentimento explícito e acordo sobre guarda e acesso."
 
-    texto = f"""CONTRATO TERAPÊUTICO (MODELO)
+    return f"""CONTRATO TERAPÊUTICO (MODELO)
 
 1) Modalidade e setting
 - Modalidade: {modalidade}
@@ -757,17 +524,17 @@ def gerar_contrato_texto(data: dict) -> str:
 
 3) Comunicação fora da sessão
 - Canal de contato: {canal}
-- Finalidade do contato: logística (remarcação, confirmação e avisos)
-- Mensagens terapêuticas longas são preferencialmente tratadas em sessão.
+- Finalidade: logística (remarcação, confirmação e avisos)
+- Mensagens longas são preferencialmente tratadas em sessão.
 
 4) Cancelamentos, faltas e atrasos
 - Prazo para desmarcação: {prazo_cancel} horas
-- Atraso: tolerância de {atraso} minutos, respeitando o horário final agendado
+- Tolerância de atraso: {atraso} minutos (respeitando o horário final)
 - Faltas: {falta_txt}
 
 5) Atendimento online e queda de conexão (se aplicável)
-- Em queda de conexão: aguardar {queda} minutos e tentar reconectar
-- Se não for possível retomar: registrar tentativa e remarcar conforme disponibilidade.
+- Em queda: aguardar {queda} minutos e tentar reconectar
+- Se não retomar: registrar tentativa e remarcar conforme política.
 
 6) Pagamento e recibos
 - Forma de pagamento: {pagamento}
@@ -776,7 +543,6 @@ def gerar_contrato_texto(data: dict) -> str:
 
 7) Sigilo e privacidade
 - {sig_txt}
-- Recomenda-se evitar compartilhamento de informações do processo terapêutico em ambientes e dispositivos desprotegidos.
 
 8) Gravações
 - {grava_txt}
@@ -785,19 +551,17 @@ def gerar_contrato_texto(data: dict) -> str:
 - {emerg_txt}
 
 10) Encerramento
-- O encerramento pode ocorrer por alta, acordo entre as partes, limites de agenda ou indicação clínica.
-- Quando possível, o encerramento será trabalhado em sessão, com orientações e encaminhamentos.
+- Encerramento por alta, acordo, limites de agenda ou indicação clínica.
+- Quando possível, será trabalhado em sessão, com orientações e encaminhamentos.
 
 Observação
-Este documento é um modelo informacional e pode ser adaptado conforme contexto, modalidade e critérios profissionais.
+Este documento é um modelo informacional e pode ser adaptado conforme contexto e critérios profissionais.
 """
-    return texto
 
 # =====================================================
-# HONORÁRIOS CALC
+# HONORÁRIOS (calculadora)
 # =====================================================
 def calc_honorarios(d: dict) -> dict:
-    # Entradas
     custos_fixos = float(d.get("custos_fixos", 0) or 0)
     custos_variaveis_mes = float(d.get("custos_variaveis_mes", 0) or 0)
     pro_labore = float(d.get("pro_labore", 0) or 0)
@@ -807,31 +571,21 @@ def calc_honorarios(d: dict) -> dict:
     sessoes_semana = float(d.get("sessoes_semana", 0) or 0)
     duracao_min = float(d.get("duracao_min", 50) or 50)
     admin_min = float(d.get("admin_min", 10) or 10)
-
     faltas_perc = float(d.get("faltas_perc", 0) or 0) / 100.0
 
-    # Cálculos
     custo_total_mes = custos_fixos + custos_variaveis_mes + pro_labore
-
     sessoes_mes_brutas = sessoes_semana * semanas_mes
     sessoes_mes_liquidas = max(0.0, sessoes_mes_brutas * (1.0 - faltas_perc))
 
     if sessoes_mes_liquidas <= 0:
-        return {
-            "ok": False,
-            "erro": "Defina sessões por semana e faltas em um valor que gere ao menos 1 sessão/mês efetiva."
-        }
+        return {"ok": False, "erro": "Defina sessões por semana e faltas em um valor que gere ao menos 1 sessão/mês efetiva."}
 
-    # Receita bruta necessária para cobrir custo e imposto
-    # receita_liquida = receita_bruta * (1 - imposto)
-    # queremos receita_liquida >= custo_total_mes
     if impostos_perc >= 0.95:
         impostos_perc = 0.95
 
     receita_bruta_necessaria = custo_total_mes / max(0.01, (1.0 - impostos_perc))
     preco_min_sessao = receita_bruta_necessaria / sessoes_mes_liquidas
 
-    # Métrica de tempo (carga real por sessão)
     tempo_por_sessao_min = duracao_min + admin_min
     horas_trabalho_mes = (tempo_por_sessao_min * sessoes_mes_brutas) / 60.0
     if horas_trabalho_mes <= 0:
@@ -850,6 +604,177 @@ def calc_honorarios(d: dict) -> dict:
         "horas_trabalho_mes": round(horas_trabalho_mes, 1),
         "receita_por_hora_bruta": round(receita_por_hora_bruta, 2),
     }
+
+# =====================================================
+# POLÍTICAS PRONTAS (gerador)
+# =====================================================
+def gerar_politica(data: dict) -> dict:
+    tipo = data.get("tipo", "faltas")
+    modalidade = data.get("modalidade", "Online")
+    prazo = data.get("prazo", "24")
+    atraso = data.get("atraso", "15")
+    canal = data.get("canal", "WhatsApp")
+    falta_cobra = data.get("falta_cobra", "sim")
+    reembolso = data.get("reembolso", "nao")
+    mensagens = data.get("mensagens", "logistica")
+    queda = data.get("queda", "10")
+    pagamento = data.get("pagamento", "pix")
+
+    base_header = "POLÍTICA (TEXTO PRONTO PARA COPIAR)\n\n"
+
+    if tipo == "faltas":
+        texto = f"""{base_header}Política de cancelamento e faltas
+
+- Prazo para desmarcação: {prazo} horas.
+- Atrasos: tolerância de {atraso} minutos, respeitando o horário final.
+- Falta sem aviso ou cancelamento fora do prazo: {"sessão é cobrada" if falta_cobra == "sim" else "pode ser remanejada conforme disponibilidade e critério"}.
+- Canal para desmarcação: {canal}.
+
+Observação
+Esta política existe para proteger o enquadre, a organização de agenda e a continuidade do cuidado.
+"""
+        return {"titulo": "Faltas e cancelamentos", "texto": texto}
+
+    if tipo == "mensagens":
+        if mensagens == "logistica":
+            regra = "Mensagens são destinadas apenas à logística (remarcação, confirmação e avisos)."
+        elif mensagens == "curtas":
+            regra = "Mensagens devem ser curtas e objetivas. Conteúdos terapêuticos serão priorizados em sessão."
+        else:
+            regra = "Mensagens não substituem a sessão. Em caso de necessidade importante, combinaremos o melhor encaminhamento."
+
+        texto = f"""{base_header}Política de mensagens e contato fora da sessão
+
+- Canal principal: {canal}.
+- {regra}
+- Este serviço não funciona como plantão de urgência.
+
+Observação
+Limites de contato protegem o sigilo, o enquadre e evitam dependência do canal de mensagens.
+"""
+        return {"titulo": "Mensagens e contato", "texto": texto}
+
+    if tipo == "reembolso":
+        texto = f"""{base_header}Política de pagamentos e reembolso
+
+- Forma de pagamento: {pagamento}.
+- Reembolso: {"pode haver ajuste proporcional em caso de interrupção do serviço, conforme sessões realizadas" if reembolso == "sim" else "não há reembolso automático para faltas ou cancelamentos fora do prazo"}.
+- Regras de faltas seguem a política de cancelamento.
+
+Observação
+Transparência financeira reduz conflito e protege o vínculo terapêutico.
+"""
+        return {"titulo": "Pagamentos e reembolso", "texto": texto}
+
+    if tipo == "online":
+        texto = f"""{base_header}Protocolo de atendimento online
+
+- Modalidade: {modalidade}.
+- Recomenda-se ambiente privado e uso de fone.
+- Em queda de conexão: aguardar {queda} minutos e tentar reconectar.
+- Se não retomar: confirmar por {canal} e remarcar conforme disponibilidade.
+
+Observação
+Este protocolo reduz ansiedade e evita improviso em momentos críticos.
+"""
+        return {"titulo": "Atendimento online", "texto": texto}
+
+    if tipo == "sigilo":
+        texto = f"""{base_header}Política de sigilo e privacidade
+
+- O sigilo profissional é regra e protege a intimidade e o vínculo terapêutico.
+- Informações só são compartilhadas em situações excepcionais, seguindo o princípio do mínimo necessário.
+- Recomenda-se cuidado com dispositivos, backups e ambientes compartilhados.
+
+Observação
+O objetivo é proteger a pessoa atendida e a qualidade do serviço.
+"""
+        return {"titulo": "Sigilo e privacidade", "texto": texto}
+
+    # fallback
+    return {"titulo": "Política", "texto": f"{base_header}Escolha uma política para gerar um texto pronto."}
+
+# =====================================================
+# MAPA DE REDE (roteiros prontos)
+# =====================================================
+def gerar_rede(data: dict) -> dict:
+    destino = data.get("destino", "psiquiatria")
+    canal = data.get("canal", "WhatsApp")
+    inclui_autorizacao = data.get("autorizacao", "sim")
+    tom = data.get("tom", "neutro")
+
+    autorizacao_txt = (
+        "Antes de qualquer contato com terceiros, solicite autorização por escrito do paciente (ou responsável legal), delimitando o que pode ser compartilhado e com qual finalidade.\n\n"
+        if inclui_autorizacao == "sim" else ""
+    )
+
+    if destino == "psiquiatria":
+        texto = f"""ROTEIRO DE REDE: Psiquiatria
+
+{autorizacao_txt}Mensagem para encaminhamento (copiar e colar)
+- Canal sugerido: {canal}
+
+Olá, tudo bem?
+Sou psicóloga e estou acompanhando a pessoa em psicoterapia. Com autorização expressa, gostaria de encaminhar para avaliação psiquiátrica, considerando benefícios de uma avaliação clínica complementar.
+Se você puder me informar disponibilidade de agenda e orientação de documentação necessária, agradeço.
+
+Observação
+Evite enviar detalhes sensíveis por mensagens. Prefira dados mínimos e, se necessário, contato profissional protegido.
+"""
+        return {"titulo": "Encaminhamento para Psiquiatria", "texto": texto}
+
+    if destino == "escola":
+        texto = f"""ROTEIRO DE REDE: Escola (orientação e comunicação)
+
+{autorizacao_txt}Modelo de e-mail/mensagem para escola (copiar e colar)
+Prezados,
+Sou psicóloga e acompanho o(a) estudante em psicoterapia. Com autorização, solicito alinhamento para favorecer medidas de apoio pedagógico e bem-estar escolar.
+Peço, se possível, informações gerais sobre contexto escolar (frequência, adaptações já feitas, demandas observadas), preservando a privacidade do(a) estudante.
+
+Observação
+Evite descrição de conteúdo íntimo. Foque em medidas de apoio e informações gerais necessárias.
+"""
+        return {"titulo": "Contato com Escola", "texto": texto}
+
+    if destino == "familia":
+        texto = f"""ROTEIRO DE REDE: Família / Responsáveis
+
+{autorizacao_txt}Mensagem para combinar devolutiva (copiar e colar)
+Olá, tudo bem?
+Podemos agendar um momento breve para uma devolutiva geral sobre o processo, com foco em orientações práticas e medidas de apoio. 
+Por ética e privacidade, evitamos expor detalhes íntimos do conteúdo das sessões, mantendo o essencial para o cuidado.
+
+Observação
+Devolutivas devem ser proporcionais e no mínimo necessário, especialmente em crianças e adolescentes.
+"""
+        return {"titulo": "Devolutiva para Família", "texto": texto}
+
+    if destino == "rede_publica":
+        texto = f"""ROTEIRO DE REDE: Rede pública / serviços
+
+{autorizacao_txt}Mensagem para serviço (copiar e colar)
+Olá,
+Sou psicóloga e estou acompanhando a pessoa em psicoterapia. Com autorização, solicito orientação sobre fluxo de atendimento e possibilidade de acolhimento/encaminhamento para o serviço.
+Caso existam documentos necessários ou horários de triagem, por favor me informem.
+
+Observação
+Se houver risco imediato, priorize serviços de emergência locais e rede de apoio.
+"""
+        return {"titulo": "Contato com Serviços", "texto": texto}
+
+    if destino == "autorizacao":
+        texto = f"""MODELO: Autorização para contato com terceiros (copiar e colar)
+
+Eu, ______________________________, autorizo a psicóloga ______________________________ (CRP ________) a realizar contato profissional com ______________________________ (nome/serviço), pelo canal ______________________________, com a finalidade de ______________________________.
+
+Declaro estar ciente de que serão compartilhadas apenas informações mínimas necessárias para o objetivo acima, preservando minha privacidade.
+
+Data: ____/____/____
+Assinatura: ______________________________
+"""
+        return {"titulo": "Autorização por escrito", "texto": texto}
+
+    return {"titulo": "Rede", "texto": "Escolha um destino para gerar um roteiro."}
 
 # =====================================================
 # ROTAS
@@ -881,7 +806,7 @@ def home():
                       <h3>Resultados da Busca</h3>
                       <p>Não encontrei uma resposta exata, mas estes trechos podem ajudar:</p>
                       {html_hits}
-                      <div class="alert-box tip">💡 Use a aba Recursos para abrir o Código completo.</div>
+                      <div class="alert-box tip">💡 Use as abas Políticas e Rede para textos prontos e roteiros.</div>
                     </div>
                     """
                 else:
@@ -914,12 +839,21 @@ def honorarios():
     resultado = None
     if request.method == "POST":
         resultado = calc_honorarios(request.form)
-    return render_template(
-        "honorarios.html",
-        app_name=APP_NAME,
-        resultado=resultado,
-        links=LINKS_OFICIAIS
-    )
+    return render_template("honorarios.html", app_name=APP_NAME, resultado=resultado, links=LINKS_OFICIAIS)
+
+@app.route("/politicas", methods=["GET", "POST"])
+def politicas():
+    out = None
+    if request.method == "POST":
+        out = gerar_politica(request.form)
+    return render_template("politicas.html", app_name=APP_NAME, out=out)
+
+@app.route("/rede", methods=["GET", "POST"])
+def rede():
+    out = None
+    if request.method == "POST":
+        out = gerar_rede(request.form)
+    return render_template("rede.html", app_name=APP_NAME, out=out)
 
 @app.route("/admin")
 def admin():

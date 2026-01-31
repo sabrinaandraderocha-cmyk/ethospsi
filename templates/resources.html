@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block content %}
+
+<section class="card">
+  <h2 style="margin-top:0;">Recursos Oficiais</h2>
+  <p style="color:#64748b; margin-top:6px;">
+    Links para leitura completa e referência de honorários.
+  </p>
+
+  <div class="resource-grid">
+    <div class="resource-card">
+      <h3 style="margin-top:0;">Código de Ética</h3>
+      <p>Abra o PDF oficial para leitura completa.</p>
+      <a class="btn-action" href="{{ links.codigo_etica_pdf_2025 }}" target="_blank" rel="noopener">
+        Abrir Código de Ética (PDF)
+      </a>
+    </div>
+
+    <div class="resource-card">
+      <h3 style="margin-top:0;">Tabela de Honorários</h3>
+      <p>Referência nacional (CFP/FENAPSI, elaboração DIEESE).</p>
+      <div class="btn-row">
+        <a class="btn-action" href="{{ links.tabela_honorarios_cfp }}" target="_blank" rel="noopener">
+          Página do CFP
+        </a>
+        <a class="btn-action" href="{{ links.tabela_honorarios_pdf_ate_julho_2025 }}" target="_blank" rel="noopener">
+          PDF da Tabela
+        </a>
+      </div>
+      <p class="muted-block">
+        Use como referência, considerando região, público, custos, modalidade e experiência.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="card">
+  <h2 style="margin-top:0;">Kit Recém-Formadas</h2>
+
+  <div class="resource-card" style="margin-top:14px;">
+    <h3 style="margin-top:0;">Checklist de Enquadre</h3>
+    <ul>
+      <li>Política de atrasos e faltas (prazo de desmarcação)</li>
+      <li>Forma de pagamento e recibos</li>
+      <li>Canal de contato e limites (mensagens)</li>
+      <li>Protocolo de queda de internet (online)</li>
+      <li>Encaminhamentos, rede de apoio e limites de urgência</li>
+    </ul>
+  </div>
+
+  <div class="resource-card" style="margin-top:14px;">
+    <h3 style="margin-top:0;">Rotina mínima de prontuário</h3>
+    <ul>
+      <li>Data e presença</li>
+      <li>Síntese técnica breve</li>
+      <li>Intervenções e combinados</li>
+      <li>Encaminhamentos e encerramento</li>
+    </ul>
+  </div>
+
+  <div class="resource-card" style="margin-top:14px;">
+    <h3 style="margin-top:0;">Use a calculadora do app</h3>
+    <ul>
+      <li>Calcule o preço mínimo sustentável por sessão</li>
+      <li>Compare com a Tabela de Honorários</li>
+      <li>Ajuste por no-show, impostos e tempo administrativo</li>
+    </ul>
+    <div class="btn-row">
+      <a class="btn-action" href="{{ url_for('honorarios') }}">Abrir Calculadora</a>
+      <a class="btn-action" href="{{ url_for('contrato') }}">Gerar Contrato</a>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

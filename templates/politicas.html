@@ -4,12 +4,12 @@
 <section class="card">
   <h2 style="margin-top:0;">Políticas prontas</h2>
   <p style="color:#64748b; margin-top:6px;">
-    Gere textos curtos para copiar e colar. Sem inserir dados de pacientes.
+    Gere textos curtos para copiar e colar. Evite inserir dados de pacientes.
   </p>
 
   <form method="post" class="form-grid">
     <div class="form-card">
-      <h3>Escolha a política</h3>
+      <h3>Escolha</h3>
 
       <label class="field">
         Tipo
@@ -25,13 +25,13 @@
       <label class="field">
         Modalidade
         <select name="modalidade">
-          <option>Online</option>
+          <option selected>Online</option>
           <option>Presencial</option>
         </select>
       </label>
 
       <label class="field">
-        Prazo para desmarcação (horas)
+        Prazo (horas)
         <select name="prazo">
           <option value="12">12</option>
           <option value="24" selected>24</option>
@@ -40,7 +40,7 @@
       </label>
 
       <label class="field">
-        Tolerância de atraso (min)
+        Atraso (min)
         <select name="atraso">
           <option value="10">10</option>
           <option value="15" selected>15</option>
@@ -58,10 +58,10 @@
     </div>
 
     <div class="form-card">
-      <h3>Comunicação e pagamentos</h3>
+      <h3>Detalhes</h3>
 
       <label class="field">
-        Canal principal
+        Canal
         <select name="canal">
           <option selected>WhatsApp</option>
           <option>E-mail</option>
@@ -79,7 +79,7 @@
       </label>
 
       <label class="field">
-        Queda de internet: aguardar (min)
+        Queda (min)
         <select name="queda">
           <option value="5">5</option>
           <option value="10" selected>10</option>
@@ -88,7 +88,7 @@
       </label>
 
       <label class="field">
-        Forma de pagamento
+        Pagamento
         <select name="pagamento">
           <option value="pix" selected>Pix</option>
           <option value="transferencia">Transferência</option>
@@ -114,10 +114,18 @@
 {% if out %}
 <section class="card">
   <h2 style="margin-top:0;">{{ out.titulo }}</h2>
+
   <div class="copy-row">
     <button class="btn-action" type="button" onclick="copyText()">Copiar</button>
-    <a class="btn-action" href="{{ url_for('contrato') }}">Gerar contrato</a>
+
+    <form method="post" action="{{ url_for('download_docx') }}" style="margin:0;">
+      <input type="hidden" name="doc_title" value="{{ out.titulo }}">
+      <input type="hidden" name="doc_filename" value="politica">
+      <input type="hidden" name="doc_text" value="{{ out.texto|e }}">
+      <button class="btn-action" type="submit">Baixar em Word</button>
+    </form>
   </div>
+
   <textarea id="outText" class="mono-area" readonly>{{ out.texto }}</textarea>
 </section>
 

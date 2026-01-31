@@ -32,7 +32,7 @@
       </label>
 
       <label class="field">
-        Incluir lembrete de autorização por escrito?
+        Incluir lembrete de autorização?
         <select name="autorizacao">
           <option value="sim" selected>Sim</option>
           <option value="nao">Não</option>
@@ -40,7 +40,7 @@
       </label>
 
       <label class="field">
-        Tom do texto
+        Tom
         <select name="tom">
           <option value="neutro" selected>Neutro</option>
           <option value="formal">Mais formal</option>
@@ -68,10 +68,18 @@
 {% if out %}
 <section class="card">
   <h2 style="margin-top:0;">{{ out.titulo }}</h2>
+
   <div class="copy-row">
     <button class="btn-action" type="button" onclick="copyText()">Copiar</button>
-    <a class="btn-action" href="{{ url_for('politicas') }}">Políticas prontas</a>
+
+    <form method="post" action="{{ url_for('download_docx') }}" style="margin:0;">
+      <input type="hidden" name="doc_title" value="{{ out.titulo }}">
+      <input type="hidden" name="doc_filename" value="roteiro-rede">
+      <input type="hidden" name="doc_text" value="{{ out.texto|e }}">
+      <button class="btn-action" type="submit">Baixar em Word</button>
+    </form>
   </div>
+
   <textarea id="outText" class="mono-area" readonly>{{ out.texto }}</textarea>
 </section>
 

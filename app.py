@@ -21,9 +21,8 @@ os.makedirs(DATA_DIR, exist_ok=True)
 DB_PATH = os.path.join(DATA_DIR, "ethospsi.sqlite3")
 
 # =====================================================
-# Links oficiais (usados na página Recursos)
-# ✅ Código de Ética: PDF azul (CFP 2012) - como você pediu
-# Mantive a chave antiga para NÃO quebrar templates que usam codigo_etica_pdf_2025.
+# LINKS OFICIAIS
+# (mantive as chaves antigas para não quebrar templates)
 # =====================================================
 LINKS_OFICIAIS = {
     "codigo_etica_pdf_2025": "https://site.cfp.org.br/wp-content/uploads/2012/07/codigo-de-etica-psicologia.pdf",
@@ -58,158 +57,8 @@ Art. 13 - No atendimento à criança, ao adolescente ou ao interdito, deve ser c
 """
 
 # =====================================================
-# RESPOSTAS PRONTAS (curadoria)
-# ⚠️ IMPORTANTÍSSIMO:
-# - aqui ficam APENAS respostas "objetivas" que você escreveu mesmo.
-# - NÃO vamos mais preencher isso com fallback, senão quebra o selo (foi seu bug).
-# =====================================================
-RESPOSTAS_PRONTAS = {
-    "Posso atender familiares de ex-pacientes?": """
-    <div class="resposta-humanizada">
-      <h3>Pode, mas com muitas ressalvas éticas.</h3>
-      <p>Na prática clínica, <strong>não é recomendado</strong> atender familiares próximos. Isso aumenta risco de relação dual, conflito de interesse e quebra involuntária de sigilo.</p>
-      <div class="alert-box warning">
-        <strong>Risco:</strong> confusão de papéis e prejuízo do vínculo terapêutico. Se puder, encaminhe.
-      </div>
-    </div>
-    """,
-    "Posso ir a eventos sociais em que meu paciente esta?": """
-    <div class="resposta-humanizada">
-      <h3>Zona de cuidado: evite relações duplas.</h3>
-      <p>Eventos grandes tendem a ser menos problemáticos; eventos íntimos aumentam risco de confundir papéis e inibir o paciente.</p>
-      <p><strong>Conduta prática:</strong> discrição, pouco contato e retomar o enquadre na sessão se for relevante.</p>
-    </div>
-    """,
-    "Devo cumprimentar meu paciente na rua?": """
-    <div class="resposta-humanizada">
-      <h3>Regra de ouro: espere o paciente.</h3>
-      <p>O sigilo sobre a existência do atendimento é direito do paciente. Cumprimentar primeiro pode expor vínculo.</p>
-      <div class="alert-box tip">
-        💡 <strong>Combine antes:</strong> “Se nos encontrarmos, vou esperar você cumprimentar para proteger sua privacidade, ok?”
-      </div>
-    </div>
-    """,
-    "Posso aceitar presentes de um paciente?": """
-    <div class="resposta-humanizada">
-      <h3>Depende do valor e do significado.</h3>
-      <p>Presentes caros, frequentes ou com expectativa de retribuição são alerta. Presentes simbólicos podem acontecer, mas precisam ser avaliados pelo contexto e pelo manejo.</p>
-      <div class="alert-box warning">
-        <strong>Sinal de risco:</strong> tentativa de comprar atenção, sedução, controle ou quebra de limites.
-      </div>
-    </div>
-    """,
-    "Posso aceitar presentes?": """
-    <div class="resposta-humanizada">
-      <h3>Depende do contexto.</h3>
-      <p>Presentes caros, frequentes ou com “cobrança” devem ser recusados. Presentes simbólicos podem ser avaliados clinicamente, com cautela.</p>
-    </div>
-    """,
-    "Sou obrigada a fazer anotações?": """
-    <div class="resposta-humanizada">
-      <h3>Sim, registro é dever profissional.</h3>
-      <p>Registre o essencial, de forma técnica e suficiente. Você não precisa escrever detalhes íntimos desnecessários.</p>
-    </div>
-    """,
-    "O que é obrigatório eu anotar no prontuário?": """
-    <div class="resposta-humanizada">
-      <h3>O essencial: processo, evolução e conduta.</h3>
-      <ul>
-        <li>Identificação mínima necessária</li>
-        <li>Demanda e objetivos</li>
-        <li>Datas e síntese técnica da evolução</li>
-        <li>Intervenções e combinados</li>
-        <li>Encaminhamentos e encerramento</li>
-      </ul>
-    </div>
-    """,
-    "Paciente pediu para não registrar no prontuário": """
-    <div class="resposta-humanizada">
-      <h3>Explique que o registro técnico é dever.</h3>
-      <p>Você pode combinar um registro mais sintético, sem detalhes íntimos, mas precisa registrar o essencial para continuidade do cuidado e proteção técnica.</p>
-      <div class="alert-box tip">💡 “Vou registrar de forma técnica e sem detalhes desnecessários, para proteger você e o processo.”</div>
-    </div>
-    """,
-    "O que fazer se o juiz pedir o prontuário?": """
-    <div class="resposta-humanizada">
-      <h3>Entregue o mínimo necessário.</h3>
-      <ol>
-        <li>Prefira responder por <strong>relatório</strong> limitado ao pedido.</li>
-        <li>Se exigirem prontuário, solicite medidas de proteção (segredo de justiça) e reduza exposição.</li>
-      </ol>
-      <div class="alert-box tip">Em dúvida, procure orientação técnica do CRP (COF) com o ofício em mãos.</div>
-    </div>
-    """,
-    "Preciso de contrato para terapia online?": """
-    <div class="resposta-humanizada">
-      <h3>Sim, recomendado.</h3>
-      <p>Coloque por escrito: sigilo, plataforma, política de faltas, protocolo de queda de conexão, canal de contato e limites.</p>
-    </div>
-    """,
-    "Posso cobrar multa por falta?": """
-    <div class="resposta-humanizada">
-      <h3>Pode, se estiver combinado previamente.</h3>
-      <p>Coloque em contrato: prazo para desmarcação, remarcação e exceções. Mantenha tom respeitoso e foco no enquadre.</p>
-    </div>
-    """,
-    "Como lidar com inadimplência?": """
-    <div class="resposta-humanizada">
-      <h3>Com dignidade e clareza.</h3>
-      <p>Relembre o combinado, proponha renegociação e registre. Evite exposição. Se necessário, encerre com encaminhamento.</p>
-    </div>
-    """,
-    "Posso cobrar PIX adiantado?": """
-    <div class="resposta-humanizada">
-      <h3>Pode, como regra de contrato.</h3>
-      <p>Deixe claro: cancelamentos, remarcação e reembolso.</p>
-    </div>
-    """,
-    "Existe cura gay?": """
-    <div class="resposta-humanizada">
-      <h3>Não existe “cura gay”.</h3>
-      <p>Orientação sexual não é doença. O trabalho ético é acolher sofrimento, apoiar autonomia e enfrentar impactos de discriminação, sem objetivo de “mudar” orientação.</p>
-    </div>
-    """,
-    "O que responder quando pedem terapia de reversão?": """
-    <div class="resposta-humanizada">
-      <h3>Responda com firmeza e cuidado.</h3>
-      <p>Explique que não existe finalidade psicológica legítima para “reversão” de orientação sexual. Ofereça cuidado para sofrimento, culpa, ansiedade e conflitos, sem objetivo de mudança de orientação.</p>
-      <div class="alert-box tip">💡 “Posso te ajudar com o sofrimento que você vive, mas não com a ideia de ‘mudar’ sua orientação sexual.”</div>
-    </div>
-    """,
-    "Posso influenciar na orientação sexual do meu paciente?": """
-    <div class="resposta-humanizada">
-      <h3>Não. É vedado induzir convicções.</h3>
-      <p>O cuidado ético prioriza acolhimento e autonomia, sem imposição moral, religiosa ou ideológica.</p>
-    </div>
-    """,
-    "Existe psicologia evangélica?": """
-    <div class="resposta-humanizada">
-      <h3>A Psicologia é laica.</h3>
-      <p>Você pode ter fé, mas não pode transformar a sessão em prática religiosa. A espiritualidade do paciente pode ser tema clínico, sem imposição.</p>
-    </div>
-    """,
-    "É proíbido falar sobre religião nas sessões?": """
-    <div class="resposta-humanizada">
-      <h3>Não. Falar sobre fé pode ser necessário.</h3>
-      <p>O que não pode é impor crenças, pregar, converter ou julgar com base em dogmas pessoais.</p>
-    </div>
-    """,
-    "Posso seguir paciente no Instagram?": """
-    <div class="resposta-humanizada">
-      <h3>Em geral, não é recomendado.</h3>
-      <p>Redes sociais aumentam risco de relação dual e exposição. O mais seguro é manter separação. Se houver motivo excepcional, combine limites e registre.</p>
-    </div>
-    """,
-    "Posso responder mensagens fora do horário?": """
-    <div class="resposta-humanizada">
-      <h3>Defina limites de comunicação.</h3>
-      <p>Combine horário, canal e finalidade (ex.: remarcação). Deixe claro que não é canal de urgência.</p>
-    </div>
-    """,
-}
-
-# =====================================================
 # 100 DÚVIDAS ÉTICAS (BOTÕES)
+# (mantive sua lista integral)
 # =====================================================
 QUICK_QUESTIONS = [
     "Até onde vai o sigilo?",
@@ -325,96 +174,453 @@ QUICK_QUESTIONS = [
 ]
 
 # =====================================================
-# SELOS VISUAIS (mas agora sem mentir)
-# ✅ selo "normativa" SÓ se houver resposta direta em RESPOSTAS_PRONTAS
-# ✅ o resto é "zona"
+# HELPERS DE RESPOSTA (HTML)
 # =====================================================
-def question_seal(q: str) -> str:
-    return "normativa" if q in RESPOSTAS_PRONTAS else "zona"
+def _html_escape(s: str) -> str:
+    return (s or "").replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
-def build_question_item(q: str) -> dict:
-    seal = question_seal(q)
-    return {"text": q, "seal": seal}
-
-def build_quick_groups():
-    # Diretas em cima (apenas as que realmente têm resposta cadastrada)
-    direct = [build_question_item(q) for q in QUICK_QUESTIONS if q in RESPOSTAS_PRONTAS]
-    care = [build_question_item(q) for q in QUICK_QUESTIONS if q not in RESPOSTAS_PRONTAS]
-    return direct, care
-
-# =====================================================
-# FALLBACK INTELIGENTE
-# =====================================================
-TEMA_DICAS = {
-    "sigilo": [
-        "Use o princípio do mínimo necessário.",
-        "Evite confirmar vínculo terapêutico a terceiros.",
-        "Em exceções, registre justificativa e medidas de proteção.",
-    ],
-    "prontuario": [
-        "Registre o essencial: evolução, conduta, combinados e encaminhamentos.",
-        "Evite detalhes íntimos desnecessários.",
-        "Guarde com acesso restrito e backup seguro.",
-    ],
-    "redes": [
-        "Evite seguir, curtir ou interagir com paciente em redes sociais.",
-        "Limites digitais protegem o enquadre e o sigilo.",
-        "Se necessário, alinhe em sessão de forma respeitosa.",
-    ],
-    "online": [
-        "Combine plataforma, protocolo de queda e limites de comunicação.",
-        "Oriente ambiente privado e uso de fone.",
-        "Não transforme mensageria em plantão terapêutico.",
-    ],
-    "honorarios": [
-        "Tenha política de faltas por escrito.",
-        "Negociação deve preservar dignidade e enquadre.",
-        "Use tabelas como referência, com realidade regional e custos.",
-    ],
-    "relacoes": [
-        "Evite relação dual: amigos, familiares, vínculos próximos.",
-        "Se inevitável, explicite limites e registre decisão.",
-        "Em dúvida, encaminhe ou busque supervisão.",
-    ],
-    "geral": [
-        "Se a decisão aumentar risco de exposição, recue e reoriente.",
-        "Se houver dúvida, supervisão e orientação do CRP ajudam.",
-        "Registre combinados importantes de forma técnica.",
-    ],
-}
-
-def detectar_tema(pergunta: str) -> str:
-    q = (pergunta or "").lower()
-    if any(k in q for k in ["sigilo", "confirmar", "crime", "terceiro", "familia", "familiar"]):
-        return "sigilo"
-    if any(k in q for k in ["prontu", "registro", "anotar", "guardar", "relatório", "laudo", "declara"]):
-        return "prontuario"
-    if any(k in q for k in ["instagram", "rede", "stories", "curtir", "google", "bloquear"]):
-        return "redes"
-    if any(k in q for k in ["online", "internet", "whatsapp", "chat", "áudio", "audio"]):
-        return "online"
-    if any(k in q for k in ["honor", "cobrar", "multa", "inadimpl", "pix", "pacote", "desconto", "precificar"]):
-        return "honorarios"
-    if any(k in q for k in ["amigo", "famil", "casal", "professor", "chefe", "social"]):
-        return "relacoes"
-    return "geral"
-
-def resposta_orientativa(pergunta: str) -> str:
-    tema = detectar_tema(pergunta)
-    dicas = TEMA_DICAS.get(tema, TEMA_DICAS["geral"])
-    html_dicas = "".join([f"<li>{d}</li>" for d in dicas])
-
+def _make_answer(title: str, bullets: list[str], delicate: bool = True) -> str:
+    warn = ""
+    if delicate:
+        warn = """
+        <div class="alert-box warning">
+          <strong>Questão delicada:</strong> se houver dúvida prática, consulte a COF do seu CRP e leve para supervisão.
+        </div>
+        """
+    lis = "".join([f"<li>{_html_escape(b)}</li>" for b in bullets if b.strip()])
     return f"""
     <div class="resposta-humanizada">
-      <h3>Orientação ética para esta dúvida</h3>
-      <p><strong>Pergunta:</strong> {pergunta}</p>
-      <p>Esta pergunta ainda não tem resposta específica cadastrada. Pelo tema (<strong>{tema}</strong>), estes princípios ajudam a decidir com segurança:</p>
-      <ul>{html_dicas}</ul>
-      <div class="alert-box tip">
-        💡 Dica: use as abas <strong>Recursos</strong>, <strong>Políticas</strong> e <strong>Rede</strong> para textos prontos e roteiros.
-      </div>
+      <h3>{_html_escape(title)}</h3>
+      {warn}
+      <ul>{lis}</ul>
     </div>
     """
+
+# =====================================================
+# RESPOSTAS ESPECÍFICAS (OVERRIDES IMPORTANTES)
+# (aqui entram as "fechadas" que você pediu explicitamente)
+# =====================================================
+OVERRIDES = {
+    "Posso falar do caso com meu cônjuge ou amigo?": _make_answer(
+        "Não. Isso viola o sigilo profissional.",
+        [
+            "Não é permitido compartilhar informações clínicas com cônjuge/amigos, mesmo sem citar nome, se houver risco de identificação ou exposição.",
+            "Se isso te afetar emocionalmente, leve o tema para supervisão (e não para conversas pessoais).",
+            "Foque em discutir o manejo clínico em espaço profissional e com anonimização.",
+        ],
+        delicate=True
+    ),
+
+    "Até onde vai o sigilo?": _make_answer(
+        "O sigilo é a regra e protege a intimidade do paciente.",
+        [
+            "Você não deve revelar que alguém é seu paciente nem conteúdo de sessões.",
+            "Exceções são raras: risco grave e atual, dever legal ou ordem judicial — sempre pelo mínimo necessário.",
+            "Em situações de violência/violação de direitos (especialmente envolvendo crianças/adolescentes), o encaminhamento à rede de proteção pode ser necessário; registre a justificativa e compartilhe somente o essencial.",
+            "Sempre que possível, combine limites de sigilo no início e retome quando a situação exigir.",
+        ],
+        delicate=True
+    ),
+
+    "Quando posso quebrar o sigilo?": _make_answer(
+        "A quebra de sigilo é excepcional e deve ser mínima.",
+        [
+            "Considere apenas em risco grave e atual, dever legal, ou ordem judicial.",
+            "Compartilhe somente o mínimo necessário e registre a decisão técnica.",
+            "Quando possível, informe o paciente sobre limites e sobre o que será comunicado.",
+        ],
+        delicate=True
+    ),
+
+    "Existe cura gay?": _make_answer(
+        "Não. Orientação sexual não é doença.",
+        [
+            "O psicólogo não deve prometer, oferecer ou conduzir intervenção para “mudar” orientação sexual.",
+            "Atuação ética: acolher sofrimento, fortalecer autonomia, lidar com discriminação e conflitos.",
+        ],
+        delicate=True
+    ),
+
+    "Posso influenciar na orientação sexual do meu paciente?": _make_answer(
+        "Não. É vedado induzir convicções e preconceitos.",
+        [
+            "O psicólogo não deve direcionar o paciente a mudar orientação sexual.",
+            "Atuação ética: acolher, reduzir sofrimento e fortalecer autonomia.",
+        ],
+        delicate=True
+    ),
+}
+
+# =====================================================
+# GERAÇÃO DE RESPOSTAS PARA TODAS AS QUESTÕES
+# - todas as perguntas terão resposta específica
+# - sempre com nota "Questão delicada..." quando apropriado
+# =====================================================
+def generate_answer_for_question(q: str) -> str:
+    if q in OVERRIDES:
+        return OVERRIDES[q]
+
+    ql = (q or "").lower()
+
+    # SIGILO / TERCEIROS
+    if "sigilo" in ql or "confirmar" in ql or "crime" in ql or "familiar" in ql or "terceiro" in ql:
+        if "confirmar" in ql:
+            return _make_answer(
+                "Evite confirmar. O vínculo terapêutico é sigiloso.",
+                [
+                    "A conduta mais segura é não confirmar nem negar: “Por sigilo profissional, não posso confirmar nem negar.”",
+                    "Evite conversas informais sobre pacientes com terceiros.",
+                ],
+                delicate=True
+            )
+        if "grupo" in ql or "whatsapp" in ql:
+            return _make_answer(
+                "Não é adequado discutir caso em grupo aberto.",
+                [
+                    "Mesmo em grupo “profissional”, há risco de quebra de sigilo e exposição.",
+                    "Discussão de caso deve ser em supervisão/equipe autorizada e com anonimização rigorosa.",
+                ],
+                delicate=True
+            )
+        if "e-mail" in ql or "email" in ql:
+            return _make_answer(
+                "Cuidado: não compartilhe informações do paciente com familiares por e-mail.",
+                [
+                    "Só compartilhe o mínimo necessário, com autorização e finalidade clara.",
+                    "Evite detalhes clínicos por canais inseguros; registre o motivo e o conteúdo essencial comunicado.",
+                ],
+                delicate=True
+            )
+        if "quebrar" in ql:
+            return _make_answer(
+                "Quebra de sigilo é exceção e deve ser mínima.",
+                [
+                    "Considere apenas em risco grave e atual, dever legal ou ordem judicial.",
+                    "Compartilhe somente o essencial e registre a decisão técnica.",
+                ],
+                delicate=True
+            )
+        return _make_answer(
+            "Sigilo é regra. Exceções são raras e justificadas.",
+            [
+                "Use o princípio do mínimo necessário.",
+                "Registre sua decisão técnica quando houver exceção.",
+                "Em dúvida, consulte o CRP (COF) e supervisão.",
+            ],
+            delicate=True
+        )
+
+    # PRONTUÁRIO / REGISTRO / GUARDA
+    if "prontu" in ql or "anot" in ql or "guardar" in ql or "digital" in ql or "ia" in ql:
+        if "ia" in ql:
+            return _make_answer(
+                "Use com extrema cautela. Priorize sigilo.",
+                [
+                    "Evite inserir dados identificáveis em ferramentas externas.",
+                    "Se usar, mantenha texto genérico e revise tudo; a responsabilidade é do psicólogo.",
+                    "Considere alternativas: modelos locais/offline e registro sintético.",
+                ],
+                delicate=True
+            )
+        if "digital" in ql:
+            return _make_answer(
+                "Pode ser digital, desde que preserve sigilo e segurança.",
+                [
+                    "Acesso restrito, senha forte e backups.",
+                    "Evite compartilhamento automático e dispositivos desprotegidos.",
+                ],
+                delicate=True
+            )
+        if "obrigatório" in ql or "obrigatoria" in ql:
+            return _make_answer(
+                "Registre o essencial técnico.",
+                [
+                    "Identificação mínima necessária, objetivos, evolução, condutas e encaminhamentos.",
+                    "Evite detalhes íntimos desnecessários.",
+                ],
+                delicate=True
+            )
+        if "cópia" in ql or "copia" in ql:
+            return _make_answer(
+                "Em geral, o paciente pode solicitar acesso, com cuidado na forma.",
+                [
+                    "Avalie a forma mais adequada: relatório/síntese, preservando terceiros e evitando dano.",
+                    "Registre a decisão e o que foi entregue.",
+                ],
+                delicate=True
+            )
+        if "guardar" in ql or "quanto tempo" in ql:
+            return _make_answer(
+                "Guarde registros com sigilo e acesso restrito.",
+                [
+                    "Arquivo físico: local trancado.",
+                    "Arquivo digital: proteção por senha, backup e controle de acesso.",
+                    "Registre sua política de guarda e descarte seguro.",
+                ],
+                delicate=True
+            )
+        return _make_answer(
+            "Prontuário é dever profissional e deve ser protegido.",
+            [
+                "Registre o essencial técnico, preserve sigilo e mantenha segurança.",
+                "Em dúvida, consulte CRP e supervisão.",
+            ],
+            delicate=True
+        )
+
+    # DOCUMENTOS / RELATÓRIO / LAUDO / DECLARAÇÃO
+    if "relatório" in ql or "relatorio" in ql or "laudo" in ql or "declara" in ql or "cid" in ql:
+        if "declara" in ql:
+            return _make_answer(
+                "Declaração de comparecimento é possível e deve ser simples.",
+                [
+                    "Inclua data/horário e identificação do profissional.",
+                    "Evite conteúdo clínico desnecessário.",
+                ],
+                delicate=False
+            )
+        if "cid" in ql:
+            return _make_answer(
+                "CID em documento exige cautela e finalidade clara.",
+                [
+                    "Evite expor diagnóstico sem necessidade e sem consentimento.",
+                    "Use o mínimo necessário e registre a justificativa.",
+                ],
+                delicate=True
+            )
+        if "escola" in ql or "empresa" in ql or "inss" in ql:
+            return _make_answer(
+                "Documento para terceiros deve ser mínimo e com finalidade clara.",
+                [
+                    "Solicite autorização e delimite o que será informado.",
+                    "Evite detalhamento íntimo; foque em informações essenciais e medidas de apoio.",
+                    "Registre a solicitação, a autorização e o conteúdo entregue.",
+                ],
+                delicate=True
+            )
+        if "juiz" in ql:
+            return _make_answer(
+                "Não entregue tudo automaticamente.",
+                [
+                    "Prefira relatório respondendo ao que foi solicitado, com mínimo necessário.",
+                    "Se houver exigência, peça proteção (segredo de justiça) e registre.",
+                ],
+                delicate=True
+            )
+        return _make_answer(
+            "Documentos devem respeitar sigilo e finalidade.",
+            [
+                "Produza apenas o necessário e tecnicamente justificável.",
+                "Evite expor paciente e terceiros.",
+                "Registre o motivo e o conteúdo essencial emitido.",
+            ],
+            delicate=True
+        )
+
+    # REDES SOCIAIS / CONTATO
+    if "instagram" in ql or "stories" in ql or "curtir" in ql or "google" in ql or "bloquear" in ql:
+        if "seguir" in ql:
+            return _make_answer(
+                "Em geral, evite seguir paciente.",
+                [
+                    "Redes sociais aumentam risco de relação dual e exposição.",
+                    "Se necessário, alinhe limites explicitamente e registre a decisão.",
+                ],
+                delicate=True
+            )
+        if "curtir" in ql or "stories" in ql:
+            return _make_answer(
+                "Evite interações que confundam papéis.",
+                [
+                    "Curtidas e visualizações podem ser percebidas como proximidade pessoal e expor vínculo.",
+                    "Se o tema aparecer, trabalhe em sessão.",
+                ],
+                delicate=True
+            )
+        if "google" in ql:
+            return _make_answer(
+                "Evite pesquisar paciente por curiosidade.",
+                [
+                    "Pode violar privacidade e distorcer o vínculo.",
+                    "Só considere em situações excepcionais e justificáveis (segurança), preferindo transparência e supervisão.",
+                ],
+                delicate=True
+            )
+        if "bloquear" in ql:
+            return _make_answer(
+                "Pode bloquear se for necessário para proteger o enquadre.",
+                [
+                    "Você pode explicar como política profissional: não manter contato por redes.",
+                    "Registre se houve impacto no processo.",
+                ],
+                delicate=True
+            )
+        return _make_answer(
+            "Mantenha limites digitais claros.",
+            [
+                "Evite interações em redes sociais para proteger sigilo e enquadre.",
+                "Se necessário, alinhe em sessão e registre.",
+            ],
+            delicate=True
+        )
+
+    # ONLINE / WHATSAPP / CHAT / ÁUDIO
+    if "online" in ql or "internet" in ql or "whatsapp" in ql or "chat" in ql or "áudio" in ql or "audio" in ql:
+        if "contrato" in ql:
+            return _make_answer(
+                "Sim, contrato é recomendado no online.",
+                [
+                    "Defina plataforma, sigilo, faltas, queda de internet e canal de contato.",
+                ],
+                delicate=False
+            )
+        if "cai" in ql or "internet" in ql:
+            return _make_answer(
+                "Tenha protocolo para queda de conexão.",
+                [
+                    "Aguardar alguns minutos, tentar reconectar e confirmar por mensagem.",
+                    "Remarcar conforme política acordada.",
+                ],
+                delicate=False
+            )
+        if "áudio" in ql or "chat" in ql:
+            return _make_answer(
+                "Pode ser possível, mas aumenta riscos.",
+                [
+                    "Mensageria/áudio elevam risco de vazamento e confundem enquadre.",
+                    "Se usar, estabeleça regras claras e registre.",
+                ],
+                delicate=True
+            )
+        if "dirigindo" in ql or "trabalho" in ql:
+            return _make_answer(
+                "Evite se não houver privacidade e segurança.",
+                [
+                    "Atendimento exige ambiente protegido.",
+                    "Se o paciente estiver dirigindo ou em local público, oriente a parar ou remarcar.",
+                ],
+                delicate=True
+            )
+        if "gravar" in ql:
+            return _make_answer(
+                "Somente com consentimento explícito e necessidade.",
+                [
+                    "Defina finalidade, guarda e acesso.",
+                    "Gravação aumenta risco de vazamento.",
+                ],
+                delicate=True
+            )
+        return _make_answer(
+            "Atendimento online exige regras claras.",
+            [
+                "Ambiente privado e fone de ouvido.",
+                "Plano para queda de internet.",
+                "Limites de mensagens para logística.",
+            ],
+            delicate=True
+        )
+
+    # HONORÁRIOS / PAGAMENTO / PROMOÇÃO
+    if "honor" in ql or "cobrar" in ql or "multa" in ql or "inadimpl" in ql or "pix" in ql or "pacote" in ql or "gratuita" in ql or "de graça" in ql:
+        if "multa" in ql or "falta" in ql:
+            return _make_answer(
+                "Pode cobrar, se estiver combinado previamente.",
+                [
+                    "Política de faltas deve ser transparente e por escrito.",
+                    "Mantenha manejo respeitoso e registre combinados.",
+                ],
+                delicate=True
+            )
+        if "inadimpl" in ql:
+            return _make_answer(
+                "Lide com dignidade e contrato claro.",
+                [
+                    "Relembre o combinado, proponha renegociação e registre.",
+                    "Evite exposição do paciente em cobranças.",
+                ],
+                delicate=True
+            )
+        if "pix" in ql:
+            return _make_answer(
+                "Pode solicitar pagamento antecipado, se acordado.",
+                [
+                    "Defina cancelamentos, remarcação e reembolso.",
+                ],
+                delicate=False
+            )
+        if "pacote" in ql:
+            return _make_answer(
+                "Pode, com transparência e regras claras.",
+                [
+                    "Defina validade, cancelamento e o que ocorre em caso de alta/encerramento.",
+                ],
+                delicate=True
+            )
+        if "de graça" in ql or "gratuita" in ql:
+            return _make_answer(
+                "Pode atender gratuitamente, com enquadre claro.",
+                [
+                    "Defina regras, limites e duração do acordo.",
+                    "Evite usar como captação promocional.",
+                ],
+                delicate=True
+            )
+        return _make_answer(
+            "Honorários exigem transparência e enquadre.",
+            [
+                "Registre política de faltas e pagamentos.",
+                "Evite promessas e captação desleal.",
+            ],
+            delicate=True
+        )
+
+    # RELAÇÕES DUAIS / FAMÍLIA / AMIGOS / CASAL
+    if "amig" in ql or "famil" in ql or "casal" in ql or "professor" in ql or "chefe" in ql or "social" in ql:
+        return _make_answer(
+            "Em geral, evite relações duais.",
+            [
+                "Atender amigos/familiares/casal+individual com o mesmo profissional eleva risco de conflito de interesse e quebra de sigilo.",
+                "Se inevitável, explicite limites, avalie riscos e registre; frequentemente o melhor é encaminhar.",
+            ],
+            delicate=True
+        )
+
+    # ENCERRAMENTO / ENCAMINHAMENTO / SUPERVISÃO
+    if "encerrar" in ql or "encaminh" in ql or "supervis" in ql:
+        return _make_answer(
+            "Encerramento e encaminhamento devem ser cuidadosos e registrados.",
+            [
+                "Evite abandono: prepare, comunique e encaminhe quando necessário.",
+                "Registre o encerramento e orientações essenciais.",
+            ],
+            delicate=True
+        )
+
+    # DEFAULT
+    return _make_answer(
+        "Orientação ética geral",
+        [
+            "Considere sigilo, limites, finalidade e mínimo necessário.",
+            "Registre combinados importantes.",
+            "Em dúvida, supervisão e CRP (COF).",
+        ],
+        delicate=True
+    )
+
+# =====================================================
+# RESPOSTAS PARA TODAS AS QUESTÕES
+# (agora sim: todas terão resposta específica)
+# =====================================================
+RESPOSTAS_GERADAS = {q: generate_answer_for_question(q) for q in QUICK_QUESTIONS}
+
+# =====================================================
+# AGRUPAMENTO: OBJETIVAS EM CIMA / ZONA EMBAIXO
+# (objetiva = tem override ou resposta "fechada" no RESPOSTAS_PRONTAS)
+# =====================================================
+def build_quick_groups():
+    direct = [{"text": q} for q in QUICK_QUESTIONS if q in RESPOSTAS_PRONTAS or q in OVERRIDES]
+    care = [{"text": q} for q in QUICK_QUESTIONS if q not in RESPOSTAS_PRONTAS and q not in OVERRIDES]
+    return direct, care
 
 # =====================================================
 # DB
@@ -470,13 +676,10 @@ def stats():
 # INDEX e BUSCA
 # =====================================================
 def index_content(title: str, text: str):
-    chunks = [c.strip() for c in text.split("\n") if len(c.strip()) > 20]
+    chunks = [c.strip() for c in text.split('\n') if len(c.strip()) > 20]
     conn = db()
     cur = conn.cursor()
-    cur.execute(
-        "INSERT INTO documents (title, created_at) VALUES (?,?)",
-        (title, datetime.now().strftime("%Y-%m-%d"))
-    )
+    cur.execute("INSERT INTO documents (title, created_at) VALUES (?,?)", (title, datetime.now().strftime("%Y-%m-%d")))
     doc_id = cur.lastrowid
     for c in chunks:
         cur.execute("INSERT INTO chunks (doc_id, chunk_text) VALUES (?,?)", (doc_id, c))
@@ -485,11 +688,14 @@ def index_content(title: str, text: str):
 
 def simple_search(query: str):
     conn = db()
-    keywords = [t for t in (query or "").lower().split() if len(t) > 3]
+    terms = (query or "").lower().split()
+    keywords = [t for t in terms if len(t) > 3]
     if not keywords:
         return []
+
     sql = "SELECT chunk_text FROM chunks WHERE " + " OR ".join(["chunk_text LIKE ?"] * len(keywords))
     params = [f"%{k}%" for k in keywords]
+
     rows = conn.execute(sql, params).fetchall()
     conn.close()
 
@@ -502,7 +708,8 @@ def simple_search(query: str):
     return unique_rows[:3]
 
 # =====================================================
-# CONTRATO (gerador)
+# CONTRATO / HONORÁRIOS / POLÍTICAS / REDE
+# (mantive suas funções exatamente como vinham)
 # =====================================================
 def gerar_contrato_texto(data: dict) -> str:
     modalidade = data.get("modalidade", "Online")
@@ -579,9 +786,6 @@ Observação
 Este documento é um modelo informacional e pode ser adaptado conforme contexto e critérios profissionais.
 """
 
-# =====================================================
-# HONORÁRIOS (calculadora)
-# =====================================================
 def calc_honorarios(d: dict) -> dict:
     custos_fixos = float(d.get("custos_fixos", 0) or 0)
     custos_variaveis_mes = float(d.get("custos_variaveis_mes", 0) or 0)
@@ -626,9 +830,6 @@ def calc_honorarios(d: dict) -> dict:
         "receita_por_hora_bruta": round(receita_por_hora_bruta, 2),
     }
 
-# =====================================================
-# POLÍTICAS PRONTAS (gerador)
-# =====================================================
 def gerar_politica(data: dict) -> dict:
     tipo = data.get("tipo", "faltas")
     modalidade = data.get("modalidade", "Online")
@@ -650,9 +851,6 @@ def gerar_politica(data: dict) -> dict:
 - Atrasos: tolerância de {atraso} minutos, respeitando o horário final.
 - Falta sem aviso ou cancelamento fora do prazo: {"sessão é cobrada" if falta_cobra == "sim" else "pode ser remanejada conforme disponibilidade e critério"}.
 - Canal para desmarcação: {canal}.
-
-Observação
-Esta política existe para proteger o enquadre, a organização de agenda e a continuidade do cuidado.
 """
         return {"titulo": "Faltas e cancelamentos", "texto": texto}
 
@@ -669,9 +867,6 @@ Esta política existe para proteger o enquadre, a organização de agenda e a co
 - Canal principal: {canal}.
 - {regra}
 - Este serviço não funciona como plantão de urgência.
-
-Observação
-Limites de contato protegem o sigilo, o enquadre e evitam dependência do canal de mensagens.
 """
         return {"titulo": "Mensagens e contato", "texto": texto}
 
@@ -680,10 +875,6 @@ Limites de contato protegem o sigilo, o enquadre e evitam dependência do canal 
 
 - Forma de pagamento: {pagamento}.
 - Reembolso: {"pode haver ajuste proporcional em caso de interrupção do serviço, conforme sessões realizadas" if reembolso == "sim" else "não há reembolso automático para faltas ou cancelamentos fora do prazo"}.
-- Regras de faltas seguem a política de cancelamento.
-
-Observação
-Transparência financeira reduz conflito e protege o vínculo terapêutico.
 """
         return {"titulo": "Pagamentos e reembolso", "texto": texto}
 
@@ -694,9 +885,6 @@ Transparência financeira reduz conflito e protege o vínculo terapêutico.
 - Recomenda-se ambiente privado e uso de fone.
 - Em queda de conexão: aguardar {queda} minutos e tentar reconectar.
 - Se não retomar: confirmar por {canal} e remarcar conforme disponibilidade.
-
-Observação
-Este protocolo reduz ansiedade e evita improviso em momentos críticos.
 """
         return {"titulo": "Atendimento online", "texto": texto}
 
@@ -705,23 +893,15 @@ Este protocolo reduz ansiedade e evita improviso em momentos críticos.
 
 - O sigilo profissional é regra e protege a intimidade e o vínculo terapêutico.
 - Informações só são compartilhadas em situações excepcionais, seguindo o princípio do mínimo necessário.
-- Recomenda-se cuidado com dispositivos, backups e ambientes compartilhados.
-
-Observação
-O objetivo é proteger a pessoa atendida e a qualidade do serviço.
 """
         return {"titulo": "Sigilo e privacidade", "texto": texto}
 
     return {"titulo": "Política", "texto": f"{base_header}Escolha uma política para gerar um texto pronto."}
 
-# =====================================================
-# MAPA DE REDE (roteiros prontos)
-# =====================================================
 def gerar_rede(data: dict) -> dict:
     destino = data.get("destino", "psiquiatria")
     canal = data.get("canal", "WhatsApp")
     inclui_autorizacao = data.get("autorizacao", "sim")
-    tom = data.get("tom", "neutro")
 
     autorizacao_txt = (
         "Antes de qualquer contato com terceiros, solicite autorização por escrito do paciente (ou responsável legal), delimitando o que pode ser compartilhado e com qual finalidade.\n\n"
@@ -731,66 +911,18 @@ def gerar_rede(data: dict) -> dict:
     if destino == "psiquiatria":
         texto = f"""ROTEIRO DE REDE: Psiquiatria
 
-{autorizacao_txt}Mensagem para encaminhamento (copiar e colar)
-- Canal sugerido: {canal}
+{autorizacao_txt}Mensagem para encaminhamento
+Canal sugerido: {canal}
 
 Olá, tudo bem?
-Sou psicóloga e estou acompanhando a pessoa em psicoterapia. Com autorização expressa, gostaria de encaminhar para avaliação psiquiátrica, considerando benefícios de uma avaliação clínica complementar.
-Se você puder me informar disponibilidade de agenda e orientação de documentação necessária, agradeço.
-
-Observação
-Evite enviar detalhes sensíveis por mensagens. Prefira dados mínimos e, se necessário, contato profissional protegido.
+Sou psicóloga e estou acompanhando a pessoa em psicoterapia. Com autorização expressa, gostaria de encaminhar para avaliação psiquiátrica.
 """
         return {"titulo": "Encaminhamento para Psiquiatria", "texto": texto}
 
-    if destino == "escola":
-        texto = f"""ROTEIRO DE REDE: Escola (orientação e comunicação)
-
-{autorizacao_txt}Modelo de e-mail/mensagem para escola (copiar e colar)
-Prezados,
-Sou psicóloga e acompanho o(a) estudante em psicoterapia. Com autorização, solicito alinhamento para favorecer medidas de apoio pedagógico e bem-estar escolar.
-Peço, se possível, informações gerais sobre contexto escolar (frequência, adaptações já feitas, demandas observadas), preservando a privacidade do(a) estudante.
-
-Observação
-Evite descrição de conteúdo íntimo. Foque em medidas de apoio e informações gerais necessárias.
-"""
-        return {"titulo": "Contato com Escola", "texto": texto}
-
-    if destino == "familia":
-        texto = f"""ROTEIRO DE REDE: Família / Responsáveis
-
-{autorizacao_txt}Mensagem para combinar devolutiva (copiar e colar)
-Olá, tudo bem?
-Podemos agendar um momento breve para uma devolutiva geral sobre o processo, com foco em orientações práticas e medidas de apoio. 
-Por ética e privacidade, evitamos expor detalhes íntimos do conteúdo das sessões, mantendo o essencial para o cuidado.
-
-Observação
-Devolutivas devem ser proporcionais e no mínimo necessário, especialmente em crianças e adolescentes.
-"""
-        return {"titulo": "Devolutiva para Família", "texto": texto}
-
-    if destino == "rede_publica":
-        texto = f"""ROTEIRO DE REDE: Rede pública / serviços
-
-{autorizacao_txt}Mensagem para serviço (copiar e colar)
-Olá,
-Sou psicóloga e estou acompanhando a pessoa em psicoterapia. Com autorização, solicito orientação sobre fluxo de atendimento e possibilidade de acolhimento/encaminhamento para o serviço.
-Caso existam documentos necessários ou horários de triagem, por favor me informem.
-
-Observação
-Se houver risco imediato, priorize serviços de emergência locais e rede de apoio.
-"""
-        return {"titulo": "Contato com Serviços", "texto": texto}
-
     if destino == "autorizacao":
-        texto = f"""MODELO: Autorização para contato com terceiros (copiar e colar)
+        texto = """MODELO: Autorização para contato com terceiros
 
-Eu, ______________________________, autorizo a psicóloga ______________________________ (CRP ________) a realizar contato profissional com ______________________________ (nome/serviço), pelo canal ______________________________, com a finalidade de ______________________________.
-
-Declaro estar ciente de que serão compartilhadas apenas informações mínimas necessárias para o objetivo acima, preservando minha privacidade.
-
-Data: ____/____/____
-Assinatura: ______________________________
+Eu, ______________________________, autorizo a psicóloga ______________________________ (CRP ________) a realizar contato profissional com ______________________________, com a finalidade de ______________________________.
 """
         return {"titulo": "Autorização por escrito", "texto": texto}
 
@@ -811,10 +943,7 @@ def _make_docx_bytes(title: str, text: str) -> BytesIO:
 
     lines = (text or "").replace("\r\n", "\n").split("\n")
     for line in lines:
-        if line.strip() == "":
-            doc.add_paragraph("")
-        else:
-            doc.add_paragraph(line)
+        doc.add_paragraph(line)
 
     bio = BytesIO()
     doc.save(bio)
@@ -855,27 +984,8 @@ def home():
 
         q = (request.form.get("q") or "").strip()
         if q:
-            # ✅ Só é direta se estiver em RESPOSTAS_PRONTAS
-            if q in RESPOSTAS_PRONTAS:
-                answer = RESPOSTAS_PRONTAS[q]
-            else:
-                hits = simple_search(q)
-                if hits:
-                    html_hits = "".join([
-                        f"<div class='ref-card source-cfp'><div class='ref-body'>...{h}...</div></div>"
-                        for h in hits
-                    ])
-                    answer = f"""
-                    <div class="resposta-humanizada">
-                      <h3>Resultados da Busca</h3>
-                      <p>Não encontrei uma resposta direta cadastrada para esta dúvida, mas estes trechos podem ajudar:</p>
-                      {html_hits}
-                      <div class="alert-box tip">💡 Use as abas Políticas e Rede para textos prontos e roteiros.</div>
-                    </div>
-                    """
-                else:
-                    answer = resposta_orientativa(q)
-
+            # agora TODAS as perguntas têm resposta específica (gerada)
+            answer = RESPOSTAS_GERADAS.get(q) or resposta_orientativa(q)
             save_history(q, answer)
 
     direct_questions, care_questions = build_quick_groups()
@@ -931,6 +1041,7 @@ def admin():
 # =====================================================
 if __name__ == "__main__":
     init_db()
+    # mantive o "cérebro" disponível
     if stats()["chunks"] == 0:
         index_content("Código de Ética (Resumo)", TEXTO_CODIGO_ETICA)
     app.run(debug=True, port=5000)

@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+
 {% block content %}
 
 <div class="ethical-warning">
@@ -13,7 +14,7 @@
   <div style="margin-bottom: 18px;">
     <h2 style="margin:0;">Consulta Ética</h2>
     <p style="margin:6px 0 0 0; color:#64748b; font-size:0.92rem;">
-      Selecione uma dúvida abaixo para ver a orientação.
+      Selecione uma dúvida abaixo para ver a orientação embasada.
     </p>
   </div>
 
@@ -32,14 +33,14 @@
       </div>
     </div>
   {% else %}
-    <div class="muted-box">
+    <div class="muted-box" style="padding: 20px; text-align: center; color: #94a3b8; background: #f8fafc; border-radius: 8px;">
       Nenhuma pergunta cadastrada no momento.
     </div>
   {% endif %}
 
-  <form method="post" style="margin-top: 18px;">
-    <button class="btn-action" type="submit" name="load_bases" value="1">
-      Recarregar Base
+  <form method="post" style="margin-top: 18px; text-align: right;">
+    <button class="btn-action" type="submit" name="load_bases" value="1" title="Forçar recarga do banco de dados">
+      ↻ Atualizar Base
     </button>
   </form>
 
@@ -51,18 +52,43 @@
 </section>
 
 <section class="card">
+  <h3 style="margin-bottom: 5px;">Atalhos úteis</h3>
+  <p style="color:#64748b; font-size:0.9rem; margin-bottom: 0;">Acesso rápido às ferramentas administrativas.</p>
+  
+  <div class="shortcuts-grid">
+    <a href="{{ url_for('contrato') }}" class="btn-shortcut">
+      Gerar Contrato
+    </a>
+
+    <a href="{{ url_for('honorarios') }}" class="btn-shortcut">
+      Calculadora
+    </a>
+
+    <a href="{{ url_for('politicas') }}" class="btn-shortcut">
+      Políticas
+    </a>
+
+    <a href="{{ url_for('rede') }}" class="btn-shortcut">
+      Rede
+    </a>
+  </div>
+</section>
+
+<section class="card">
   <h3>Histórico Recente</h3>
   {% if history %}
     <ul class="history-list">
       {% for h in history %}
-        <li style="border-bottom: 1px solid #f1f5f9; padding: 10px 0;">
-          <small style="color: #94a3b8; font-size: 0.75rem;">{{ h.created_at }}</small>
-          <div style="font-weight: 600; font-size: 0.9rem; color: #0f172a;">{{ h.question }}</div>
+        <li class="history-item">
+          <small class="history-date">{{ h.created_at }}</small>
+          <div class="history-question">{{ h.question }}</div>
         </li>
       {% endfor %}
     </ul>
   {% else %}
-    <p style="color: #94a3b8; font-size: 0.9rem;">Nenhuma consulta recente.</p>
+    <p style="color: #94a3b8; font-size: 0.9rem; text-align: center; padding: 20px;">
+      Nenhuma consulta recente.
+    </p>
   {% endif %}
 </section>
 

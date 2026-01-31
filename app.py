@@ -10,7 +10,7 @@ from flask import (
 from docx import Document
 
 # =====================================================
-# CONFIG
+# CONFIGURAÇÕES
 # =====================================================
 APP_NAME = "EthosPsi"
 app = Flask(__name__)
@@ -31,7 +31,7 @@ LINKS_OFICIAIS = {
 }
 
 # =====================================================
-# TEXTO BASE (para busca genérica)
+# TEXTO BASE (CÓDIGO DE ÉTICA RESUMIDO PARA BUSCA)
 # =====================================================
 TEXTO_CODIGO_ETICA = """
 PRINCÍPIOS FUNDAMENTAIS
@@ -52,11 +52,12 @@ q) Realizar diagnósticos, divulgar procedimentos ou apresentar resultados em me
 
 SIGILO PROFISSIONAL
 Art. 9º - É dever do psicólogo respeitar o sigilo profissional a fim de proteger, por meio da confidencialidade, a intimidade das pessoas.
+Art. 10 - Nas situações em que se configure conflito entre as exigências decorrentes do disposto no Art. 9º e as afirmações dos princípios fundamentais deste Código, excetuando-se os casos previstos em lei, o psicólogo poderá decidir pela quebra de sigilo, baseando sua decisão na busca do menor prejuízo.
 Art. 13 - No atendimento à criança, ao adolescente ou ao interdito, deve ser comunicado aos responsáveis o estritamente essencial para se promoverem medidas em seu benefício.
 """
 
 # =====================================================
-# 100 DÚVIDAS ÉTICAS (LISTA INTEGRAL)
+# LISTA DE PERGUNTAS (ORDEM DE EXIBIÇÃO)
 # =====================================================
 QUICK_QUESTIONS = [
     "Até onde vai o sigilo?",
@@ -66,109 +67,36 @@ QUICK_QUESTIONS = [
     "Como agir se um familiar pede informações do paciente?",
     "Como agir se o paciente pede segredo absoluto?",
     "Até onde vai o sigilo em caso de crime?",
-    "Posso responder e-mail de familiar sobre o paciente?",
-    "Posso discutir caso em grupo de WhatsApp profissional?",
-    "O que fazer se eu quebrar o sigilo sem querer?",
     "Sou obrigada a fazer anotações?",
     "O que é obrigatório eu anotar no prontuário?",
     "Paciente pediu para não registrar no prontuário",
     "O paciente pode pedir cópia do prontuário?",
-    "Como devo guardar prontuários antigos?",
+    "Por quanto tempo devo guardar prontuários?",
     "Posso usar prontuários de forma digital?",
     "Posso usar IA para escrever prontuário?",
-    "Por quanto tempo devo guardar prontuários?",
-    "Posso negar um relatório solicitado?",
-    "O que fazer se o juiz pedir o prontuário?",
     "Posso emitir declaração de comparecimento?",
     "Posso emitir laudo psicológico para processo?",
     "Posso emitir relatório para escola?",
-    "Posso emitir relatório para empresa do paciente?",
     "Posso colocar CID em relatório?",
-    "Posso assinar documento sem avaliação suficiente?",
-    "Posso emitir relatório a pedido de familiar?",
     "Posso cobrar por relatório psicológico?",
-    "Posso alterar um relatório após entregue?",
-    "Posso recusar emitir laudo judicial?",
     "Posso atender amigos?",
     "Posso atender familiares?",
     "Posso atender familiares de ex-pacientes?",
-    "Posso atender duas pessoas da mesma família individualmente?",
-    "Posso atender casal e um dos parceiros individualmente?",
-    "Posso atender alguém que eu já conheço socialmente?",
-    "Posso atender paciente que trabalha comigo?",
-    "Posso atender paciente que é meu chefe?",
-    "Posso atender paciente que é meu professor?",
-    "Posso manter amizade com paciente durante o tratamento?",
-    "Devo cumprimentar meu paciente na rua?",
     "Posso ir a eventos sociais em que meu paciente esta?",
     "Posso seguir paciente no Instagram?",
-    "Posso curtir posts do paciente?",
-    "Posso ver stories do paciente?",
-    "Posso bloquear paciente nas redes sociais?",
-    "Posso pesquisar o paciente no Google?",
-    "Posso responder mensagens fora do horário?",
-    "Posso usar WhatsApp pessoal com pacientes?",
-    "Posso ligar para o paciente fora do combinado?",
     "Preciso de contrato para terapia online?",
     "Como garantir sigilo no atendimento online?",
-    "Posso atender online com paciente em outro estado?",
-    "O que fazer quando a internet cai na sessão?",
-    "Posso cobrar sessão cancelada por internet ruim?",
-    "Posso atender por áudio no WhatsApp?",
-    "Posso atender por mensagem (chat)?",
     "Posso atender paciente dirigindo?",
-    "Posso atender paciente no trabalho dele?",
-    "Posso gravar a sessão?",
-    "Posso cobrar multa por falta?",
-    "Como lidar com inadimplência?",
-    "Posso cobrar PIX adiantado?",
-    "Posso cobrar pacote de sessões?",
     "Posso atender de graça?",
-    "Posso oferecer primeira sessão gratuita?",
     "Posso divulgar o valor da sessão no Instagram?",
-    "Posso fazer sorteio de sessões?",
-    "Posso receber comissão por encaminhamento?",
-    "Posso fazer parceria com médico por indicação?",
+    "Como lidar com inadimplência?",
     "Existe cura gay?",
-    "O que responder quando pedem terapia de reversão?",
-    "Posso influenciar na orientação sexual do meu paciente?",
-    "Existe psicologia evangélica?",
-    "É proíbido falar sobre religião nas sessões?",
     "Posso orar com o paciente na sessão?",
     "Posso recusar atendimento por conflito de valores?",
-    "Posso recusar atendimento por falta de vaga?",
-    "Quando devo encaminhar um paciente?",
     "Como encerrar terapia de forma ética?",
-    "Como definir meu enquadre (horários, cancelamentos e atrasos)?",
-    "Como criar um contrato terapêutico simples?",
-    "Como organizar ficha de anamnese sem invadir demais?",
-    "Posso atender em local público (cafeteria)?",
-    "Como agir se o paciente pede desconto na sessão?",
-    "Como lidar com faltas recorrentes sem culpabilizar?",
-    "O que fazer se eu errar com o paciente?",
-    "Posso confrontar o paciente?",
-    "Posso dar conselhos diretos ao paciente?",
-    "Como registrar sessão de forma sintética e segura?",
-    "Como fazer devolutiva sem expor o paciente?",
-    "Como lidar com pedido de “diagnóstico rápido”?",
-    "Posso orientar medicação ao paciente?",
-    "Como trabalhar em rede com psiquiatria sem quebrar sigilo?",
-    "Como pedir autorização para falar com outro profissional?",
+    "Quando devo encaminhar um paciente?",
     "Posso atender adolescente sem os pais saberem?",
-    "O que falar para os pais sobre a terapia do filho?",
     "Como agir em suspeita de violência (rede de proteção)?",
-    "Como lidar com paciente que pede amizade nas redes?",
-    "Como lidar com mensagens longas no WhatsApp?",
-    "Como evitar dependência do paciente do meu contato?",
-    "Como fazer encaminhamento sem abandonar?",
-    "Como preparar alta e encerramento?",
-    "Como lidar com pedido de relatório para INSS ou empresa?",
-    "Como me proteger eticamente na publicidade profissional?",
-    "Posso postar rotina e bastidores do consultório?",
-    "Como citar casos clínicos sem identificar?",
-    "Como escolher supervisão e manter sigilo do caso?",
-    "Como definir política de reembolso?",
-    "Como precificar sem culpa e sem exploração?",
 ]
 
 # =====================================================
@@ -178,6 +106,7 @@ def _html_escape(s: str) -> str:
     return (s or "").replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
 def _make_answer(title: str, bullets: list[str], delicate: bool = True) -> str:
+    """Gera o HTML da resposta com o alerta de 'Questão Delicada'."""
     warn = ""
     if delicate:
         warn = """
@@ -195,422 +124,347 @@ def _make_answer(title: str, bullets: list[str], delicate: bool = True) -> str:
     """
 
 # =====================================================
-# RESPOSTAS ESPECÍFICAS (OVERRIDES)
+# BANCO DE DADOS DE RESPOSTAS (DICT)
 # =====================================================
-OVERRIDES = {
-    "Posso falar do caso com meu cônjuge ou amigo?": _make_answer(
-        "Não. Isso viola o sigilo profissional.",
-        [
-            "Não é permitido compartilhar informações clínicas com cônjuge/amigos, mesmo sem citar nome, se houver risco de identificação ou exposição.",
-            "Se isso te afetar emocionalmente, leve o tema para supervisão (e não para conversas pessoais).",
-            "Foque em discutir o manejo clínico em espaço profissional e com anonimização.",
-        ],
-        delicate=True
-    ),
-
+RESPOSTAS_DB = {
+    # --- SIGILO ---
     "Até onde vai o sigilo?": _make_answer(
-        "O sigilo é a regra e protege a intimidade do paciente.",
+        "O sigilo é inerente à profissão (Art. 9º do CEpp).",
         [
-            "Você não deve revelar que alguém é seu paciente nem conteúdo de sessões.",
-            "Exceções são raras: risco grave e atual, dever legal ou ordem judicial — sempre pelo mínimo necessário.",
-            "Em situações de violência/violação de direitos (especialmente envolvendo crianças/adolescentes), o encaminhamento à rede de proteção pode ser necessário; registre a justificativa e compartilhe somente o essencial.",
-            "Sempre que possível, combine limites de sigilo no início e retome quando a situação exigir.",
-        ],
-        delicate=True
+            "Protege a intimidade da pessoa, grupos ou organizações.",
+            "Não é absoluto: pode ser quebrado em situações de risco grave à vida (suicídio/homicídio), violência contra vulneráveis ou ordem judicial específica.",
+            "Mesmo na quebra, deve-se restringir as informações ao estritamente necessário."
+        ]
     ),
-
     "Quando posso quebrar o sigilo?": _make_answer(
-        "A quebra de sigilo é excepcional e deve ser mínima.",
+        "Situações de exceção (Art. 10º do CEpp).",
         [
-            "Considere apenas em risco grave e atual, dever legal, ou ordem judicial.",
-            "Compartilhe somente o mínimo necessário e registre a decisão técnica.",
-            "Quando possível, informe o paciente sobre limites e sobre o que será comunicado.",
-        ],
-        delicate=True
+            "Quando houver risco grave e iminente à vida (da pessoa ou terceiros).",
+            "Casos de violência contra criança, adolescente ou idoso (comunicação aos órgãos competentes).",
+            "Decisão judicial fundamentada (embora o psicólogo possa arguir sigilo se julgar prejudicial).",
+            "Em todos os casos, prestar apenas as informações estritamente necessárias."
+        ]
+    ),
+    "Posso confirmar para alguém que a pessoa é minha paciente?": _make_answer(
+        "Não. A própria existência do vínculo é sigilosa.",
+        [
+            "Confirmar o atendimento expõe a pessoa e viola o Art. 9º.",
+            "Resposta padrão: 'Por questões éticas, não posso confirmar nem negar atendimento a qualquer pessoa'.",
+            "Exceção: Se o paciente autorizar formalmente ou se for responsável legal de menor."
+        ]
+    ),
+    "Posso falar do caso com meu cônjuge ou amigo?": _make_answer(
+        "Não. Violação gravíssima de sigilo.",
+        [
+            "O Art. 9º veda a exposição da intimidade.",
+            "Mesmo trocando nomes, detalhes podem identificar o paciente.",
+            "Angústias do terapeuta devem ser tratadas em Supervisão ou Terapia Pessoal, nunca em conversas sociais."
+        ]
+    ),
+    "Como agir se um familiar pede informações do paciente?": _make_answer(
+        "Proteja o sigilo e o vínculo.",
+        [
+            "Para pacientes adultos: Não passe informações sem consentimento expresso.",
+            "Para crianças/adolescentes: Pais têm direito a feedback, mas não ao conteúdo detalhado das sessões (Art. 13º). Informe apenas o necessário para promover medidas em benefício.",
+            "Acolha a angústia da família, mas reafirme a ética."
+        ]
+    ),
+    "Como agir se o paciente pede segredo absoluto?": _make_answer(
+        "Alinhe expectativas (Contrato Terapêutico).",
+        [
+            "Explique que o sigilo é a regra, mas a lei obriga a quebra em risco de vida ou violência.",
+            "Isso constrói confiança e transparência desde o início.",
+            "Garanta que nada será revelado 'sem querer' ou por descuido."
+        ]
+    ),
+    "Até onde vai o sigilo em caso de crime?": _make_answer(
+        "O psicólogo não é investigador de polícia.",
+        [
+            "Crimes passados relatados em sessão (ex: roubo) estão sob sigilo.",
+            "Crimes em andamento ou futuros com risco à vida (ex: planejamento de homicídio/suicídio) ou contra vulneráveis exigem quebra de sigilo para proteção (Art. 10º).",
+            "Em dúvida, consulte o jurídico do CRP."
+        ]
     ),
 
+    # --- PRONTUÁRIO / DOCUMENTOS ---
+    "Sou obrigada a fazer anotações?": _make_answer(
+        "Sim. O registro documental é obrigatório.",
+        [
+            "Resolução CFP 01/2009: É dever do psicólogo manter registro documental.",
+            "Serve para garantia de direitos do usuário, defesa do profissional e evolução do caso.",
+            "A falta de registro é infração ética frequente em fiscalizações."
+        ]
+    ),
+    "O que é obrigatório eu anotar no prontuário?": _make_answer(
+        "Conteúdo mínimo (Res. CFP 01/2009).",
+        [
+            "Identificação do usuário.",
+            "Avaliação da demanda e definição de objetivos.",
+            "Registro da evolução (datas, procedimentos, síntese do atendimento).",
+            "Encaminhamentos ou encerramento.",
+            "Não é necessário transcrever a sessão inteira (diário), apenas a síntese técnica."
+        ]
+    ),
+    "Paciente pediu para não registrar no prontuário": _make_answer(
+        "O registro é dever do psicólogo, não escolha do paciente.",
+        [
+            "Explique que é uma obrigação legal (Res. 01/2009).",
+            "Negocie o *teor*: você pode registrar de forma mais sintética, protegendo detalhes muito íntimos, mas mantendo a evolução técnica.",
+            "O prontuário pertence ao paciente, mas a guarda é do psicólogo."
+        ]
+    ),
+    "O paciente pode pedir cópia do prontuário?": _make_answer(
+        "Sim. É direito do usuário (Res. CFP 01/2009).",
+        [
+            "O paciente tem acesso integral às suas informações.",
+            "O psicólogo deve fornecer cópia ou acesso quando solicitado.",
+            "Se houver risco de o conteúdo causar dano (ex: surto psicótico ao ler), o profissional deve oferecer acompanhamento ou entrevista devolutiva para explicar o conteúdo."
+        ]
+    ),
+    "Por quanto tempo devo guardar prontuários?": _make_answer(
+        "Mínimo de 05 anos.",
+        [
+            "Resolução CFP 01/2009: Guarda mínima de 5 anos após o último atendimento.",
+            "Após esse prazo, podem ser incinerados ou destruídos de forma segura.",
+            "Para crianças, recomenda-se guardar até a maioridade (precaução jurídica)."
+        ]
+    ),
+    "Posso usar prontuários de forma digital?": _make_answer(
+        "Sim, com requisitos de segurança.",
+        [
+            "O sistema deve garantir sigilo, autenticidade e integridade.",
+            "Recomendado uso de Certificado Digital (ICP-Brasil) para assinatura.",
+            "Evite guardar em Word/Excel sem senha ou em nuvens públicas não seguras."
+        ]
+    ),
+    "Posso usar IA para escrever prontuário?": _make_answer(
+        "Extremo cuidado. Risco de violação de sigilo.",
+        [
+            "Não insira nomes ou dados identificáveis em IAs públicas (ChatGPT, Gemini, etc.), pois os dados são usados para treino.",
+            "A responsabilidade técnica do texto é 100% do psicólogo.",
+            "O uso deve ser apenas para auxílio na redação, nunca para análise clínica automática."
+        ]
+    ),
+
+    # --- DOCUMENTOS (Resolução 06/2019) ---
+    "Posso emitir laudo psicológico para processo?": _make_answer(
+        "Sim, se houver demanda e capacitação.",
+        [
+            "Deve seguir rigorosamente a Resolução CFP 06/2019.",
+            "O Laudo é resultado de Avaliação Psicológica. Não emita laudo apenas com base em psicoterapia.",
+            "Deve ser imparcial, objetivo e responder aos quesitos ou demanda específica."
+        ]
+    ),
+    "Posso emitir declaração de comparecimento?": _make_answer(
+        "Sim. É o documento mais simples.",
+        [
+            "Resolução 06/2019: Atesta apenas o comparecimento (dia, hora, duração).",
+            "Não deve conter diagnóstico (CID) ou sintomas, a menos que estritamente necessário e solicitado.",
+            "Serve para justificar falta no trabalho/escola."
+        ]
+    ),
+    "Posso emitir relatório para escola?": _make_answer(
+        "Sim, focado no processo de aprendizagem.",
+        [
+            "Não exponha a intimidade familiar para a escola.",
+            "O foco deve ser: como as questões emocionais impactam a aprendizagem ou comportamento escolar.",
+            "Sempre peça autorização dos responsáveis e, se possível, mostre o documento a eles antes de enviar."
+        ]
+    ),
+    "Posso colocar CID em relatório?": _make_answer(
+        "Apenas com autorização e se tecnicamente justificado.",
+        [
+            "O diagnóstico pertence ao paciente. Só coloque CID se o paciente solicitar ou autorizar.",
+            "Em documentos para planos de saúde ou INSS, geralmente é exigido, mas discuta com o paciente antes.",
+            "Evite rotulação desnecessária."
+        ]
+    ),
+    "Posso cobrar por relatório psicológico?": _make_answer(
+        "Depende do contexto.",
+        [
+            "Se for um relatório simples de evolução do tratamento, geralmente entende-se incluso no serviço.",
+            "Se for um Laudo ou Avaliação Psicológica extra (documento complexo), pode ser cobrado à parte, desde que acordado previamente no Contrato."
+        ]
+    ),
+
+    # --- RELACIONAMENTOS DUAIS ---
+    "Posso atender amigos?": _make_answer(
+        "Não. Veda relação que interfira na objetividade.",
+        [
+            "Art. 2º, j: Vedado estabelecer relação que possa interferir negativamente.",
+            "A intimidade prévia contamina a transferência e a neutralidade técnica.",
+            "Encaminhe para um colega de confiança."
+        ]
+    ),
+    "Posso atender familiares?": _make_answer(
+        "Não. Configura relação dual/múltipla.",
+        [
+            "Mesma lógica dos amigos: falta de isenção e risco de confusão de papéis.",
+            "O vínculo pessoal pré-existente impede o vínculo profissional ético.",
+            "Encaminhamento é a conduta correta."
+        ]
+    ),
+    "Posso atender familiares de ex-pacientes?": _make_answer(
+        "Cuidado. Avalie caso a caso.",
+        [
+            "Não é explicitamente proibido, mas pode gerar conflito se as histórias se cruzarem.",
+            "Se o ex-paciente foi atendido há pouco tempo ou se o vínculo familiar é muito próximo, melhor evitar.",
+            "Priorize a qualidade do serviço e o sigilo."
+        ]
+    ),
+    "Posso ir a eventos sociais em que meu paciente esta?": _make_answer(
+        "Situação delicada. Preserve o enquadre.",
+        [
+            "Se for evento grande (show, palestra), ok. Se for íntimo (aniversário na casa de amigo comum), evite.",
+            "Se encontrar: cumprimente discretamente, não puxe assunto terapêutico.",
+            "Proteja o sigilo: não deixe transparecer para outros que é seu paciente."
+        ]
+    ),
+    "Posso seguir paciente no Instagram?": _make_answer(
+        "Não recomendado. Proteja o setting.",
+        [
+            "Ter acesso à vida pessoal do paciente fora da sessão pode enviesar a escuta.",
+            "O paciente ter acesso à sua vida pessoal pode interferir na transferência.",
+            "Perfis profissionais são ok, mas evite seguir de volta (seguir o paciente) para manter a assimetria da relação."
+        ]
+    ),
+
+    # --- ONLINE / TECNOLOGIA ---
+    "Preciso de contrato para terapia online?": _make_answer(
+        "Altamente recomendado.",
+        [
+            "Estabeleça regras claras sobre plataforma, falhas de conexão, privacidade do ambiente e pagamentos.",
+            "Define o que acontece se a internet cair (remarca? cobra?).",
+            "Protege ambas as partes."
+        ]
+    ),
+    "Como garantir sigilo no atendimento online?": _make_answer(
+        "Medidas técnicas e ambientais.",
+        [
+            "Use fones de ouvido.",
+            "Esteja em sala fechada e isolada acusticamente.",
+            "Peça para o paciente fazer o mesmo (garantir que ele esteja sozinho).",
+            "Evite gravar sessões sem necessidade extrema e consentimento."
+        ]
+    ),
+    "Posso atender paciente dirigindo?": _make_answer(
+        "Não. Risco à segurança e falta de foco.",
+        [
+            "A sessão exige atenção plena e ambiente seguro.",
+            "Dirigir exige atenção ao trânsito. Fazer os dois coloca o paciente em risco físico.",
+            "Interrompa a sessão e peça para ele estacionar ou remarcar."
+        ]
+    ),
+
+    # --- HONORÁRIOS ---
+    "Posso atender de graça?": _make_answer(
+        "Sim, mas com ética (não promocional).",
+        [
+            "O atendimento voluntário é permitido e nobre (Art. 4º do Código).",
+            "Não pode ser usado para captar clientela (ex: '1ª sessão grátis' como marketing).",
+            "Deve ser um trabalho social genuíno ou vinculado a instituição."
+        ]
+    ),
+    "Posso divulgar o valor da sessão no Instagram?": _make_answer(
+        "Não. Vedado pelo Código de Ética.",
+        [
+            "Art. 20: É vedado utilizar o preço do serviço como forma de propaganda.",
+            "O preço não deve ser o diferencial competitivo.",
+            "Informe o valor apenas quando o interessado entrar em contato (direct/whatsapp)."
+        ]
+    ),
+    "Como lidar com inadimplência?": _make_answer(
+        "Sem exposição e com diálogo.",
+        [
+            "O psicólogo não pode expor o paciente a situações vexatórias de cobrança.",
+            "Tente renegociar, parcelar ou entender o motivo.",
+            "Se a inadimplência persistir, pode-se suspender o atendimento, encaminhando o paciente (não abandonar, mas encerrar por quebra de contrato)."
+        ]
+    ),
+
+    # --- TEMAS SENSÍVEIS / RELIGIÃO / SEXUALIDADE ---
     "Existe cura gay?": _make_answer(
-        "Não. Orientação sexual não é doença.",
+        "Não. E é proibido oferecer.",
         [
-            "O psicólogo não deve prometer, oferecer ou conduzir intervenção para “mudar” orientação sexual.",
-            "Atuação ética: acolher sofrimento, fortalecer autonomia, lidar com discriminação e conflitos.",
-        ],
-        delicate=True
+            "Resolução CFP 01/1999: A homossexualidade não é doença, perversão ou distúrbio.",
+            "O psicólogo não colaborará com eventos ou serviços que proponham tratamento e cura da homossexualidade.",
+            "Foco no acolhimento do sofrimento decorrente do preconceito."
+        ]
     ),
-
-    "Posso influenciar na orientação sexual do meu paciente?": _make_answer(
-        "Não. É vedado induzir convicções e preconceitos.",
+    "Posso orar com o paciente na sessão?": _make_answer(
+        "Não. Mistura técnica com religião.",
         [
-            "O psicólogo não deve direcionar o paciente a mudar orientação sexual.",
-            "Atuação ética: acolher, reduzir sofrimento e fortalecer autonomia.",
-        ],
-        delicate=True
+            "A psicologia é laica.",
+            "O psicólogo deve respeitar a crença do paciente, mas não deve induzir ou praticar rituais religiosos durante o atendimento técnico.",
+            "Isso configura imposição de crença ou confusão metodológica."
+        ]
     ),
+    "Posso recusar atendimento por conflito de valores?": _make_answer(
+        "Sim. É ético reconhecer limites.",
+        [
+            "Se uma demanda viola seus valores pessoais a ponto de impedir a escuta neutra e o acolhimento, você DEVE recusar.",
+            "Justifique tecnicamente e encaminhe para outro profissional qualificado.",
+            "Não tente 'tratar' algo que você rejeita moralmente."
+        ]
+    ),
+    
+    # --- ENCERRAMENTO E ENCAMINHAMENTO ---
+    "Como encerrar terapia de forma ética?": _make_answer(
+        "Planejamento e Autonomia.",
+        [
+            "O encerramento (alta) deve ser trabalhado processualmente, não abruptamente.",
+            "Deve visar a autonomia do paciente.",
+            "Se for interrupção (pelo terapeuta), deve-se fornecer encaminhamento e garantir a continuidade do cuidado com outro profissional."
+        ]
+    ),
+    "Quando devo encaminhar um paciente?": _make_answer(
+        "Limites técnicos ou pessoais.",
+        [
+            "Quando a demanda exige competência técnica que você não possui.",
+            "Quando há quebra do vínculo de confiança ou conflito de valores intransponível.",
+            "Faça o encaminhamento de forma responsável, indicando profissionais ou serviços adequados."
+        ]
+    ),
+    "Posso atender adolescente sem os pais saberem?": _make_answer(
+        "Depende da maturidade e gravidade.",
+        [
+            "O adolescente tem direito a sigilo e atendimento.",
+            "Porém, para continuidade, os responsáveis legais precisam estar cientes e autorizar (contrato financeiro/legal).",
+            "Exceção: Em casos de violência intrafamiliar, o sigilo pode ser mantido inicialmente para proteção, acionando o Conselho Tutelar."
+        ]
+    ),
+    "Como agir em suspeita de violência (rede de proteção)?": _make_answer(
+        "Notificação e Proteção.",
+        [
+            "Em casos de violência contra criança, adolescente, idoso ou mulher, a notificação é obrigatória ou recomendada (conforme legislação específica e ECA).",
+            "Não confronte o suposto agressor se isso colocar a vítima em risco.",
+            "Acione a rede de proteção (CREAS, Conselho Tutelar, Delegacia) de forma articulada."
+        ]
+    )
 }
 
 # =====================================================
 # GERAÇÃO DE RESPOSTAS
 # =====================================================
 def generate_answer_for_question(q: str) -> str:
-    if q in OVERRIDES:
-        return OVERRIDES[q]
-
-    ql = (q or "").lower()
-
-    # SIGILO / TERCEIROS
-    if "sigilo" in ql or "confirmar" in ql or "crime" in ql or "familiar" in ql or "terceiro" in ql:
-        if "confirmar" in ql:
-            return _make_answer(
-                "Evite confirmar. O vínculo terapêutico é sigiloso.",
-                [
-                    "A conduta mais segura é não confirmar nem negar: “Por sigilo profissional, não posso confirmar nem negar.”",
-                    "Evite conversas informais sobre pacientes com terceiros.",
-                ],
-                delicate=True
-            )
-        if "grupo" in ql or "whatsapp" in ql:
-            return _make_answer(
-                "Não é adequado discutir caso em grupo aberto.",
-                [
-                    "Mesmo em grupo “profissional”, há risco de quebra de sigilo e exposição.",
-                    "Discussão de caso deve ser em supervisão/equipe autorizada e com anonimização rigorosa.",
-                ],
-                delicate=True
-            )
-        if "e-mail" in ql or "email" in ql:
-            return _make_answer(
-                "Cuidado: não compartilhe informações do paciente com familiares por e-mail.",
-                [
-                    "Só compartilhe o mínimo necessário, com autorização e finalidade clara.",
-                    "Evite detalhes clínicos por canais inseguros; registre o motivo e o conteúdo essencial comunicado.",
-                ],
-                delicate=True
-            )
-        if "quebrar" in ql:
-            return _make_answer(
-                "Quebra de sigilo é exceção e deve ser mínima.",
-                [
-                    "Considere apenas em risco grave e atual, dever legal ou ordem judicial.",
-                    "Compartilhe somente o essencial e registre a decisão técnica.",
-                ],
-                delicate=True
-            )
-        return _make_answer(
-            "Sigilo é regra. Exceções são raras e justificadas.",
-            [
-                "Use o princípio do mínimo necessário.",
-                "Registre sua decisão técnica quando houver exceção.",
-                "Em dúvida, consulte o CRP (COF) e supervisão.",
-            ],
-            delicate=True
-        )
-
-    # PRONTUÁRIO / REGISTRO / GUARDA
-    if "prontu" in ql or "anot" in ql or "guardar" in ql or "digital" in ql or "ia" in ql:
-        if "ia" in ql:
-            return _make_answer(
-                "Use com extrema cautela. Priorize sigilo.",
-                [
-                    "Evite inserir dados identificáveis em ferramentas externas.",
-                    "Se usar, mantenha texto genérico e revise tudo; a responsabilidade é do psicólogo.",
-                    "Considere alternativas: modelos locais/offline e registro sintético.",
-                ],
-                delicate=True
-            )
-        if "digital" in ql:
-            return _make_answer(
-                "Pode ser digital, desde que preserve sigilo e segurança.",
-                [
-                    "Acesso restrito, senha forte e backups.",
-                    "Evite compartilhamento automático e dispositivos desprotegidos.",
-                ],
-                delicate=True
-            )
-        if "obrigatório" in ql or "obrigatoria" in ql:
-            return _make_answer(
-                "Registre o essencial técnico.",
-                [
-                    "Identificação mínima necessária, objetivos, evolução, condutas e encaminhamentos.",
-                    "Evite detalhes íntimos desnecessários.",
-                ],
-                delicate=True
-            )
-        if "cópia" in ql or "copia" in ql:
-            return _make_answer(
-                "Em geral, o paciente pode solicitar acesso, com cuidado na forma.",
-                [
-                    "Avalie a forma mais adequada: relatório/síntese, preservando terceiros e evitando dano.",
-                    "Registre a decisão e o que foi entregue.",
-                ],
-                delicate=True
-            )
-        if "guardar" in ql or "quanto tempo" in ql:
-            return _make_answer(
-                "Guarde registros com sigilo e acesso restrito.",
-                [
-                    "Arquivo físico: local trancado.",
-                    "Arquivo digital: proteção por senha, backup e controle de acesso.",
-                    "Registre sua política de guarda e descarte seguro.",
-                ],
-                delicate=True
-            )
-        return _make_answer(
-            "Prontuário é dever profissional e deve ser protegido.",
-            [
-                "Registre o essencial técnico, preserve sigilo e mantenha segurança.",
-                "Em dúvida, consulte CRP e supervisão.",
-            ],
-            delicate=True
-        )
-
-    # DOCUMENTOS / RELATÓRIO / LAUDO / DECLARAÇÃO
-    if "relatório" in ql or "relatorio" in ql or "laudo" in ql or "declara" in ql or "cid" in ql:
-        if "declara" in ql:
-            return _make_answer(
-                "Declaração de comparecimento é possível e deve ser simples.",
-                [
-                    "Inclua data/horário e identificação do profissional.",
-                    "Evite conteúdo clínico desnecessário.",
-                ],
-                delicate=False
-            )
-        if "cid" in ql:
-            return _make_answer(
-                "CID em documento exige cautela e finalidade clara.",
-                [
-                    "Evite expor diagnóstico sem necessidade e sem consentimento.",
-                    "Use o mínimo necessário e registre a justificativa.",
-                ],
-                delicate=True
-            )
-        if "escola" in ql or "empresa" in ql or "inss" in ql:
-            return _make_answer(
-                "Documento para terceiros deve ser mínimo e com finalidade clara.",
-                [
-                    "Solicite autorização e delimite o que será informado.",
-                    "Evite detalhamento íntimo; foque em informações essenciais e medidas de apoio.",
-                    "Registre a solicitação, a autorização e o conteúdo entregue.",
-                ],
-                delicate=True
-            )
-        if "juiz" in ql:
-            return _make_answer(
-                "Não entregue tudo automaticamente.",
-                [
-                    "Prefira relatório respondendo ao que foi solicitado, com mínimo necessário.",
-                    "Se houver exigência, peça proteção (segredo de justiça) e registre.",
-                ],
-                delicate=True
-            )
-        return _make_answer(
-            "Documentos devem respeitar sigilo e finalidade.",
-            [
-                "Produza apenas o necessário e tecnicamente justificável.",
-                "Evite expor paciente e terceiros.",
-                "Registre o motivo e o conteúdo essencial emitido.",
-            ],
-            delicate=True
-        )
-
-    # REDES SOCIAIS / CONTATO
-    if "instagram" in ql or "stories" in ql or "curtir" in ql or "google" in ql or "bloquear" in ql:
-        if "seguir" in ql:
-            return _make_answer(
-                "Em geral, evite seguir paciente.",
-                [
-                    "Redes sociais aumentam risco de relação dual e exposição.",
-                    "Se necessário, alinhe limites explicitamente e registre a decisão.",
-                ],
-                delicate=True
-            )
-        if "curtir" in ql or "stories" in ql:
-            return _make_answer(
-                "Evite interações que confundam papéis.",
-                [
-                    "Curtidas e visualizações podem ser percebidas como proximidade pessoal e expor vínculo.",
-                    "Se o tema aparecer, trabalhe em sessão.",
-                ],
-                delicate=True
-            )
-        if "google" in ql:
-            return _make_answer(
-                "Evite pesquisar paciente por curiosidade.",
-                [
-                    "Pode violar privacidade e distorcer o vínculo.",
-                    "Só considere em situações excepcionais e justificáveis (segurança), preferindo transparência e supervisão.",
-                ],
-                delicate=True
-            )
-        if "bloquear" in ql:
-            return _make_answer(
-                "Pode bloquear se for necessário para proteger o enquadre.",
-                [
-                    "Você pode explicar como política profissional: não manter contato por redes.",
-                    "Registre se houve impacto no processo.",
-                ],
-                delicate=True
-            )
-        return _make_answer(
-            "Mantenha limites digitais claros.",
-            [
-                "Evite interações em redes sociais para proteger sigilo e enquadre.",
-                "Se necessário, alinhe em sessão e registre.",
-            ],
-            delicate=True
-        )
-
-    # ONLINE / WHATSAPP / CHAT / ÁUDIO
-    if "online" in ql or "internet" in ql or "whatsapp" in ql or "chat" in ql or "áudio" in ql or "audio" in ql:
-        if "contrato" in ql:
-            return _make_answer(
-                "Sim, contrato é recomendado no online.",
-                [
-                    "Defina plataforma, sigilo, faltas, queda de internet e canal de contato.",
-                ],
-                delicate=False
-            )
-        if "cai" in ql or "internet" in ql:
-            return _make_answer(
-                "Tenha protocolo para queda de conexão.",
-                [
-                    "Aguardar alguns minutos, tentar reconectar e confirmar por mensagem.",
-                    "Remarcar conforme política acordada.",
-                ],
-                delicate=False
-            )
-        if "áudio" in ql or "chat" in ql:
-            return _make_answer(
-                "Pode ser possível, mas aumenta riscos.",
-                [
-                    "Mensageria/áudio elevam risco de vazamento e confundem enquadre.",
-                    "Se usar, estabeleça regras claras e registre.",
-                ],
-                delicate=True
-            )
-        if "dirigindo" in ql or "trabalho" in ql:
-            return _make_answer(
-                "Evite se não houver privacidade e segurança.",
-                [
-                    "Atendimento exige ambiente protegido.",
-                    "Se o paciente estiver dirigindo ou em local público, oriente a parar ou remarcar.",
-                ],
-                delicate=True
-            )
-        if "gravar" in ql:
-            return _make_answer(
-                "Somente com consentimento explícito e necessidade.",
-                [
-                    "Defina finalidade, guarda e acesso.",
-                    "Gravação aumenta risco de vazamento.",
-                ],
-                delicate=True
-            )
-        return _make_answer(
-            "Atendimento online exige regras claras.",
-            [
-                "Ambiente privado e fone de ouvido.",
-                "Plano para queda de internet.",
-                "Limites de mensagens para logística.",
-            ],
-            delicate=True
-        )
-
-    # HONORÁRIOS / PAGAMENTO / PROMOÇÃO
-    if "honor" in ql or "cobrar" in ql or "multa" in ql or "inadimpl" in ql or "pix" in ql or "pacote" in ql or "gratuita" in ql or "de graça" in ql:
-        if "multa" in ql or "falta" in ql:
-            return _make_answer(
-                "Pode cobrar, se estiver combinado previamente.",
-                [
-                    "Política de faltas deve ser transparente e por escrito.",
-                    "Mantenha manejo respeitoso e registre combinados.",
-                ],
-                delicate=True
-            )
-        if "inadimpl" in ql:
-            return _make_answer(
-                "Lide com dignidade e contrato claro.",
-                [
-                    "Relembre o combinado, proponha renegociação e registre.",
-                    "Evite exposição do paciente em cobranças.",
-                ],
-                delicate=True
-            )
-        if "pix" in ql:
-            return _make_answer(
-                "Pode solicitar pagamento antecipado, se acordado.",
-                [
-                    "Defina cancelamentos, remarcação e reembolso.",
-                ],
-                delicate=False
-            )
-        if "pacote" in ql:
-            return _make_answer(
-                "Pode, com transparência e regras claras.",
-                [
-                    "Defina validade, cancelamento e o que ocorre em caso de alta/encerramento.",
-                ],
-                delicate=True
-            )
-        if "de graça" in ql or "gratuita" in ql:
-            return _make_answer(
-                "Pode atender gratuitamente, com enquadre claro.",
-                [
-                    "Defina regras, limites e duração do acordo.",
-                    "Evite usar como captação promocional.",
-                ],
-                delicate=True
-            )
-        return _make_answer(
-            "Honorários exigem transparência e enquadre.",
-            [
-                "Registre política de faltas e pagamentos.",
-                "Evite promessas e captação desleal.",
-            ],
-            delicate=True
-        )
-
-    # RELAÇÕES DUAIS / FAMÍLIA / AMIGOS / CASAL
-    if "amig" in ql or "famil" in ql or "casal" in ql or "professor" in ql or "chefe" in ql or "social" in ql:
-        return _make_answer(
-            "Em geral, evite relações duais.",
-            [
-                "Atender amigos/familiares/casal+individual com o mesmo profissional eleva risco de conflito de interesse e quebra de sigilo.",
-                "Se inevitável, explicite limites, avalie riscos e registre; frequentemente o melhor é encaminhar.",
-            ],
-            delicate=True
-        )
-
-    # ENCERRAMENTO / ENCAMINHAMENTO / SUPERVISÃO
-    if "encerrar" in ql or "encaminh" in ql or "supervis" in ql:
-        return _make_answer(
-            "Encerramento e encaminhamento devem ser cuidadosos e registrados.",
-            [
-                "Evite abandono: prepare, comunique e encaminhe quando necessário.",
-                "Registre o encerramento e orientações essenciais.",
-            ],
-            delicate=True
-        )
-
-    # DEFAULT
+    """Retorna a resposta específica do DB ou um fallback genérico."""
+    # 1. Busca exata
+    if q in RESPOSTAS_DB:
+        return RESPOSTAS_DB[q]
+    
+    # 2. Fallback (caso a pergunta não esteja mapeada no DB)
     return _make_answer(
-        "Orientação ética geral",
+        "Consulte o Código de Ética",
         [
-            "Considere sigilo, limites, finalidade e mínimo necessário.",
-            "Registre combinados importantes.",
-            "Em dúvida, supervisão e CRP (COF).",
+            "Esta pergunta requer análise específica dos artigos do Código de Ética.",
+            "Recomenda-se leitura da resolução pertinente ao tema (ex: documentos, online, registro).",
+            "Na dúvida, consulte a COF do seu CRP ou a supervisão."
         ],
         delicate=True
     )
 
 # =====================================================
-# RESPOSTAS (DICT)
-# =====================================================
-RESPOSTAS_GERADAS = {q: generate_answer_for_question(q) for q in QUICK_QUESTIONS}
-
-# (Função build_quick_groups REMOVIDA conforme solicitado)
-
-# =====================================================
-# DB
+# BANCO DE DADOS (SQLITE)
 # =====================================================
 def db() -> sqlite3.Connection:
     conn = sqlite3.connect(DB_PATH)
@@ -660,7 +514,7 @@ def stats():
     return {"documents": d, "chunks": c, "history": h}
 
 # =====================================================
-# INDEX e BUSCA
+# INDEX e BUSCA (MANTIDOS PARA POSSÍVEL USO FUTURO)
 # =====================================================
 def index_content(title: str, text: str):
     chunks = [c.strip() for c in text.split('\n') if len(c.strip()) > 20]
@@ -695,7 +549,7 @@ def simple_search(query: str):
     return unique_rows[:3]
 
 # =====================================================
-# CONTRATO / HONORÁRIOS / POLÍTICAS / REDE
+# FERRAMENTAS (CONTRATO, HONORARIOS, POLITICAS, REDE)
 # =====================================================
 def gerar_contrato_texto(data: dict) -> str:
     modalidade = data.get("modalidade", "Online")
@@ -970,14 +824,11 @@ def home():
 
         q = (request.form.get("q") or "").strip()
         if q:
-            # Tenta pegar resposta pronta, se não existir, usa a lógica de fallback (se houver)
-            # Obs: resposta_orientativa não está definida no código enviado,
-            # então mantive apenas o get do dicionário para evitar outro NameError se a função faltar.
-            answer = RESPOSTAS_GERADAS.get(q) or "Desculpe, não encontrei uma resposta específica. Tente reformular."
+            # Lógica unificada: pega do DB ou usa fallback
+            answer = generate_answer_for_question(q)
             save_history(q, answer)
 
-    # REMOVIDO: direct_questions, care_questions = build_quick_groups()
-    # NOVA LOGICA: Uma única lista com todas as questões
+    # Lista única para o template (sem distinção de cores/tipos)
     all_questions = [{"text": q} for q in QUICK_QUESTIONS]
 
     return render_template(
@@ -986,8 +837,7 @@ def home():
         stats=stats(),
         history=get_history(50),
         answer=answer,
-        # Passa a lista única para o template
-        questions=all_questions
+        questions=all_questions # Passa a lista única
     )
 
 @app.route("/recursos")
@@ -1027,7 +877,7 @@ def admin():
     return render_template("admin.html", stats=stats(), app_name=APP_NAME)
 
 # =====================================================
-# INIT
+# INICIALIZAÇÃO
 # =====================================================
 if __name__ == "__main__":
     init_db()

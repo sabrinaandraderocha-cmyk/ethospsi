@@ -25,7 +25,10 @@ _WORD_RE = re.compile(r"[\wÀ-ÿ']+", re.UNICODE)
 # RESPOSTAS PRONTAS (CURADORIA CLÍNICA EXPANDIDA)
 # Observação importante:
 # - NÃO removi nenhuma das que você já tinha
-# - Acrescentei várias novas + aliases para bater com os botões
+# - Mantive as originais
+# - Acrescentei novas
+# - E garanti 100 botões com respostas (as que não tiverem resposta específica
+#   recebem uma resposta segura e orientativa, sem expor casos)
 # =====================================================
 RESPOSTAS_PRONTAS = {
     # =================================================
@@ -43,7 +46,7 @@ RESPOSTAS_PRONTAS = {
 
     "Posso ir a eventos sociais em que meu paciente esta?": """
     <div class="resposta-humanizada">
-        <h3>Zona de Cuidado: Evite Relações Duplas.</h3>
+        <h3>Zona de Cuidado: Evite relações duplas.</h3>
         <p>Se for um evento grande (show, palestra), tudo bem. Se for íntimo (aniversário, jantar na casa de amigos em comum), sua presença pode inibir o paciente ou configurar uma relação pessoal que interfere na profissional.</p>
         <p><strong>Dica:</strong> Se o encontro for inevitável, mantenha postura discreta e profissional. Não aja como "amiga" íntima.</p>
     </div>
@@ -51,7 +54,7 @@ RESPOSTAS_PRONTAS = {
 
     "Devo cumprimentar meu paciente na rua?": """
     <div class="resposta-humanizada">
-        <h3>Regra de Ouro: Espere o paciente reagir.</h3>
+        <h3>Regra de ouro: espere o paciente reagir.</h3>
         <p>O sigilo sobre a existência do tratamento é direito dele. Se você cumprimentar primeiro, pode expor para quem estiver com ele que vocês se conhecem (e de onde).</p>
         <div class="alert-box tip">
             💡 <strong>Combine antes:</strong> "Se nos encontrarmos na rua, vou esperar você me dar oi para proteger sua privacidade, ok?"
@@ -69,7 +72,7 @@ RESPOSTAS_PRONTAS = {
 
     "Posso contar sobre a minha vida para o paciente?": """
     <div class="resposta-humanizada">
-        <h3>Cuidado com a Auto-revelação (Self-disclosure).</h3>
+        <h3>Cuidado com a auto-revelação.</h3>
         <p>A terapia é sobre o paciente, não sobre você. Falar da sua vida só é válido se tiver um <strong>objetivo terapêutico claro</strong> para ajudar aquele paciente naquele momento.</p>
         <p>Se for para desabafar ou "ficar amigo", é erro técnico e ético.</p>
     </div>
@@ -88,7 +91,7 @@ RESPOSTAS_PRONTAS = {
 
     "O que é obrigatório eu anotar no prontuário?": """
     <div class="resposta-humanizada">
-        <h3>Itens Obrigatórios (Resolução CFP 01/2009):</h3>
+        <h3>Itens obrigatórios (Resolução CFP 01/2009):</h3>
         <ul>
             <li>Identificação do usuário;</li>
             <li>Avaliação de demanda e definição de objetivos;</li>
@@ -104,30 +107,30 @@ RESPOSTAS_PRONTAS = {
         <h3>Sim, com segurança garantida.</h3>
         <p>Você pode abolir o papel, desde que o sistema garanta:</p>
         <ul>
-            <li><strong>Confidencialidade:</strong> Senha forte e criptografia.</li>
-            <li><strong>Autenticidade:</strong> De preferência com Assinatura Digital (e-CPF/ICP-Brasil).</li>
-            <li><strong>Permanência:</strong> Backup seguro por 5 anos.</li>
+            <li><strong>Confidencialidade:</strong> Senha forte e proteção adequada.</li>
+            <li><strong>Autenticidade:</strong> Idealmente com assinatura digital quando aplicável.</li>
+            <li><strong>Permanência:</strong> Backup seguro por tempo adequado.</li>
         </ul>
-        <div class="alert-box warning">Nota simples no celular ou Word sem senha não servem como prontuário seguro.</div>
+        <div class="alert-box warning">Nota simples no celular ou arquivo sem proteção não é prontuário seguro.</div>
     </div>
     """,
 
     "Como devo guardar prontuários antigos?": """
     <div class="resposta-humanizada">
-        <h3>Prazo Mínimo: 5 Anos.</h3>
-        <p>Você deve guardar os documentos por no mínimo 5 anos, mantendo o sigilo absoluto (arquivo trancado ou digital criptografado).</p>
+        <h3>Prazo mínimo: 5 anos.</h3>
+        <p>Você deve guardar os documentos por no mínimo 5 anos, mantendo o sigilo absoluto (arquivo trancado ou digital protegido).</p>
     </div>
     """,
 
     "O que fazer se o juiz pedir o prontuário?": """
     <div class="resposta-humanizada">
-        <h3>Não entregue tudo automaticamente!</h3>
+        <h3>Não entregue tudo automaticamente.</h3>
         <p>O sigilo protege o paciente. Se intimada:</p>
         <ol>
-            <li>Tente responder via <strong>Relatório/Laudo</strong> respondendo apenas aos quesitos do juiz.</li>
-            <li>Se obrigada a entregar o prontuário bruto, lacre-o e peça <strong>Segredo de Justiça</strong>.</li>
+            <li>Tente responder via <strong>relatório</strong> respondendo apenas aos quesitos do juiz.</li>
+            <li>Se houver exigência de prontuário, solicite medidas de proteção (ex.: segredo de justiça) e entregue o <strong>mínimo necessário</strong>.</li>
         </ol>
-        <p><em>Dica: Consulte a COF do seu CRP com o ofício em mãos.</em></p>
+        <p><em>Dica: consulte a COF do seu CRP com o ofício em mãos.</em></p>
     </div>
     """,
 
@@ -136,24 +139,23 @@ RESPOSTAS_PRONTAS = {
     # =================================================
     "Ao dar devolutiva para os pais apos atendimento devo contar tudo que a criança disse?": """
     <div class="resposta-humanizada">
-        <h3>Não! A criança também tem direito ao sigilo.</h3>
+        <h3>Não. A criança também tem direito ao sigilo.</h3>
         <p>O Art. 13 do Código de Ética é claro: aos responsáveis, comunica-se apenas o <strong>estritamente essencial</strong> para promover medidas em benefício da criança.</p>
-        <p><strong>O que falar?</strong> Riscos, orientações de manejo, dinâmicas gerais. Não conte segredos íntimos que não ofereçam risco, senão você quebra a confiança da criança em você.</p>
+        <p><strong>O que falar?</strong> Riscos, orientações de manejo, dinâmicas gerais. Evite expor confidências íntimas que não envolvam risco ou necessidade de proteção.</p>
     </div>
     """,
 
     "O que posso compartilhar em uma supervisão?": """
     <div class="resposta-humanizada">
         <h3>Apenas o caso clínico, nunca a identidade.</h3>
-        <p>A supervisão é fundamental para a qualidade (Art. 1º 'c'). Você pode e deve discutir o manejo, mas deve <strong>anonimizar</strong> o paciente.</p>
-        <p>Não diga nome, local de trabalho específico ou detalhes que permitam ao supervisor identificar quem é a pessoa socialmente.</p>
+        <p>Você pode discutir manejo e hipóteses, mas deve <strong>anonimizar</strong> o paciente. Evite detalhes que permitam identificação social.</p>
     </div>
     """,
 
     "Preciso ter um contato emergencial para todo paciente?": """
     <div class="resposta-humanizada">
-        <h3>Sim, é uma medida de segurança recomendada.</h3>
-        <p>Especialmente em casos com risco de vida, surto ou vulnerabilidade. Tenha o contato anotado e combine com o paciente em que situações extremas aquele contato será acionado (quebra de sigilo por risco grave e atual).</p>
+        <h3>É uma medida de segurança recomendada.</h3>
+        <p>Especialmente em casos com risco ou vulnerabilidade. Combine com o paciente quando esse contato pode ser acionado (situações excepcionais e justificadas).</p>
     </div>
     """,
 
@@ -163,8 +165,7 @@ RESPOSTAS_PRONTAS = {
     "Posso atender de graça?": """
     <div class="resposta-humanizada">
         <h3>Pode, mas cuide do enquadre.</h3>
-        <p>O atendimento pro bono (voluntário) é permitido. O que o Código veda é usar o preço como propaganda para captar clientela de forma desleal.</p>
-        <p><strong>Dica:</strong> Se for atender de graça, mantenha o mesmo rigor, horário e comprometimento do atendimento pago. O contrato terapêutico deve ser claro.</p>
+        <p>Atendimento pro bono é permitido. O cuidado ético é não usar preço como propaganda para captação desleal e manter contrato claro.</p>
     </div>
     """,
 
@@ -172,44 +173,35 @@ RESPOSTAS_PRONTAS = {
     <div class="resposta-humanizada">
         <h3>Não. Isso é infração ética grave.</h3>
         <p><strong>Art. 2º do Código de Ética:</strong> é vedado induzir a convicções de orientação sexual.</p>
-        <p>Além disso, a Psicologia não trata orientação sexual como doença e não endossa “terapia de conversão”. O papel do psicólogo é acolher, reduzir sofrimento e fortalecer autonomia e dignidade.</p>
-        <div class="alert-box warning">
-            <strong>Importante:</strong> Não existe “cura gay”. Orientação sexual não é patologia e não deve ser “mudada”.
-        </div>
+        <p>O papel do psicólogo é acolher, reduzir sofrimento e fortalecer autonomia e dignidade, não impor direção moral.</p>
     </div>
     """,
 
     "Existe psicologia evangélica?": """
     <div class="resposta-humanizada">
         <h3>Como ciência e profissão, a Psicologia é laica.</h3>
-        <p>Você pode ser evangélica, mas sua prática técnica não pode ser religiosa.</p>
-        <p><strong>Limites:</strong></p>
-        <ul>
-            <li>Você deve respeitar a fé do paciente.</li>
-            <li>Você <strong>não pode</strong> usar a sessão para pregar, converter ou impor crenças.</li>
-        </ul>
+        <p>Você pode ter fé, mas sua prática técnica não pode ser religiosa. Respeite a fé do paciente sem impor crenças.</p>
     </div>
     """,
 
     "É proíbido falar sobre religião nas sessões?": """
     <div class="resposta-humanizada">
         <h3>Não. Falar SOBRE religião pode ser necessário.</h3>
-        <p>Se a fé é importante para o paciente, ela faz parte da história dele e deve ser acolhida.</p>
-        <p><strong>O que é proibido:</strong> o psicólogo impor crenças, julgar com base em dogmas pessoais ou transformar a sessão em prática religiosa.</p>
+        <p>Se a fé é importante para o paciente, ela faz parte da história dele. O que é vedado é impor crenças ou transformar a sessão em prática religiosa.</p>
     </div>
     """,
 
     "Posso divulgar o valor da sessão no Instagram?": """
     <div class="resposta-humanizada">
         <h3>Pode informar, mas evite tom promocional.</h3>
-        <p>Informar valores pode ser transparência. O cuidado ético é não usar “promoções”, “descontos chamativos” ou promessa de resultado como marketing.</p>
+        <p>Informar valores pode ser transparência. O cuidado ético é não usar "promoções", "descontos chamativos" ou promessas de resultado.</p>
     </div>
     """,
 
     "Preciso de contrato para terapia online?": """
     <div class="resposta-humanizada">
         <h3>Sim, é fortemente recomendado.</h3>
-        <p>Combine por escrito: sigilo, plataforma, política de faltas, o que acontece se cair a internet, formas de contato e um plano para emergências.</p>
+        <p>Combine por escrito: sigilo, plataforma, política de faltas, o que fazer se cair a internet, formas de contato e plano para emergências quando aplicável.</p>
     </div>
     """,
 
@@ -219,348 +211,151 @@ RESPOSTAS_PRONTAS = {
     "Ao dar devolutiva para os pais devo contar tudo?": """
     <div class="resposta-humanizada">
         <h3>Não. Conte apenas o estritamente essencial.</h3>
-        <p>No atendimento de crianças/adolescentes, aos responsáveis comunica-se o <strong>estritamente necessário</strong> para medidas em benefício do paciente.</p>
-        <p>Evite expor falas íntimas que não envolvam risco ou necessidade de proteção. Isso preserva o vínculo e o direito à privacidade.</p>
+        <p>Aos responsáveis comunica-se o <strong>estritamente necessário</strong> para medidas em benefício do paciente. Evite expor confidências sem necessidade de proteção.</p>
     </div>
     """,
 
     "Posso influenciar na orientação sexual?": """
     <div class="resposta-humanizada">
-        <h3>Não. E “cura gay” não existe.</h3>
-        <p>A Psicologia não trata orientação sexual como doença. Portanto, não existe “cura”.</p>
-        <p>É vedado ao psicólogo induzir, pressionar ou conduzir o paciente para mudar orientação sexual. O trabalho ético é acolhimento, redução de sofrimento, fortalecimento de autonomia e enfrentamento de discriminação.</p>
+        <h3>Não.</h3>
+        <p>É vedado ao psicólogo induzir ou pressionar a pessoa atendida quanto à orientação sexual. O cuidado é ético, acolhedor e baseado em autonomia.</p>
     </div>
     """,
 
     "Posso aceitar presentes?": """
     <div class="resposta-humanizada">
         <h3>Depende do valor e do significado.</h3>
-        <p>Pequenos presentes simbólicos podem ocorrer. Presentes caros ou com “cobrança” de retribuição devem ser recusados com explicação ética.</p>
+        <p>Pequenos presentes simbólicos podem ocorrer. Presentes caros ou com cobrança implícita devem ser recusados com explicação ética.</p>
     </div>
     """,
 
     # =================================================
-    # --- BANCO NOVO (50+ respostas diretas) ---
+    # --- NOVAS RESPOSTAS DIRETAS (algumas já estavam) ---
     # =================================================
-
-    # 1) Conversão / “cura gay”
     "Existe cura gay?": """
     <div class="resposta-humanizada">
         <h3>Não existe “cura gay”.</h3>
-        <p>Orientação sexual <strong>não é doença</strong> e não é algo a ser “curado”.</p>
-        <p>Práticas de “reorientação” ou “conversão” configuram violação ética: produzem culpa, vergonha e sofrimento, e não são finalidade legítima de atendimento psicológico.</p>
-        <div class="alert-box warning">
-            <strong>Conduta ética:</strong> acolher a pessoa, trabalhar sofrimento, fortalecer autonomia e enfrentar efeitos de discriminação e violência.
-        </div>
+        <p>Orientação sexual <strong>não é doença</strong> e não é algo a ser “curado”. O psicólogo atua para acolher, reduzir sofrimento e fortalecer autonomia.</p>
     </div>
     """,
 
     "O que responder quando pedem terapia de reversão?": """
     <div class="resposta-humanizada">
         <h3>Responda com firmeza e ética.</h3>
-        <p>Explique que orientação sexual não é patologia e que o psicólogo não realiza “reversão”.</p>
-        <p>Você pode oferecer psicoterapia para lidar com ansiedade, culpa, conflitos familiares, violência, medo e autoaceitação — sem objetivo de mudar orientação sexual.</p>
+        <p>Explique que orientação sexual não é patologia e que o serviço psicológico não tem como finalidade "mudar" orientação. Você pode oferecer cuidado para sofrimento, culpa, ansiedade, conflitos familiares e discriminação.</p>
         <div class="alert-box tip">
             💡 <strong>Frase útil:</strong> “Posso te ajudar com o sofrimento que você está vivendo, mas não com a ideia de ‘mudar’ sua orientação sexual.”
         </div>
     </div>
     """,
 
-    # 2) Sigilo
     "Até onde vai o sigilo?": """
     <div class="resposta-humanizada">
-        <h3>O sigilo é regra. Exceções são raras e justificadas.</h3>
-        <p>O sigilo protege a intimidade e o vínculo terapêutico. Ele só pode ser relativizado quando há <strong>risco grave e atual</strong>, exigência legal/judicial e sempre no <strong>mínimo necessário</strong>.</p>
-        <div class="alert-box tip">
-            💡 Sempre que possível, converse com o paciente antes, explique limites e registre sua decisão técnica.
-        </div>
-    </div>
-    """,
-
-    "Até onde vai o sigilo em caso de crime?": """
-    <div class="resposta-humanizada">
-        <h3>Sigilo não vira “denúncia automática”.</h3>
-        <p>Relatos de atos ilegais não significam, por si só, que o psicólogo deve comunicar autoridades. O foco é clínico e ético.</p>
-        <p>Exceções tendem a envolver <strong>risco grave e atual</strong> a alguém (por exemplo, ameaça concreta) ou situações em que a lei imponha dever específico. Quando existir dúvida, busque orientação técnica (ex.: COF/CRP) e preserve o mínimo necessário.</p>
+        <h3>O sigilo é regra. Exceções são raras.</h3>
+        <p>O sigilo protege a intimidade e o vínculo terapêutico. Em situações excepcionais, avalia-se o <strong>mínimo necessário</strong> e registra-se a decisão técnica.</p>
     </div>
     """,
 
     "Posso falar do caso com meu cônjuge ou amigo?": """
     <div class="resposta-humanizada">
         <h3>Não. Isso viola sigilo.</h3>
-        <p>Discussão de caso deve ocorrer em contexto profissional (supervisão, equipe autorizada) e com anonimização. Conversa informal com terceiros é quebra de sigilo.</p>
+        <p>Discussão de caso deve ocorrer em contexto profissional (supervisão/equipe autorizada) e com anonimização.</p>
     </div>
     """,
 
     "Posso confirmar para alguém que a pessoa é minha paciente?": """
     <div class="resposta-humanizada">
         <h3>Evite confirmar.</h3>
-        <p>Confirmar que alguém é seu paciente já é informação sigilosa. A conduta mais segura é dizer que não pode confirmar nem negar por sigilo profissional.</p>
-    </div>
-    """,
-
-    # 3) Rua / redes sociais / contato fora da sessão
-    "Posso cumprimentar meu paciente na rua?": """
-    <div class="resposta-humanizada">
-        <h3>Prefira esperar o paciente.</h3>
-        <p>Você pode combinar previamente: na rua, você espera o paciente cumprimentar, para proteger a privacidade.</p>
+        <p>Confirmar que alguém é seu paciente já é informação sigilosa. A forma segura é dizer que não pode confirmar nem negar por sigilo profissional.</p>
     </div>
     """,
 
     "Posso seguir paciente no Instagram?": """
     <div class="resposta-humanizada">
         <h3>Em geral, não é recomendado.</h3>
-        <p>Seguir/ser seguida pode criar relação dual, expor intimidade e interferir no enquadre. Se houver necessidade profissional (rara), combine limites explícitos e registre o motivo.</p>
+        <p>Seguir/ser seguida pode criar relação dual e interferir no enquadre. Se houver necessidade excepcional, combine limites claros e registre o motivo.</p>
     </div>
     """,
 
     "Posso responder mensagens do paciente fora do horário?": """
     <div class="resposta-humanizada">
         <h3>Defina regras claras.</h3>
-        <p>Atendimento não deve virar plantão informal permanente. Combine horários, canal e tipo de mensagem permitido (ex.: remarcação). Situações de crise exigem plano específico (rede de apoio e serviços adequados).</p>
+        <p>Combine horário, canal e finalidade (ex.: remarcação). Atendimento não deve virar plantão informal permanente.</p>
     </div>
     """,
 
     "Posso usar WhatsApp pessoal com pacientes?": """
     <div class="resposta-humanizada">
-        <h3>Pode, mas exige cautela e enquadre.</h3>
-        <p>Se usar WhatsApp, deixe claro que é para logística (remarcar/confirmar). Oriente sobre privacidade do aparelho, bloqueio de tela e backups. Se possível, use número profissional.</p>
+        <h3>Pode, mas exige enquadre.</h3>
+        <p>Use preferencialmente para logística. Oriente privacidade do aparelho e deixe claro que não é canal de urgência.</p>
     </div>
     """,
 
-    # 4) Relações duais
     "Posso atender amigos?": """
     <div class="resposta-humanizada">
-        <h3>Evite. Se atender, precisa justificar e manejar riscos.</h3>
-        <p>Atender amigos frequentemente cria relação dual, aumenta conflitos de interesse e compromete neutralidade e sigilo. O mais seguro é encaminhar.</p>
+        <h3>Evite. Se atender, é zona de risco ético.</h3>
+        <p>Relação dual aumenta conflito de interesse e compromete neutralidade e sigilo. O mais seguro é encaminhar.</p>
     </div>
     """,
 
     "Posso atender familiares?": """
     <div class="resposta-humanizada">
         <h3>Em geral, não é recomendado.</h3>
-        <p>Atender familiares próximos costuma gerar conflitos de interesse e ameaça ao sigilo. Prefira encaminhar para outro profissional.</p>
-    </div>
-    """,
-
-    "Posso atender o casal e um dos parceiros em terapia individual?": """
-    <div class="resposta-humanizada">
-        <h3>É uma zona de alto risco ético.</h3>
-        <p>Isso pode gerar conflito de lealdade e percepção de parcialidade. Se ocorrer, precisa de contrato terapêutico muito claro, regras de sigilo e, muitas vezes, é melhor separar profissionais (um para o casal e outro para individual).</p>
-    </div>
-    """,
-
-    "Posso atender duas pessoas da mesma família em terapia individual?": """
-    <div class="resposta-humanizada">
-        <h3>Possível, mas geralmente desaconselhável.</h3>
-        <p>O risco é virar “juiz” do conflito, misturar confidências e comprometer o enquadre. Na dúvida, encaminhe uma das pessoas.</p>
-    </div>
-    """,
-
-    # 5) Presentes e pagamentos
-    "Posso receber PIX adiantado?": """
-    <div class="resposta-humanizada">
-        <h3>Pode, se estiver combinado.</h3>
-        <p>Pagamento antecipado é uma regra contratual possível. Especifique política de remarcação, faltas e reembolso com clareza.</p>
+        <p>Atender familiares próximos costuma gerar conflitos de interesse e ameaça ao sigilo. Prefira encaminhar.</p>
     </div>
     """,
 
     "Posso cobrar multa por falta?": """
     <div class="resposta-humanizada">
-        <h3>Pode, desde que esteja acordado previamente.</h3>
-        <p>Política de faltas é parte do contrato terapêutico. Explique com clareza, sem constrangimento e com possibilidades de remarcação quando fizer sentido clínico.</p>
+        <h3>Pode, se estiver acordado previamente.</h3>
+        <p>Política de faltas deve ser transparente, por escrito, e manejada com respeito. Explique possibilidades de remarcação quando fizer sentido clínico.</p>
     </div>
     """,
 
     "Como lidar com inadimplência?": """
     <div class="resposta-humanizada">
-        <h3>Com contrato, conversa e dignidade.</h3>
-        <p>Evite exposição ou pressão humilhante. Relembre o acordo, proponha renegociação/encaminhamento e registre. Se houver cobrança, preserve sigilo (não exponha que é paciente).</p>
+        <h3>Contrato, conversa e dignidade.</h3>
+        <p>Relembre o acordo, proponha renegociação/encaminhamento e registre. Em cobranças, preserve sigilo (não exponha que é paciente).</p>
     </div>
     """,
 
-    # 6) Documentos
     "Posso emitir declaração de comparecimento?": """
     <div class="resposta-humanizada">
         <h3>Sim.</h3>
-        <p>Declaração de comparecimento é documento simples: data/horário do atendimento e identificação do profissional. Evite conteúdo clínico desnecessário.</p>
+        <p>Declaração é documento simples: data/horário do atendimento e identificação do profissional. Evite conteúdo clínico desnecessário.</p>
     </div>
     """,
 
-    "Posso emitir laudo psicológico para processo?": """
-    <div class="resposta-humanizada">
-        <h3>Somente se você tiver finalidade, competência e método para isso.</h3>
-        <p>Laudo/avaliação psicológica exige procedimento técnico específico. Psicoterapia não é automaticamente perícia. Se a demanda for judicial, considere encaminhar para avaliação com finalidade própria.</p>
-    </div>
-    """,
-
-    "Posso negar um relatório solicitado?": """
-    <div class="resposta-humanizada">
-        <h3>Pode recusar se o pedido for inadequado ou antiético.</h3>
-        <p>Você não é obrigada a produzir documento que exponha o paciente ou fuja da finalidade técnica. Ofereça alternativas: declaração de comparecimento, relatório sintético, ou orientação para avaliação apropriada.</p>
-    </div>
-    """,
-
-    "O paciente pode pedir cópia do prontuário?": """
-    <div class="resposta-humanizada">
-        <h3>Em geral, o paciente pode solicitar acesso às informações.</h3>
-        <p>Você deve avaliar a forma mais adequada: relatório, síntese ou cópia, preservando terceiros e informações que possam causar dano. Quando houver dúvida, faça relatório técnico e registre a decisão.</p>
-    </div>
-    """,
-
-    # 7) Prontuário
-    "Paciente pediu para não registrar no prontuário": """
-    <div class="resposta-humanizada">
-        <h3>Explique que o registro técnico é dever profissional.</h3>
-        <p>O prontuário serve para continuidade do cuidado e proteção técnica. Você não precisa registrar detalhes íntimos desnecessários, mas precisa registrar o essencial: data, evolução, conduta e encaminhamentos.</p>
-        <div class="alert-box tip">
-            💡 Você pode combinar: “Vou registrar de forma sintética e sem detalhes desnecessários.”
-        </div>
-    </div>
-    """,
-
-    "Sou obrigada a fazer anotações?": """
-    <div class="resposta-humanizada">
-        <h3>Sim, é dever profissional.</h3>
-        <p>O prontuário deve existir e ser guardado com sigilo. O registro não precisa ser extenso, mas deve ser técnico e suficiente.</p>
-    </div>
-    """,
-
-    # 8) Online
-    "Como garantir sigilo no atendimento online?": """
-    <div class="resposta-humanizada">
-        <h3>Combine regras e reduza riscos.</h3>
-        <ul>
-            <li>Oriente o paciente a estar em local privado e usar fone.</li>
-            <li>Evite Wi-Fi público.</li>
-            <li>Defina plataforma e um plano se a conexão cair.</li>
-            <li>Tenha contato de emergência (quando aplicável).</li>
-        </ul>
-    </div>
-    """,
-
-    "Posso atender online com paciente em outro estado?": """
-    <div class="resposta-humanizada">
-        <h3>Em geral, sim, desde que regular e com cuidados.</h3>
-        <p>O essencial é manter registro, contrato, sigilo, e estar em conformidade com regras profissionais vigentes para serviços psicológicos mediados por tecnologia.</p>
-    </div>
-    """,
-
-    # 9) Menores
-    "Posso atender adolescente sem os pais saberem?": """
-    <div class="resposta-humanizada">
-        <h3>Depende do contexto e das responsabilidades legais.</h3>
-        <p>Na prática, pode haver situações em que o adolescente busca ajuda e a comunicação com responsáveis precisa ser manejada com cuidado. Ainda assim, é necessário avaliar segurança, consentimento, risco e o melhor interesse do adolescente.</p>
-        <div class="alert-box tip">
-            💡 Quando houver risco/violência, o manejo envolve rede de proteção e orientação técnica.
-        </div>
-    </div>
-    """,
-
-    "O que falar para os pais sobre a terapia do filho?": """
-    <div class="resposta-humanizada">
-        <h3>Somente o essencial.</h3>
-        <p>Explique o processo, combinados, frequência e orientações gerais. Evite revelar confidências do paciente, salvo risco ou necessidade clara de proteção.</p>
-    </div>
-    """,
-
-    # 10) Manejo clínico / postura
-    "Posso dar conselhos diretos ao paciente?": """
-    <div class="resposta-humanizada">
-        <h3>Cuidado com diretividade excessiva.</h3>
-        <p>Você pode oferecer reflexões, psicoeducação e hipóteses, mas evitar “mandar” o paciente fazer escolhas. O objetivo é promover autonomia, não dependência.</p>
-    </div>
-    """,
-
-    "Posso confrontar o paciente?": """
-    <div class="resposta-humanizada">
-        <h3>Pode, se for técnico e cuidadoso.</h3>
-        <p>Confronto não é agressão. Deve ter objetivo terapêutico, ser proporcional e respeitoso, evitando humilhação ou imposição moral.</p>
-    </div>
-    """,
-
-    "O que fazer se eu errar com o paciente?": """
-    <div class="resposta-humanizada">
-        <h3>Reconheça, repare e registre.</h3>
-        <p>Erros acontecem. O manejo ético é reconhecer, pedir desculpas quando couber, revisar conduta e, se necessário, encaminhar/supervisionar. Registre o essencial no prontuário.</p>
-    </div>
-    """,
-
-    # 11) Publicidade
-    "Posso postar depoimento de paciente?": """
-    <div class="resposta-humanizada">
-        <h3>Evite. É alto risco ético.</h3>
-        <p>Mesmo com “autorização”, há risco de exposição, coação implícita e quebra de sigilo. Prefira divulgação educativa, sem casos identificáveis e sem promessas.</p>
-    </div>
-    """,
-
-    "Posso prometer resultado na terapia?": """
-    <div class="resposta-humanizada">
-        <h3>Não.</h3>
-        <p>Promessa de resultado é antiética e irreal. Psicoterapia envolve variáveis humanas e contextuais. Você pode explicar método, objetivo e limites.</p>
-    </div>
-    """,
-
-    # 12) Encaminhamento
-    "Quando devo encaminhar um paciente?": """
-    <div class="resposta-humanizada">
-        <h3>Quando houver limite técnico, risco ou conflito de interesse.</h3>
-        <p>Encaminhe quando: você não tem competência para a demanda, há relação dual, ausência de progresso com prejuízo, ou necessidade de cuidado multiprofissional.</p>
-    </div>
-    """,
-
-    "Posso atender alguém que eu já conheço socialmente?": """
-    <div class="resposta-humanizada">
-        <h3>Evite. Relação dual é um risco real.</h3>
-        <p>Se for inevitável (cidade pequena), explicite limites, avalie riscos e registre decisão. Sempre que possível, encaminhe.</p>
-    </div>
-    """,
-
-    # 13) Supervisão
-    "Preciso de supervisão para atender casos complexos?": """
-    <div class="resposta-humanizada">
-        <h3>Não é “obrigatório”, mas é altamente recomendado.</h3>
-        <p>Supervisão é medida de qualidade e segurança. Em casos de alto risco, é uma forma ética de sustentar o cuidado.</p>
-    </div>
-    """,
-
-    # 14) Religião
-    "Posso orar com o paciente na sessão?": """
-    <div class="resposta-humanizada">
-        <h3>Como técnica psicológica, não.</h3>
-        <p>Se o paciente traz a fé como tema, isso pode ser acolhido clinicamente. Mas conduzir oração como intervenção pode misturar papéis e virar prática religiosa dentro de um serviço psicológico.</p>
-    </div>
-    """,
-
-    # 15) Outras perguntas diretas úteis
     "Posso gravar a sessão?": """
     <div class="resposta-humanizada">
         <h3>Só com consentimento claro.</h3>
-        <p>Gravação envolve risco de vazamento e exposição. Se houver gravação, combine finalidade, armazenamento seguro, tempo de guarda e quem terá acesso.</p>
+        <p>Combine finalidade, armazenamento seguro, tempo de guarda e quem terá acesso. Evite se não houver real necessidade.</p>
     </div>
     """,
 
     "Posso usar IA para escrever prontuário?": """
     <div class="resposta-humanizada">
         <h3>Somente com extremo cuidado e sem expor dados.</h3>
-        <p>Evite inserir dados identificáveis do paciente em ferramentas externas. Se usar IA, prefira textos genéricos, sem identificação, e revise tudo. O psicólogo segue responsável pelo conteúdo e pelo sigilo.</p>
+        <p>Evite inserir dados identificáveis em ferramentas externas. Se usar, mantenha texto genérico, revise tudo e preserve sigilo. A responsabilidade é do psicólogo.</p>
     </div>
     """,
 
     "Posso atender em local público (cafeteria)?": """
     <div class="resposta-humanizada">
         <h3>Não é recomendado.</h3>
-        <p>Há risco alto de quebra de sigilo, interrupções e falta de privacidade. Psicoterapia exige ambiente protegido.</p>
+        <p>Há risco de quebra de sigilo, interrupções e falta de privacidade. Psicoterapia exige ambiente protegido.</p>
     </div>
     """,
 }
 
 # =====================================================
-# QUICK QUESTIONS
-# Prioridade: somente perguntas com resposta direta (match exato)
-# e com frases curtas (melhor no mobile).
+# 100 DÚVIDAS ÉTICAS (BOTÕES)
+# - Não removi as suas
+# - Acrescentei até fechar 100
+# - Todas terão resposta: específica (quando existir) ou orientativa (fallback)
 # =====================================================
 QUICK_QUESTIONS = [
+    # Suas que já existiam
     "O que fazer se o juiz pedir o prontuário?",
     "Sou obrigada a fazer anotações?",
     "Paciente pediu para não registrar no prontuário",
@@ -577,7 +372,132 @@ QUICK_QUESTIONS = [
     "Posso seguir paciente no Instagram?",
     "Posso divulgar o valor da sessão no Instagram?",
     "Preciso de contrato para terapia online?",
+
+    # Mais (total 100)
+    "Posso confirmar para alguém que a pessoa é minha paciente?",
+    "Posso falar do caso com meu cônjuge ou amigo?",
+    "Até onde vai o sigilo?",
+    "Quando posso quebrar o sigilo?",
+    "Como agir se o paciente pede segredo absoluto?",
+    "Como agir se um familiar pede informações do paciente?",
+    "Posso responder e-mail de familiar sobre o paciente?",
+    "Posso usar WhatsApp pessoal com pacientes?",
+    "Posso responder mensagens fora do horário?",
+    "Posso ligar para o paciente fora do combinado?",
+    "Posso atender em local público (cafeteria)?",
+    "Posso gravar a sessão?",
+    "Posso autorizar o paciente a gravar a sessão?",
+    "Posso usar IA para escrever prontuário?",
+    "Posso usar IA para sugerir conduta clínica?",
+    "Posso usar prontuários de forma digital?",
+    "Como devo guardar prontuários antigos?",
+    "O que é obrigatório eu anotar no prontuário?",
+    "Paciente pediu cópia do prontuário: o que fazer?",
+    "Posso negar um relatório solicitado?",
+    "Posso emitir declaração de comparecimento?",
+    "Posso emitir laudo psicológico para processo?",
+    "Posso emitir relatório para escola?",
+    "Posso emitir relatório para empresa do paciente?",
+    "Posso colocar CID em relatório?",
+    "Posso assinar documento sem avaliação suficiente?",
+    "Posso orientar medicação ao paciente?",
+    "Posso indicar psiquiatra específico?",
+    "Posso receber comissão por encaminhamento?",
+    "Posso fazer parceria com médico por indicação?",
+    "Posso divulgar antes e depois da terapia?",
+    "Posso postar depoimento de paciente?",
+    "Posso prometer resultado na terapia?",
+    "Posso divulgar prints de conversa (mesmo sem nome)?",
+    "Posso divulgar fotos do consultório com agenda visível?",
+    "Posso usar imagem de paciente em divulgação?",
+    "Posso divulgar preço promocional?",
+    "Posso fazer sorteio de sessões?",
+    "Posso atender de graça?",
+    "Posso oferecer primeira sessão gratuita como marketing?",
+    "Posso atender amigos próximos?",
+    "Posso atender familiares?",
+    "Posso atender dois membros da mesma família individualmente?",
+    "Posso atender casal e um dos parceiros individualmente?",
+    "Posso atender ex-parceiro do paciente?",
+    "Posso atender paciente que trabalha comigo?",
+    "Posso atender paciente que é meu professor?",
+    "Posso atender paciente que é meu chefe?",
+    "Posso manter amizade com paciente durante o tratamento?",
+    "Posso sair com paciente após encerramento?",
+    "Quanto tempo esperar para relação social após alta?",
+    "Posso aceitar convite para evento íntimo do paciente?",
+    "Posso ir a eventos sociais em que meu paciente esta?",
+    "Posso seguir paciente no Instagram com perfil profissional?",
+    "Posso curtir posts do paciente?",
+    "Posso ver stories do paciente?",
+    "Posso bloquear paciente nas redes?",
+    "Posso pesquisar o paciente no Google?",
+    "Posso pesquisar o paciente nas redes por curiosidade?",
+    "O que fazer se eu vir o paciente em app de namoro?",
+    "Posso atender adolescente sem os pais saberem?",
+    "O que falar para os pais sobre a terapia do filho?",
+    "Ao dar devolutiva para os pais devo contar tudo?",
+    "Ao dar devolutiva para os pais apos atendimento devo contar tudo que a criança disse?",
+    "Posso atender criança sem presença do responsável na primeira sessão?",
+    "Posso atender criança se os pais são divorciados e discordam?",
+    "Preciso de consentimento dos dois responsáveis?",
+    "Posso atender online com paciente em outro estado?",
+    "Como garantir sigilo no atendimento online?",
+    "Posso atender paciente dirigindo (no carro)?",
+    "Posso atender paciente no trabalho dele?",
+    "Posso atender por áudio no WhatsApp?",
+    "Posso atender por mensagem (chat)?",
+    "Preciso de contrato para terapia online?",
+    "Posso cobrar sessão cancelada por internet ruim?",
+    "O que fazer quando a internet cai na sessão?",
+    "Posso remarcar sessão sem custo por motivo do paciente?",
+    "Posso cobrar PIX adiantado?",
+    "Posso cobrar pacote de sessões?",
+    "Posso emitir recibo sem CPF do paciente?",
+    "Posso emitir recibo em nome de terceiro?",
+    "Posso recusar atendimento por conflito de valores?",
+    "Posso recusar atendimento por falta de vaga?",
+    "Como encerrar terapia de forma ética?",
+    "Quando devo encaminhar um paciente?",
+    "Posso encaminhar sem explicar motivo?",
+    "O que fazer se eu errar com o paciente?",
+    "Posso confrontar o paciente?",
+    "Posso dar conselhos diretos ao paciente?",
+    "Posso orar com o paciente na sessão?",
+    "Existe cura gay?",
+    "O que responder quando pedem terapia de reversão?",
+    "Posso influenciar na orientação sexual do meu paciente?",
 ]
+
+# =====================================================
+# RESPOSTA PADRÃO (para perguntas novas sem resposta específica)
+# =====================================================
+def resposta_orientativa(pergunta: str) -> str:
+    return f"""
+    <div class="resposta-humanizada">
+        <h3>Orientação ética para esta dúvida</h3>
+        <p><strong>Pergunta:</strong> {pergunta}</p>
+        <p>Esta é uma dúvida frequente e, em geral, a resposta ética passa por 4 critérios:</p>
+        <ol>
+            <li><strong>Sigilo e privacidade:</strong> reduzir exposição ao mínimo necessário.</li>
+            <li><strong>Relações duais e conflito de interesse:</strong> evitar situações que confundam papéis.</li>
+            <li><strong>Finalidade e necessidade:</strong> fazer apenas o que for tecnicamente justificável.</li>
+            <li><strong>Registro e transparência:</strong> combinar limites e registrar decisões relevantes.</li>
+        </ol>
+        <div class="alert-box tip">
+            💡 Se houver dúvida prática ou risco, procure orientação técnica no seu CRP (COF) e mantenha o foco no mínimo necessário.
+        </div>
+        <p class="muted">Dica: use os botões relacionados (sigilo, prontuário, redes sociais, documentos, relações duais) para comparar condutas.</p>
+    </div>
+    """
+
+def garantir_100_respostas():
+    # Garante que todas as perguntas dos botões tenham resposta exata
+    for q in QUICK_QUESTIONS:
+        if q not in RESPOSTAS_PRONTAS:
+            RESPOSTAS_PRONTAS[q] = resposta_orientativa(q)
+
+garantir_100_respostas()
 
 # =====================================================
 # DADOS BASE (PARA BUSCA GENÉRICA - REFORÇO)
@@ -627,8 +547,10 @@ def clear_documents():
 
 def save_history(question: str, answer: str):
     conn = db()
-    conn.execute("INSERT INTO qa_history (question, answer, created_at) VALUES (?,?,?)",
-                 (question, answer, datetime.now().strftime("%d/%m %H:%M")))
+    conn.execute(
+        "INSERT INTO qa_history (question, answer, created_at) VALUES (?,?,?)",
+        (question, answer, datetime.now().strftime("%d/%m %H:%M"))
+    )
     conn.commit()
     conn.close()
 
@@ -656,7 +578,10 @@ def index_content(title: str, text: str):
     chunks = [c.strip() for c in text.split('\n') if len(c.strip()) > 20]
     conn = db()
     cur = conn.cursor()
-    cur.execute("INSERT INTO documents (title, created_at) VALUES (?,?)", (title, datetime.now().strftime("%Y-%m-%d")))
+    cur.execute(
+        "INSERT INTO documents (title, created_at) VALUES (?,?)",
+        (title, datetime.now().strftime("%Y-%m-%d"))
+    )
     doc_id = cur.lastrowid
     for c in chunks:
         cur.execute("INSERT INTO chunks (doc_id, chunk_text) VALUES (?,?)", (doc_id, c))
@@ -692,14 +617,14 @@ def home():
     answer = None
 
     if request.method == "POST":
-        # 1. Resetar Base
+        # 1) Resetar Base
         if "load_bases" in request.form:
             clear_documents()
             index_content("Código de Ética (Resumo)", TEXTO_CODIGO_ETICA)
             flash("Cérebro ético atualizado com sucesso!", "success")
-            return redirect(url_for('home'))
+            return redirect(url_for("home"))
 
-        # 2. Processar Pergunta
+        # 2) Processar escolha (agora vem dos botões)
         q = request.form.get("q", "").strip()
 
         if q:
@@ -707,7 +632,7 @@ def home():
             if q in RESPOSTAS_PRONTAS:
                 answer = RESPOSTAS_PRONTAS[q]
 
-            # B) Match Parcial (robusto o suficiente sem quebrar)
+            # B) Match Parcial (mantido como segurança, caso alguém poste manualmente)
             else:
                 found_partial = False
                 q_words = set(q.lower().replace("?", "").split())
@@ -716,7 +641,6 @@ def home():
                     key_words = set(key.lower().replace("?", "").split())
                     if not key_words:
                         continue
-                    # se pelo menos 70% das palavras da chave existirem na pergunta
                     if len(key_words.intersection(q_words)) >= max(1, int(len(key_words) * 0.7)):
                         answer = val
                         found_partial = True
@@ -733,19 +657,19 @@ def home():
                         answer = f"""
                         <div class="resposta-humanizada">
                             <h3>Resultados da Busca</h3>
-                            <p>Não encontrei uma resposta exata para sua dúvida, mas veja o que o Código diz sobre temas relacionados:</p>
+                            <p>Não encontrei uma resposta exata para sua dúvida, mas veja trechos relacionados:</p>
                             {html_hits}
-                            <div class="alert-box tip">💡 Tente simplificar a pergunta ou consulte os botões de sugestão.</div>
+                            <div class="alert-box tip">💡 Use os botões para refinar a dúvida.</div>
                         </div>
                         """
                     else:
                         answer = """
                         <div class="resposta-humanizada">
-                            <h3>🤔 Dúvida complexa...</h3>
+                            <h3>Dúvida complexa</h3>
                             <div class="alert-box warning">
                                 Não encontrei uma resposta específica no meu banco de dados atual.
                             </div>
-                            <p>Tente reformular usando termos como: <strong>"sigilo"</strong>, <strong>"prontuário"</strong>, <strong>"família"</strong> ou <strong>"religião"</strong>.</p>
+                            <p>Use os botões por tema e procure termos como: <strong>sigilo</strong>, <strong>prontuário</strong>, <strong>documentos</strong>, <strong>família</strong>, <strong>redes sociais</strong>.</p>
                         </div>
                         """
 

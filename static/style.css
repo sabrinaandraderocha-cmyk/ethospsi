@@ -34,7 +34,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--navy-dark);
+  background: var(--navy);
   border-radius: 12px;
   font-size: 2.2rem;
   font-weight: 800;

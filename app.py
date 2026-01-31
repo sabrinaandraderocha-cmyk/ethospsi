@@ -20,9 +20,14 @@ DATA_DIR = os.path.abspath("./data")
 os.makedirs(DATA_DIR, exist_ok=True)
 DB_PATH = os.path.join(DATA_DIR, "ethospsi.sqlite3")
 
+# =====================================================
 # Links oficiais (usados na página Recursos)
+# ✅ Código de Ética: PDF azul (CFP 2012) - como você pediu
+# Mantive a chave antiga para NÃO quebrar templates que usam codigo_etica_pdf_2025.
+# =====================================================
 LINKS_OFICIAIS = {
-    "codigo_etica_pdf_2025": "https://transparencia.cfp.org.br/wp-content/uploads/sites/29/2025/04/CodigoDeEtica_2025_Digital.pdf",
+    "codigo_etica_pdf_2025": "https://site.cfp.org.br/wp-content/uploads/2012/07/codigo-de-etica-psicologia.pdf",
+    "codigo_etica_pdf": "https://site.cfp.org.br/wp-content/uploads/2012/07/codigo-de-etica-psicologia.pdf",
     "tabela_honorarios_cfp": "https://site.cfp.org.br/servicos/tabela-de-honorarios/",
     "tabela_honorarios_pdf_ate_julho_2025": "https://site.cfp.org.br/wp-content/uploads/2025/12/3699.1___ANEXO_REF_AO_OFICIO_N__009_20225___FENAPSI.pdf",
 }
@@ -54,6 +59,9 @@ Art. 13 - No atendimento à criança, ao adolescente ou ao interdito, deve ser c
 
 # =====================================================
 # RESPOSTAS PRONTAS (curadoria)
+# ⚠️ IMPORTANTÍSSIMO:
+# - aqui ficam APENAS respostas "objetivas" que você escreveu mesmo.
+# - NÃO vamos mais preencher isso com fallback, senão quebra o selo (foi seu bug).
 # =====================================================
 RESPOSTAS_PRONTAS = {
     "Posso atender familiares de ex-pacientes?": """
@@ -317,118 +325,22 @@ QUICK_QUESTIONS = [
 ]
 
 # =====================================================
-# SELOS (🟢 normativa | 🟡 zona de cuidado)
-# - A ideia é simples:
-#   • 🟢 quando tende a ter resposta mais "regra/conduta" e base normativa clara
-#   • 🟡 quando depende mais de contexto (risco de relação dual, avaliação, manejo)
-# - Você pode ajustar depois sem quebrar nada.
+# SELOS VISUAIS (mas agora sem mentir)
+# ✅ selo "normativa" SÓ se houver resposta direta em RESPOSTAS_PRONTAS
+# ✅ o resto é "zona"
 # =====================================================
-QUESTION_SELOS = {
-    # SIGILO / DOCUMENTOS (geralmente mais normativo)
-    "Até onde vai o sigilo?": "normativa",
-    "Quando posso quebrar o sigilo?": "normativa",
-    "Posso confirmar para alguém que a pessoa é minha paciente?": "normativa",
-    "Posso falar do caso com meu cônjuge ou amigo?": "normativa",
-    "Até onde vai o sigilo em caso de crime?": "normativa",
-    "Posso responder e-mail de familiar sobre o paciente?": "normativa",
-    "Posso discutir caso em grupo de WhatsApp profissional?": "normativa",
-    "O que fazer se eu quebrar o sigilo sem querer?": "zona",
-    "Como agir se um familiar pede informações do paciente?": "normativa",
-    "Como agir se o paciente pede segredo absoluto?": "zona",
+def question_seal(q: str) -> str:
+    return "normativa" if q in RESPOSTAS_PRONTAS else "zona"
 
-    "Sou obrigada a fazer anotações?": "normativa",
-    "O que é obrigatório eu anotar no prontuário?": "normativa",
-    "Paciente pediu para não registrar no prontuário": "zona",
-    "O paciente pode pedir cópia do prontuário?": "zona",
-    "Como devo guardar prontuários antigos?": "normativa",
-    "Posso usar prontuários de forma digital?": "normativa",
-    "Posso usar IA para escrever prontuário?": "zona",
-    "Por quanto tempo devo guardar prontuários?": "normativa",
-    "Posso negar um relatório solicitado?": "zona",
-    "O que fazer se o juiz pedir o prontuário?": "normativa",
-    "Posso emitir declaração de comparecimento?": "normativa",
-    "Posso emitir laudo psicológico para processo?": "zona",
-    "Posso emitir relatório para escola?": "zona",
-    "Posso emitir relatório para empresa do paciente?": "zona",
-    "Posso colocar CID em relatório?": "zona",
-    "Posso assinar documento sem avaliação suficiente?": "normativa",
-    "Posso emitir relatório a pedido de familiar?": "zona",
-    "Posso cobrar por relatório psicológico?": "zona",
-    "Posso alterar um relatório após entregue?": "zona",
-    "Posso recusar emitir laudo judicial?": "zona",
+def build_question_item(q: str) -> dict:
+    seal = question_seal(q)
+    return {"text": q, "seal": seal}
 
-    # Relações duais / redes (normalmente zona de cuidado)
-    "Posso atender amigos?": "zona",
-    "Posso atender familiares?": "zona",
-    "Posso atender familiares de ex-pacientes?": "zona",
-    "Posso atender duas pessoas da mesma família individualmente?": "zona",
-    "Posso atender casal e um dos parceiros individualmente?": "zona",
-    "Posso atender alguém que eu já conheço socialmente?": "zona",
-    "Posso atender paciente que trabalha comigo?": "zona",
-    "Posso atender paciente que é meu chefe?": "zona",
-    "Posso atender paciente que é meu professor?": "zona",
-    "Posso manter amizade com paciente durante o tratamento?": "zona",
-    "Devo cumprimentar meu paciente na rua?": "zona",
-    "Posso ir a eventos sociais em que meu paciente esta?": "zona",
-    "Posso seguir paciente no Instagram?": "zona",
-    "Posso curtir posts do paciente?": "zona",
-    "Posso ver stories do paciente?": "zona",
-    "Posso bloquear paciente nas redes sociais?": "zona",
-    "Posso pesquisar o paciente no Google?": "zona",
-    "Posso responder mensagens fora do horário?": "zona",
-    "Posso usar WhatsApp pessoal com pacientes?": "zona",
-    "Posso ligar para o paciente fora do combinado?": "zona",
-
-    # Online
-    "Preciso de contrato para terapia online?": "normativa",
-    "Como garantir sigilo no atendimento online?": "normativa",
-    "Posso atender online com paciente em outro estado?": "zona",
-    "O que fazer quando a internet cai na sessão?": "zona",
-    "Posso cobrar sessão cancelada por internet ruim?": "zona",
-    "Posso atender por áudio no WhatsApp?": "zona",
-    "Posso atender por mensagem (chat)?": "zona",
-    "Posso atender paciente dirigindo?": "zona",
-    "Posso atender paciente no trabalho dele?": "zona",
-    "Posso gravar a sessão?": "normativa",
-
-    # Honorários (misto)
-    "Posso cobrar multa por falta?": "normativa",
-    "Como lidar com inadimplência?": "zona",
-    "Posso cobrar PIX adiantado?": "normativa",
-    "Posso cobrar pacote de sessões?": "zona",
-    "Posso atender de graça?": "zona",
-    "Posso oferecer primeira sessão gratuita?": "zona",
-    "Posso divulgar o valor da sessão no Instagram?": "normativa",
-    "Posso fazer sorteio de sessões?": "normativa",
-    "Posso receber comissão por encaminhamento?": "normativa",
-    "Posso fazer parceria com médico por indicação?": "zona",
-
-    # Temas sensíveis e ética
-    "Existe cura gay?": "normativa",
-    "O que responder quando pedem terapia de reversão?": "normativa",
-    "Posso influenciar na orientação sexual do meu paciente?": "normativa",
-    "Existe psicologia evangélica?": "zona",
-    "É proíbido falar sobre religião nas sessões?": "zona",
-    "Posso orar com o paciente na sessão?": "zona",
-
-    # Outros (se não estiverem mapeados, viram zona por padrão)
-}
-
-def selo_label(seal_code: str) -> str:
-    if seal_code == "normativa":
-        return "🟢 Resposta normativa"
-    return "🟡 Zona de cuidado"
-
-def build_quick_questions_with_seals():
-    out = []
-    for q in QUICK_QUESTIONS:
-        seal_code = QUESTION_SELOS.get(q, "zona")
-        out.append({
-            "text": q,
-            "seal": seal_code,
-            "label": selo_label(seal_code),
-        })
-    return out
+def build_quick_groups():
+    # Diretas em cima (apenas as que realmente têm resposta cadastrada)
+    direct = [build_question_item(q) for q in QUICK_QUESTIONS if q in RESPOSTAS_PRONTAS]
+    care = [build_question_item(q) for q in QUICK_QUESTIONS if q not in RESPOSTAS_PRONTAS]
+    return direct, care
 
 # =====================================================
 # FALLBACK INTELIGENTE
@@ -503,13 +415,6 @@ def resposta_orientativa(pergunta: str) -> str:
       </div>
     </div>
     """
-
-def garantir_respostas_para_botoes():
-    for q in QUICK_QUESTIONS:
-        if q not in RESPOSTAS_PRONTAS:
-            RESPOSTAS_PRONTAS[q] = resposta_orientativa(q)
-
-garantir_respostas_para_botoes()
 
 # =====================================================
 # DB
@@ -597,6 +502,301 @@ def simple_search(query: str):
     return unique_rows[:3]
 
 # =====================================================
+# CONTRATO (gerador)
+# =====================================================
+def gerar_contrato_texto(data: dict) -> str:
+    modalidade = data.get("modalidade", "Online")
+    plataforma = data.get("plataforma", "Google Meet")
+    duracao = data.get("duracao", "50")
+    frequencia = data.get("frequencia", "semanal")
+    canal = data.get("canal", "WhatsApp")
+    prazo_cancel = data.get("prazo_cancel", "24")
+    falta_cobra = data.get("falta_cobra", "sim")
+    atraso = data.get("atraso", "15")
+    queda = data.get("queda", "10")
+    pagamento = data.get("pagamento", "pix")
+    recibo = data.get("recibo", "sim")
+    reembolso = data.get("reembolso", "nao")
+    emergencias = data.get("emergencias", "sim")
+    sigilo = data.get("sigilo", "sim")
+    grava = data.get("grava", "nao")
+
+    detalhe_modalidade = (
+        "Atendimento presencial em ambiente privativo, com início e término conforme horário agendado."
+        if modalidade.lower() == "presencial"
+        else f"Atendimento online por {plataforma}, com orientações de privacidade (local reservado e, se possível, uso de fone)."
+    )
+    falta_txt = "Sessões não desmarcadas dentro do prazo são cobradas." if falta_cobra == "sim" else "Sessões não desmarcadas dentro do prazo podem ser remanejadas conforme disponibilidade e critério."
+    recibo_txt = "Recibo pode ser emitido mediante solicitação." if recibo == "sim" else "Recibo não é emitido."
+    reembolso_txt = "Em caso de interrupção do serviço, valores antecipados podem ser ajustados conforme sessões realizadas." if reembolso == "sim" else "Não há reembolso automático para faltas ou cancelamentos fora do prazo."
+    emerg_txt = "Este serviço não é plantão de urgência. Em risco imediato, recomenda-se acionar rede de apoio e serviços locais." if emergencias == "sim" else "Este serviço não realiza atendimentos de urgência."
+    sig_txt = "O sigilo profissional é regra. Exceções são raras e seguem princípio do mínimo necessário." if sigilo == "sim" else "O sigilo profissional orienta a prática, com cuidado especial para privacidade."
+    grava_txt = "Gravações não são permitidas sem consentimento explícito das partes e finalidade justificada." if grava == "nao" else "Gravações podem ocorrer apenas com consentimento explícito e acordo sobre guarda e acesso."
+
+    return f"""CONTRATO TERAPÊUTICO (MODELO)
+
+1) Modalidade e setting
+- Modalidade: {modalidade}
+- {detalhe_modalidade}
+
+2) Duração e frequência
+- Duração média da sessão: {duracao} minutos
+- Frequência sugerida: {frequencia}
+
+3) Comunicação fora da sessão
+- Canal de contato: {canal}
+- Finalidade: logística (remarcação, confirmação e avisos)
+- Mensagens longas são preferencialmente tratadas em sessão.
+
+4) Cancelamentos, faltas e atrasos
+- Prazo para desmarcação: {prazo_cancel} horas
+- Tolerância de atraso: {atraso} minutos (respeitando o horário final)
+- Faltas: {falta_txt}
+
+5) Atendimento online e queda de conexão (se aplicável)
+- Em queda: aguardar {queda} minutos e tentar reconectar
+- Se não retomar: registrar tentativa e remarcar conforme política.
+
+6) Pagamento e recibos
+- Forma de pagamento: {pagamento}
+- {recibo_txt}
+- {reembolso_txt}
+
+7) Sigilo e privacidade
+- {sig_txt}
+
+8) Gravações
+- {grava_txt}
+
+9) Limites e emergências
+- {emerg_txt}
+
+10) Encerramento
+- Encerramento por alta, acordo, limites de agenda ou indicação clínica.
+- Quando possível, será trabalhado em sessão, com orientações e encaminhamentos.
+
+Observação
+Este documento é um modelo informacional e pode ser adaptado conforme contexto e critérios profissionais.
+"""
+
+# =====================================================
+# HONORÁRIOS (calculadora)
+# =====================================================
+def calc_honorarios(d: dict) -> dict:
+    custos_fixos = float(d.get("custos_fixos", 0) or 0)
+    custos_variaveis_mes = float(d.get("custos_variaveis_mes", 0) or 0)
+    pro_labore = float(d.get("pro_labore", 0) or 0)
+    impostos_perc = float(d.get("impostos_perc", 0) or 0) / 100.0
+    semanas_mes = float(d.get("semanas_mes", 4.3) or 4.3)
+
+    sessoes_semana = float(d.get("sessoes_semana", 0) or 0)
+    duracao_min = float(d.get("duracao_min", 50) or 50)
+    admin_min = float(d.get("admin_min", 10) or 10)
+    faltas_perc = float(d.get("faltas_perc", 0) or 0) / 100.0
+
+    custo_total_mes = custos_fixos + custos_variaveis_mes + pro_labore
+    sessoes_mes_brutas = sessoes_semana * semanas_mes
+    sessoes_mes_liquidas = max(0.0, sessoes_mes_brutas * (1.0 - faltas_perc))
+
+    if sessoes_mes_liquidas <= 0:
+        return {"ok": False, "erro": "Defina sessões por semana e faltas em um valor que gere ao menos 1 sessão/mês efetiva."}
+
+    if impostos_perc >= 0.95:
+        impostos_perc = 0.95
+
+    receita_bruta_necessaria = custo_total_mes / max(0.01, (1.0 - impostos_perc))
+    preco_min_sessao = receita_bruta_necessaria / sessoes_mes_liquidas
+
+    tempo_por_sessao_min = duracao_min + admin_min
+    horas_trabalho_mes = (tempo_por_sessao_min * sessoes_mes_brutas) / 60.0
+    if horas_trabalho_mes <= 0:
+        horas_trabalho_mes = 0.1
+
+    receita_por_hora_bruta = (preco_min_sessao * sessoes_mes_liquidas) / horas_trabalho_mes
+
+    return {
+        "ok": True,
+        "custo_total_mes": round(custo_total_mes, 2),
+        "receita_bruta_necessaria": round(receita_bruta_necessaria, 2),
+        "sessoes_mes_brutas": round(sessoes_mes_brutas, 1),
+        "sessoes_mes_liquidas": round(sessoes_mes_liquidas, 1),
+        "preco_min_sessao": round(preco_min_sessao, 2),
+        "tempo_por_sessao_min": round(tempo_por_sessao_min, 0),
+        "horas_trabalho_mes": round(horas_trabalho_mes, 1),
+        "receita_por_hora_bruta": round(receita_por_hora_bruta, 2),
+    }
+
+# =====================================================
+# POLÍTICAS PRONTAS (gerador)
+# =====================================================
+def gerar_politica(data: dict) -> dict:
+    tipo = data.get("tipo", "faltas")
+    modalidade = data.get("modalidade", "Online")
+    prazo = data.get("prazo", "24")
+    atraso = data.get("atraso", "15")
+    canal = data.get("canal", "WhatsApp")
+    falta_cobra = data.get("falta_cobra", "sim")
+    reembolso = data.get("reembolso", "nao")
+    mensagens = data.get("mensagens", "logistica")
+    queda = data.get("queda", "10")
+    pagamento = data.get("pagamento", "pix")
+
+    base_header = "POLÍTICA (TEXTO PRONTO PARA COPIAR)\n\n"
+
+    if tipo == "faltas":
+        texto = f"""{base_header}Política de cancelamento e faltas
+
+- Prazo para desmarcação: {prazo} horas.
+- Atrasos: tolerância de {atraso} minutos, respeitando o horário final.
+- Falta sem aviso ou cancelamento fora do prazo: {"sessão é cobrada" if falta_cobra == "sim" else "pode ser remanejada conforme disponibilidade e critério"}.
+- Canal para desmarcação: {canal}.
+
+Observação
+Esta política existe para proteger o enquadre, a organização de agenda e a continuidade do cuidado.
+"""
+        return {"titulo": "Faltas e cancelamentos", "texto": texto}
+
+    if tipo == "mensagens":
+        if mensagens == "logistica":
+            regra = "Mensagens são destinadas apenas à logística (remarcação, confirmação e avisos)."
+        elif mensagens == "curtas":
+            regra = "Mensagens devem ser curtas e objetivas. Conteúdos terapêuticos serão priorizados em sessão."
+        else:
+            regra = "Mensagens não substituem a sessão. Em caso de necessidade importante, combinaremos o melhor encaminhamento."
+
+        texto = f"""{base_header}Política de mensagens e contato fora da sessão
+
+- Canal principal: {canal}.
+- {regra}
+- Este serviço não funciona como plantão de urgência.
+
+Observação
+Limites de contato protegem o sigilo, o enquadre e evitam dependência do canal de mensagens.
+"""
+        return {"titulo": "Mensagens e contato", "texto": texto}
+
+    if tipo == "reembolso":
+        texto = f"""{base_header}Política de pagamentos e reembolso
+
+- Forma de pagamento: {pagamento}.
+- Reembolso: {"pode haver ajuste proporcional em caso de interrupção do serviço, conforme sessões realizadas" if reembolso == "sim" else "não há reembolso automático para faltas ou cancelamentos fora do prazo"}.
+- Regras de faltas seguem a política de cancelamento.
+
+Observação
+Transparência financeira reduz conflito e protege o vínculo terapêutico.
+"""
+        return {"titulo": "Pagamentos e reembolso", "texto": texto}
+
+    if tipo == "online":
+        texto = f"""{base_header}Protocolo de atendimento online
+
+- Modalidade: {modalidade}.
+- Recomenda-se ambiente privado e uso de fone.
+- Em queda de conexão: aguardar {queda} minutos e tentar reconectar.
+- Se não retomar: confirmar por {canal} e remarcar conforme disponibilidade.
+
+Observação
+Este protocolo reduz ansiedade e evita improviso em momentos críticos.
+"""
+        return {"titulo": "Atendimento online", "texto": texto}
+
+    if tipo == "sigilo":
+        texto = f"""{base_header}Política de sigilo e privacidade
+
+- O sigilo profissional é regra e protege a intimidade e o vínculo terapêutico.
+- Informações só são compartilhadas em situações excepcionais, seguindo o princípio do mínimo necessário.
+- Recomenda-se cuidado com dispositivos, backups e ambientes compartilhados.
+
+Observação
+O objetivo é proteger a pessoa atendida e a qualidade do serviço.
+"""
+        return {"titulo": "Sigilo e privacidade", "texto": texto}
+
+    return {"titulo": "Política", "texto": f"{base_header}Escolha uma política para gerar um texto pronto."}
+
+# =====================================================
+# MAPA DE REDE (roteiros prontos)
+# =====================================================
+def gerar_rede(data: dict) -> dict:
+    destino = data.get("destino", "psiquiatria")
+    canal = data.get("canal", "WhatsApp")
+    inclui_autorizacao = data.get("autorizacao", "sim")
+    tom = data.get("tom", "neutro")
+
+    autorizacao_txt = (
+        "Antes de qualquer contato com terceiros, solicite autorização por escrito do paciente (ou responsável legal), delimitando o que pode ser compartilhado e com qual finalidade.\n\n"
+        if inclui_autorizacao == "sim" else ""
+    )
+
+    if destino == "psiquiatria":
+        texto = f"""ROTEIRO DE REDE: Psiquiatria
+
+{autorizacao_txt}Mensagem para encaminhamento (copiar e colar)
+- Canal sugerido: {canal}
+
+Olá, tudo bem?
+Sou psicóloga e estou acompanhando a pessoa em psicoterapia. Com autorização expressa, gostaria de encaminhar para avaliação psiquiátrica, considerando benefícios de uma avaliação clínica complementar.
+Se você puder me informar disponibilidade de agenda e orientação de documentação necessária, agradeço.
+
+Observação
+Evite enviar detalhes sensíveis por mensagens. Prefira dados mínimos e, se necessário, contato profissional protegido.
+"""
+        return {"titulo": "Encaminhamento para Psiquiatria", "texto": texto}
+
+    if destino == "escola":
+        texto = f"""ROTEIRO DE REDE: Escola (orientação e comunicação)
+
+{autorizacao_txt}Modelo de e-mail/mensagem para escola (copiar e colar)
+Prezados,
+Sou psicóloga e acompanho o(a) estudante em psicoterapia. Com autorização, solicito alinhamento para favorecer medidas de apoio pedagógico e bem-estar escolar.
+Peço, se possível, informações gerais sobre contexto escolar (frequência, adaptações já feitas, demandas observadas), preservando a privacidade do(a) estudante.
+
+Observação
+Evite descrição de conteúdo íntimo. Foque em medidas de apoio e informações gerais necessárias.
+"""
+        return {"titulo": "Contato com Escola", "texto": texto}
+
+    if destino == "familia":
+        texto = f"""ROTEIRO DE REDE: Família / Responsáveis
+
+{autorizacao_txt}Mensagem para combinar devolutiva (copiar e colar)
+Olá, tudo bem?
+Podemos agendar um momento breve para uma devolutiva geral sobre o processo, com foco em orientações práticas e medidas de apoio. 
+Por ética e privacidade, evitamos expor detalhes íntimos do conteúdo das sessões, mantendo o essencial para o cuidado.
+
+Observação
+Devolutivas devem ser proporcionais e no mínimo necessário, especialmente em crianças e adolescentes.
+"""
+        return {"titulo": "Devolutiva para Família", "texto": texto}
+
+    if destino == "rede_publica":
+        texto = f"""ROTEIRO DE REDE: Rede pública / serviços
+
+{autorizacao_txt}Mensagem para serviço (copiar e colar)
+Olá,
+Sou psicóloga e estou acompanhando a pessoa em psicoterapia. Com autorização, solicito orientação sobre fluxo de atendimento e possibilidade de acolhimento/encaminhamento para o serviço.
+Caso existam documentos necessários ou horários de triagem, por favor me informem.
+
+Observação
+Se houver risco imediato, priorize serviços de emergência locais e rede de apoio.
+"""
+        return {"titulo": "Contato com Serviços", "texto": texto}
+
+    if destino == "autorizacao":
+        texto = f"""MODELO: Autorização para contato com terceiros (copiar e colar)
+
+Eu, ______________________________, autorizo a psicóloga ______________________________ (CRP ________) a realizar contato profissional com ______________________________ (nome/serviço), pelo canal ______________________________, com a finalidade de ______________________________.
+
+Declaro estar ciente de que serão compartilhadas apenas informações mínimas necessárias para o objetivo acima, preservando minha privacidade.
+
+Data: ____/____/____
+Assinatura: ______________________________
+"""
+        return {"titulo": "Autorização por escrito", "texto": texto}
+
+    return {"titulo": "Rede", "texto": "Escolha um destino para gerar um roteiro."}
+
+# =====================================================
 # DOCX DOWNLOAD
 # =====================================================
 def _sanitize_filename(name: str) -> str:
@@ -655,6 +855,7 @@ def home():
 
         q = (request.form.get("q") or "").strip()
         if q:
+            # ✅ Só é direta se estiver em RESPOSTAS_PRONTAS
             if q in RESPOSTAS_PRONTAS:
                 answer = RESPOSTAS_PRONTAS[q]
             else:
@@ -667,7 +868,7 @@ def home():
                     answer = f"""
                     <div class="resposta-humanizada">
                       <h3>Resultados da Busca</h3>
-                      <p>Não encontrei uma resposta exata, mas estes trechos podem ajudar:</p>
+                      <p>Não encontrei uma resposta direta cadastrada para esta dúvida, mas estes trechos podem ajudar:</p>
                       {html_hits}
                       <div class="alert-box tip">💡 Use as abas Políticas e Rede para textos prontos e roteiros.</div>
                     </div>
@@ -677,13 +878,16 @@ def home():
 
             save_history(q, answer)
 
+    direct_questions, care_questions = build_quick_groups()
+
     return render_template(
         "home.html",
         app_name=APP_NAME,
         stats=stats(),
         history=get_history(50),
         answer=answer,
-        quick_questions=build_quick_questions_with_seals()
+        direct_questions=direct_questions,
+        care_questions=care_questions
     )
 
 @app.route("/recursos")

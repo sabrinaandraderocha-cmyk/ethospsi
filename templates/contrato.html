@@ -1,0 +1,181 @@
+{% extends "base.html" %}
+{% block content %}
+
+<section class="card">
+  <h2 style="margin-top:0;">Gerador de Contrato Terapêutico</h2>
+  <p style="color:#64748b; margin-top:6px;">
+    Selecione opções e gere um modelo para copiar. Evite inserir dados de pacientes.
+  </p>
+
+  <form method="post" class="form-grid">
+    <div class="form-card">
+      <h3>Modalidade</h3>
+      <div class="radio-row">
+        <label><input type="radio" name="modalidade" value="Online" checked> Online</label>
+        <label><input type="radio" name="modalidade" value="Presencial"> Presencial</label>
+      </div>
+
+      <label class="field">
+        Plataforma (online)
+        <select name="plataforma">
+          <option>Google Meet</option>
+          <option>Zoom</option>
+          <option>Microsoft Teams</option>
+          <option>Outro</option>
+        </select>
+      </label>
+
+      <label class="field">
+        Duração da sessão (min)
+        <select name="duracao">
+          <option value="50" selected>50</option>
+          <option value="45">45</option>
+          <option value="60">60</option>
+        </select>
+      </label>
+
+      <label class="field">
+        Frequência
+        <select name="frequencia">
+          <option value="semanal" selected>Semanal</option>
+          <option value="quinzenal">Quinzenal</option>
+          <option value="variável">Variável</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="form-card">
+      <h3>Regras do Enquadre</h3>
+
+      <label class="field">
+        Canal de contato
+        <select name="canal">
+          <option selected>WhatsApp</option>
+          <option>E-mail</option>
+          <option>Telegram</option>
+        </select>
+      </label>
+
+      <label class="field">
+        Prazo para desmarcação (horas)
+        <select name="prazo_cancel">
+          <option value="12">12</option>
+          <option value="24" selected>24</option>
+          <option value="48">48</option>
+        </select>
+      </label>
+
+      <label class="field">
+        Tolerância de atraso (min)
+        <select name="atraso">
+          <option value="10">10</option>
+          <option value="15" selected>15</option>
+          <option value="20">20</option>
+        </select>
+      </label>
+
+      <label class="field">
+        Falta fora do prazo é cobrada?
+        <select name="falta_cobra">
+          <option value="sim" selected>Sim</option>
+          <option value="nao">Não</option>
+        </select>
+      </label>
+
+      <label class="field">
+        Queda de internet: aguardar (min)
+        <select name="queda">
+          <option value="5">5</option>
+          <option value="10" selected>10</option>
+          <option value="15">15</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="form-card">
+      <h3>Pagamento e documentos</h3>
+
+      <label class="field">
+        Forma de pagamento
+        <select name="pagamento">
+          <option value="pix" selected>Pix</option>
+          <option value="cartao">Cartão</option>
+          <option value="transferencia">Transferência</option>
+        </select>
+      </label>
+
+      <label class="field">
+        Emite recibo?
+        <select name="recibo">
+          <option value="sim" selected>Sim</option>
+          <option value="nao">Não</option>
+        </select>
+      </label>
+
+      <label class="field">
+        Ajuste de valores antecipados em interrupção?
+        <select name="reembolso">
+          <option value="nao" selected>Não</option>
+          <option value="sim">Sim</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="form-card">
+      <h3>Sigilo e limites</h3>
+
+      <label class="field">
+        Texto de sigilo (padrão)
+        <select name="sigilo">
+          <option value="sim" selected>Sim</option>
+          <option value="nao">Simplificado</option>
+        </select>
+      </label>
+
+      <label class="field">
+        Gravações
+        <select name="grava">
+          <option value="nao" selected>Não permitir sem acordo</option>
+          <option value="sim">Permitir com consentimento</option>
+        </select>
+      </label>
+
+      <label class="field">
+        Cláusula de urgência
+        <select name="emergencias">
+          <option value="sim" selected>Incluir</option>
+          <option value="nao">Não incluir</option>
+        </select>
+      </label>
+
+      <button class="btn-action" type="submit" style="margin-top:10px; width:100%;">
+        Gerar contrato
+      </button>
+    </div>
+  </form>
+</section>
+
+{% if contrato_txt %}
+<section class="card">
+  <h2 style="margin-top:0;">Contrato gerado</h2>
+  <p style="color:#64748b; margin-top:6px;">Copie e ajuste conforme sua prática.</p>
+
+  <div class="copy-row">
+    <button class="btn-action" type="button" onclick="copyText()">Copiar</button>
+    <a class="btn-action" href="{{ url_for('recursos') }}">Ver recursos oficiais</a>
+  </div>
+
+  <textarea id="outText" class="mono-area" readonly>{{ contrato_txt }}</textarea>
+</section>
+
+<script>
+  function copyText(){
+    const el = document.getElementById("outText");
+    el.select();
+    el.setSelectionRange(0, 999999);
+    document.execCommand("copy");
+  }
+</script>
+{% endif %}
+
+{% endblock %}

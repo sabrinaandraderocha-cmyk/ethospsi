@@ -5,7 +5,8 @@
 <div class="ethical-warning">
   <strong>⚠️ Aviso Importante:</strong>
   <ul>
-    <li>Este sistema é apoio e consulta rápida. Não substitui o Código de Ética ou o CRP.</li>
+    <li>Este sistema é apoio e consulta rápida. Não substitui o Código de Ética, nem orientações formais do CRP/CFP.</li>
+    <li>Este aplicativo não possui vínculo institucional com o CFP ou com qualquer CRP.</li>
     <li>Dados ficam apenas no seu histórico local.</li>
   </ul>
 </div>
@@ -19,13 +20,11 @@
   {% if questions %}
     <div class="quick-questions-container">
       {% for q in questions %}
-        <form method="post" class="quick-form">
-          <input type="hidden" name="q" value="{{ q.text }}">
-          <button class="quick-btn" type="submit">
-            <span class="dot"></span>
-            {{ q.text }}
-          </button>
-        </form>
+        <!-- Troca o submit por botão que abre modal (sem rolar a página no celular) -->
+        <button class="quick-btn" type="button" onclick="openAnswerModal('{{ q.text|e }}')">
+          <span class="dot"></span>
+          {{ q.text }}
+        </button>
       {% endfor %}
     </div>
   {% else %}
@@ -38,6 +37,7 @@
     </button>
   </form>
 
+  {# Mantém compatibilidade: se por algum motivo ainda vier "answer" via POST, mostra abaixo #}
   {% if answer %}
     <div class="answer-container">
       {{ answer|safe }}
@@ -70,5 +70,74 @@
     <p style="color:#94a3b8;">Sem histórico recente.</p>
   {% endif %}
 </section>
+
+<!-- =========================
+     MODAL (POP-UP) DE RESPOSTA
+     Requer a rota /qa (GET) no app.py
+     ========================= -->
+<dialog id="qaModal" class="modal">
+  <div class="modal-card">
+    <div class="modal-head">
+      <h3 id="qaModalTitle" class="modal-title"></h3>
+      <button type="button" class="modal-close" aria-label="Fechar" onclick="closeQAModal()">✕</button>
+    </div>
+    <div id="qaModalBody" class="modal-body"></div>
+
+    <div class="modal-foot" style="padding: 12px 16px; border-top: 1px solid rgba(0,0,0,0.06); display:flex; gap:10px; justify-content:flex-end;">
+      <!-- Se quiser salvar no histórico ao clicar, este botão faz POST invisível -->
+      <form method="post" id="qaSaveForm" style="margin:0;">
+        <input type="hidden" name="q" id="qaSaveInput" value="">
+        <button type="submit" class="btn-action">Salvar no histórico</button>
+      </form>
+      <button type="button" class="btn-action" onclick="closeQAModal()">Fechar</button>
+    </div>
+  </div>
+</dialog>
+
+<script>
+  const qaModal = document.getElementById("qaModal");
+  const qaModalTitle = document.getElementById("qaModalTitle");
+  const qaModalBody = document.getElementById("qaModalBody");
+  const qaSaveInput = document.getElementById("qaSaveInput");
+
+  function closeQAModal() {
+    if (qaModal && typeof qaModal.close === "function") qaModal.close();
+    else qaModal.removeAttribute("open");
+  }
+
+  async function openAnswerModal(questionText) {
+    qaModalTitle.textContent = questionText || "Resposta";
+    qaModalBody.innerHTML = "<p class='muted'>Carregando...</p>";
+    if (qaSaveInput) qaSaveInput.value = questionText || "";
+
+    if (qaModal && typeof qaModal.showModal === "function") qaModal.showModal();
+    else qaModal.setAttribute("open", "open");
+
+    try {
+      const url = "/qa?q=" + encodeURIComponent(questionText);
+      const r = await fetch(url, { method: "GET" });
+      const data = await r.json();
+
+      if (!data.ok) throw new Error(data.error || "Falha ao carregar");
+
+      qaModalBody.innerHTML = data.answer_html || "<p class='muted'>Sem resposta.</p>";
+    } catch (e) {
+      qaModalBody.innerHTML =
+        "<div class='alert-box warning'><strong>Ops:</strong> não consegui carregar a resposta. Tente novamente.</div>";
+    }
+  }
+
+  // Fecha clicando fora do card
+  if (qaModal) {
+    qaModal.addEventListener("click", (e) => {
+      const card = qaModal.querySelector(".modal-card");
+      if (!card) return;
+      const rect = card.getBoundingClientRect();
+      const outside =
+        e.clientX < rect.left || e.clientX > rect.right || e.clientY < rect.top || e.clientY > rect.bottom;
+      if (outside) closeQAModal();
+    });
+  }
+</script>
 
 {% endblock %}

@@ -4,7 +4,7 @@ from datetime import datetime
 from io import BytesIO
 
 from flask import (
-    Flask, render_template, request, redirect, url_for, flash, send_file
+    Flask, render_template, request, redirect, url_for, flash, send_file, jsonify
 )
 
 from docx import Document
@@ -114,7 +114,7 @@ def _make_answer(title: str, bullets: list[str], delicate: bool = True) -> str:
           <strong>Questão delicada:</strong> se houver dúvida prática, consulte a COF do seu CRP e leve para supervisão.
         </div>
         """
-    lis = "".join([f"<li>{_html_escape(b)}</li>" for b in bullets if b.strip()])
+    lis = "".join([f"<li>{_html_escape(b)}</li>" for b in bullets if (b or "").strip()])
     return f"""
     <div class="resposta-humanizada">
       <h3>{_html_escape(title)}</h3>
@@ -209,7 +209,7 @@ RESPOSTAS_DB = {
         "O registro é dever do psicólogo, não escolha do paciente.",
         [
             "Explique que é uma obrigação legal (Res. 01/2009).",
-            "Negocie o *teor*: você pode registrar de forma mais sintética, protegendo detalhes muito íntimos, mas mantendo a evolução técnica.",
+            "Negocie o teor: você pode registrar de forma mais sintética, protegendo detalhes muito íntimos, mas mantendo a evolução técnica.",
             "O prontuário pertence ao paciente, mas a guarda é do psicólogo."
         ]
     ),
@@ -240,7 +240,7 @@ RESPOSTAS_DB = {
     "Posso usar IA para escrever prontuário?": _make_answer(
         "Extremo cuidado. Risco de violação de sigilo.",
         [
-            "Não insira nomes ou dados identificáveis em IAs públicas (ChatGPT, Gemini, etc.), pois os dados são usados para treino.",
+            "Não insira nomes ou dados identificáveis em IAs públicas (ChatGPT, Gemini, etc.), pois os dados podem ser tratados fora do seu controle.",
             "A responsabilidade técnica do texto é 100% do psicólogo.",
             "O uso deve ser apenas para auxílio na redação, nunca para análise clínica automática."
         ]
@@ -360,17 +360,17 @@ RESPOSTAS_DB = {
     "Posso atender de graça?": _make_answer(
         "Sim, mas com ética (não promocional).",
         [
-            "O atendimento voluntário é permitido e nobre (Art. 4º do Código).",
+            "O atendimento voluntário é permitido e nobre.",
             "Não pode ser usado para captar clientela (ex: '1ª sessão grátis' como marketing).",
             "Deve ser um trabalho social genuíno ou vinculado a instituição."
         ]
     ),
     "Posso divulgar o valor da sessão no Instagram?": _make_answer(
-        "Não. Vedado pelo Código de Ética.",
+        "Não. Evite propaganda por preço.",
         [
-            "Art. 20: É vedado utilizar o preço do serviço como forma de propaganda.",
             "O preço não deve ser o diferencial competitivo.",
-            "Informe o valor apenas quando o interessado entrar em contato (direct/whatsapp)."
+            "Informe o valor apenas quando o interessado entrar em contato (direct/whatsapp).",
+            "Se houver dúvidas específicas, consulte orientações do CRP/CFP e pratique comunicação responsável."
         ]
     ),
     "Como lidar com inadimplência?": _make_answer(
@@ -378,7 +378,7 @@ RESPOSTAS_DB = {
         [
             "O psicólogo não pode expor o paciente a situações vexatórias de cobrança.",
             "Tente renegociar, parcelar ou entender o motivo.",
-            "Se a inadimplência persistir, pode-se suspender o atendimento, encaminhando o paciente (não abandonar, mas encerrar por quebra de contrato)."
+            "Se a inadimplência persistir, pode-se suspender o atendimento, com encaminhamento e encerramento ético."
         ]
     ),
 
@@ -386,35 +386,35 @@ RESPOSTAS_DB = {
     "Existe cura gay?": _make_answer(
         "Não. E é proibido oferecer.",
         [
-            "Resolução CFP 01/1999: A homossexualidade não é doença, perversão ou distúrbio.",
-            "O psicólogo não colaborará com eventos ou serviços que proponham tratamento e cura da homossexualidade.",
-            "Foco no acolhimento do sofrimento decorrente do preconceito."
+            "A homossexualidade não é doença, perversão ou distúrbio.",
+            "É vedado colaborar com serviços que proponham 'tratamento' ou 'cura' da homossexualidade.",
+            "O foco ético é acolher sofrimento, principalmente o decorrente do preconceito."
         ]
     ),
     "Posso orar com o paciente na sessão?": _make_answer(
-        "Não. Mistura técnica com religião.",
+        "Evite misturar técnica com prática religiosa.",
         [
             "A psicologia é laica.",
-            "O psicólogo deve respeitar a crença do paciente, mas não deve induzir ou praticar rituais religiosos durante o atendimento técnico.",
-            "Isso configura imposição de crença ou confusão metodológica."
+            "O psicólogo deve respeitar a crença do paciente, mas não deve induzir práticas religiosas durante o atendimento técnico.",
+            "Se espiritualidade for tema do paciente, pode ser acolhida como conteúdo, sem ritualização."
         ]
     ),
     "Posso recusar atendimento por conflito de valores?": _make_answer(
         "Sim. É ético reconhecer limites.",
         [
-            "Se uma demanda viola seus valores pessoais a ponto de impedir a escuta neutra e o acolhimento, você DEVE recusar.",
-            "Justifique tecnicamente e encaminhe para outro profissional qualificado.",
-            "Não tente 'tratar' algo que você rejeita moralmente."
+            "Se uma demanda impedir uma escuta responsável, recusar pode ser o mais ético.",
+            "Justifique de forma respeitosa e encaminhe para outro profissional qualificado.",
+            "Evite moralização ou tentativa de 'corrigir' o paciente."
         ]
     ),
-    
+
     # --- ENCERRAMENTO E ENCAMINHAMENTO ---
     "Como encerrar terapia de forma ética?": _make_answer(
         "Planejamento e Autonomia.",
         [
             "O encerramento (alta) deve ser trabalhado processualmente, não abruptamente.",
             "Deve visar a autonomia do paciente.",
-            "Se for interrupção (pelo terapeuta), deve-se fornecer encaminhamento e garantir a continuidade do cuidado com outro profissional."
+            "Se for interrupção (pelo terapeuta), oferecer encaminhamento e apoiar continuidade do cuidado."
         ]
     ),
     "Quando devo encaminhar um paciente?": _make_answer(
@@ -422,25 +422,25 @@ RESPOSTAS_DB = {
         [
             "Quando a demanda exige competência técnica que você não possui.",
             "Quando há quebra do vínculo de confiança ou conflito de valores intransponível.",
-            "Faça o encaminhamento de forma responsável, indicando profissionais ou serviços adequados."
+            "Faça o encaminhamento de forma responsável, indicando serviços adequados."
         ]
     ),
     "Posso atender adolescente sem os pais saberem?": _make_answer(
-        "Depende da maturidade e gravidade.",
+        "Depende da situação e do contrato.",
         [
-            "O adolescente tem direito a sigilo e atendimento.",
-            "Porém, para continuidade, os responsáveis legais precisam estar cientes e autorizar (contrato financeiro/legal).",
-            "Exceção: Em casos de violência intrafamiliar, o sigilo pode ser mantido inicialmente para proteção, acionando o Conselho Tutelar."
+            "Adolescente tem direito a escuta e sigilo em muitos contextos.",
+            "Para continuidade e responsabilidade legal/financeira, responsáveis normalmente precisam estar cientes.",
+            "Em suspeita de violência intrafamiliar, priorize proteção e acione rede (Conselho Tutelar), seguindo o mínimo necessário."
         ]
     ),
     "Como agir em suspeita de violência (rede de proteção)?": _make_answer(
         "Notificação e Proteção.",
         [
-            "Em casos de violência contra criança, adolescente, idoso ou mulher, a notificação é obrigatória ou recomendada (conforme legislação específica e ECA).",
+            "Em casos de violência contra criança, adolescente, idoso ou mulher, pode haver dever de notificação conforme legislação aplicável.",
             "Não confronte o suposto agressor se isso colocar a vítima em risco.",
             "Acione a rede de proteção (CREAS, Conselho Tutelar, Delegacia) de forma articulada."
         ]
-    )
+    ),
 }
 
 # =====================================================
@@ -448,17 +448,15 @@ RESPOSTAS_DB = {
 # =====================================================
 def generate_answer_for_question(q: str) -> str:
     """Retorna a resposta específica do DB ou um fallback genérico."""
-    # 1. Busca exata
     if q in RESPOSTAS_DB:
         return RESPOSTAS_DB[q]
-    
-    # 2. Fallback (caso a pergunta não esteja mapeada no DB)
+
     return _make_answer(
         "Consulte o Código de Ética",
         [
-            "Esta pergunta requer análise específica dos artigos do Código de Ética.",
-            "Recomenda-se leitura da resolução pertinente ao tema (ex: documentos, online, registro).",
-            "Na dúvida, consulte a COF do seu CRP ou a supervisão."
+            "Esta pergunta requer análise específica dos artigos e resoluções aplicáveis.",
+            "Recomenda-se leitura da normativa pertinente ao tema (ex: documentos, online, registro).",
+            "Na dúvida, consulte a COF do seu CRP e leve para supervisão."
         ],
         delicate=True
     )
@@ -509,6 +507,7 @@ def stats():
         c = conn.execute("SELECT COUNT(*) FROM chunks").fetchone()[0]
         h = conn.execute("SELECT COUNT(*) FROM qa_history").fetchone()[0]
     except Exception:
+        conn.close()
         return {"documents": 0, "chunks": 0, "history": 0}
     conn.close()
     return {"documents": d, "chunks": c, "history": h}
@@ -824,11 +823,9 @@ def home():
 
         q = (request.form.get("q") or "").strip()
         if q:
-            # Lógica unificada: pega do DB ou usa fallback
             answer = generate_answer_for_question(q)
             save_history(q, answer)
 
-    # Lista única para o template (sem distinção de cores/tipos)
     all_questions = [{"text": q} for q in QUICK_QUESTIONS]
 
     return render_template(
@@ -837,8 +834,19 @@ def home():
         stats=stats(),
         history=get_history(50),
         answer=answer,
-        questions=all_questions # Passa a lista única
+        questions=all_questions,
     )
+
+# Rota opcional: para o front abrir modal via fetch (sem rolar)
+@app.route("/qa", methods=["GET"])
+def qa_get():
+    q = (request.args.get("q") or "").strip()
+    if not q:
+        return jsonify({"ok": False, "error": "missing q"}), 400
+    html = generate_answer_for_question(q)
+    # não salva no histórico aqui, porque só “abrir” não significa que perguntou;
+    # o template pode optar por chamar /qa e também postar o form se quiser.
+    return jsonify({"ok": True, "question": q, "answer_html": html})
 
 @app.route("/recursos")
 def recursos():
